@@ -49,7 +49,11 @@ async def on_connect() -> None:
     if bot.auto_sync_commands:
 
         # Check if the debug bot, set in `config.ini`, is being used.
-        if bot.user is not None and bot.user.id == bot_settings.debug_bot:
+        if (
+            bot.user is not None
+            and bot_settings.debug_bot is not None
+            and bot.user.id == bot_settings.debug_bot
+        ):
             debug_servers = bot_settings.debug_servers
             print("Debug servers in use. Slash Commands are registered instantly.")
         else:

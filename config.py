@@ -23,15 +23,17 @@ config.read(path)
 
 @dataclass
 class BotSettings:
-    debug_bot: int
+    debug_bot: int | None
     debug_servers: list[int]
     discord_bot_token: str
     official_server: str
     web_page: str
 
 
+debug_bots = list(map(int, config["Debug Bot"].values()))
+
 bot_settings = BotSettings(
-    list(map(int, config["Debug Bot"].values()))[0],
+    debug_bots[0] if len(debug_bots) > 0 else None,
     list(map(int, config["Debug Servers"].values())),
     str(os.getenv("DISCORD_BOT_TOKEN")),
     *list(map(str, config["Bot Resources"].values()))
