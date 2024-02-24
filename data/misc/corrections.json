@@ -1,0 +1,300 @@
+{
+    "Abathur": {
+        "Symbiote": [
+            [
+                "gain XP from nearby enemy deaths.",
+                "collect Experience."
+            ]
+        ]
+    },
+    "Alexstrasza": {
+        "Cleansing Flame": [
+            [
+                null,
+                "  Dragonqueen: Cast time removed."
+            ]
+        ],
+        "Life-Binder": [
+            [
+                null,
+                "  Dragonqueen: Range increased from 6 to 9."
+            ]
+        ]
+    },
+    "Anduin": {
+        "Blessed Recovery": [
+            [
+                "Current Health",
+                "Health"
+            ]
+        ]
+    },
+    "Anub'arak": {
+        "Nerubian Armor": [
+            [
+                "Hardened Carapace",
+                "Harden Carapace"
+            ]
+        ]
+    },
+    "Arthas": {
+        "Army of the Dead": [
+            [
+                "Summons Ghouls",
+                "Summons 6 Ghouls with 1060 Health (+4% per level)"
+            ]
+        ]
+    },
+    "Dehaka": {
+        "Drag": [
+            [
+                "Stunned or Silenced",
+                "Stunned, Silenced, or knocked back"
+            ]
+        ]
+    },
+    "D.Va": {
+        "Big Shot": [
+            [
+                "Pilot Mode: ",
+                null
+            ],
+            [
+                "Requires Pilot Mode.",
+                ""
+            ]
+        ],
+        "Bunny Hop": [
+            [
+                "Lasts for 4 seconds.",
+                ""
+            ],
+            [
+                "every 0.5 seconds",
+                "every 0.5 seconds for 4 seconds"
+            ],
+            [
+                "Mech Mode: ",
+                null
+            ],
+            [
+                "Requires Mech Mode.",
+                ""
+            ]
+        ],
+        "Micro Missiles": [
+            [
+                "Lasts for 4 seconds.",
+                ""
+            ],
+            [
+                "every 0.5 seconds",
+                "every 0.5 seconds for 4 seconds"
+            ],
+            [
+                "Mech Mode: ",
+                null
+            ],
+            [
+                "Requires Mech Mode.",
+                ""
+            ]
+        ],
+        "Good To Go": [
+            [
+                "  Torpedo Dash: ",
+                "  Torpedo Dash  "
+            ],
+            [
+                "  Concussive Pulse: ",
+                "  Concussive Pulse  "
+            ]
+        ]
+    },
+    "E.T.C.": {
+        "Prog Rock": [
+            [
+                "0  ",
+                "0.  "
+            ]
+        ]
+    },
+    "Falstad": {
+        "Flight": [
+            [
+                null,
+                "  Falstad is Unstoppable during Flight."
+            ]
+        ]
+    },
+    "Greymane": {
+        "Go for the Throat": [
+            [
+                null,
+                "  Greymane is Unstoppable during Go For The Throat, unless the travel distance is short."
+            ]
+        ]
+    },
+    "Genji": {
+        "Deflect": [
+            [
+                "Total Damage Deflected: 0",
+                ""
+            ]
+        ]
+    },
+    "Hogger": {
+        "Loot Hoard": [
+            [
+                null,
+                "  Rage  Rage is gained by taking damage or dealing Basic Attack damage. Hogger’s Basic Ability cooldowns refresh 1% faster for every 2 points of Rage. After 3 seconds of not gaining Rage, it begins to quickly decay."
+            ]
+        ]
+    },
+    "Jaina": {
+        "Frost Armor": [
+            [
+                "Passive: ",
+                null
+            ],
+            [
+                "Additionally, every",
+                " Every"
+            ]
+        ]
+    },
+    "Johanna": {
+        "Heaven's Fury": [
+            [
+                null,
+                "  This effect can randomly target up to 3 allied Heroes and up to 3 enemies every 0.25 seconds, chosen at random within the target area."
+            ]
+        ]
+    },
+    "Junkrat": {
+        "Total Mayhem": [
+            [
+                "Detonate an active Concussion Mine.",
+                "Detonate the planted Concussion Mine, dealing 180 (+4% per level) damage to nearby enemies and knocking them back. Junkrat can also be affected by Concussion Mine, but takes no damage."
+            ]
+        ]
+    },
+    "Lúcio": {
+        "Crossfade": [
+            [
+                "",
+                "Play one of two music tracks for Lúcio and his allies.  Healing Boost  Passively heal Lúcio and nearby allied Heroes for 15 Health per second.  Speed Boost  Increase the Movement Speed of Lúcio and nearby allied Heroes by 10%."
+            ]
+        ],
+        "Party Mix": [
+            [
+                "Lucio",
+                "Lúcio"
+            ]
+        ],
+        "Boombox": [
+            [
+                "Place a boombox",
+                "Place a boombox with 600 (+4% level) Health"
+            ]
+        ]
+    },
+    "Lunara": {
+        "Leaping Strike": [
+            [
+                null,
+                "  Lunara is Unstoppable during Leaping Strike."
+            ]
+        ]
+    },
+    "Maiev": {
+        "Spirit of Vengeance": [
+            [
+                null,
+                "  Reactivate to teleport to the shadow's location."
+            ]
+        ]
+    },
+    "Mei": {
+        "Ice Wall": [
+            [
+                "traps enemy Heroes hit",
+                "places all enemy Heroes hit in Time Stop"
+            ]
+        ]
+    },
+    "Ragnaros": {
+        "Sulfuras Smash": [
+            [
+                null,
+                "  Molten Core: Range increased from 16 to 35."
+            ]
+        ]
+    },
+    "Sonya": {
+        "Leap": [
+            [
+                null,
+                "  Sonya is Unstoppable during Leap, unless the travel distance is short."
+            ]
+        ]
+    },
+    "Stitches": {
+        "Master Hooker": [
+            [
+                "Enemy Heroes hit by Hook have",
+                "Enemy Heroes hit by Hook receive"
+            ]
+        ]
+    },
+    "Sylvanas": {
+        "Black Arrows": [
+            [
+                "withBanshee's Curse",
+                "with Banshee's Curse"
+            ]
+        ]
+    },
+    "The Lost Vikings": {
+        "Viking Hoard": [
+            [
+                "Current Bonus: 0 Regen per second",
+                ""
+            ]
+        ],
+        "Viking Bribery": [
+            [
+                "Current number of Bribe stacks: 0",
+                ""
+            ]
+        ]
+    },
+    "Tyrael": {
+        "Archangel's Wrath": [
+            [
+                "by  ",
+                "by "
+            ],
+            [
+                "for  ",
+                "for "
+            ]
+        ]
+    },
+    "Valla": {
+        "Strafe": [
+            [
+                null,
+                "  Hatred's duration is paused while channeling and refreshed when Strafe ends."
+            ]
+        ]
+    },
+    "Whitemane": {
+        "Desperate Plea": [
+            [
+                "Current Mana Cost: 40",
+                ""
+            ]
+        ]
+    }
+}

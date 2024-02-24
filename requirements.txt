@@ -1,0 +1,7 @@
+aiosqlite
+bs4
+pillow
+py-cord
+python-dotenv
+requests
+unidecode

@@ -1,0 +1,107 @@
+{
+    "Alterac Pass": {
+        "Lava Wave Timings": "14-18-14 seconds\n44-48-44 seconds",
+        "Minions Crash": "30-23-30 seconds",
+        "Objective Spawn": "180 seconds",
+        "Objective Respawn": "140~180 - 2 * X:00 seconds (after Cavalry death)",
+        "Rotation Time": "Mid-Top: 9 seconds\nMid-Bot: 9 seconds"
+    },
+    "Battlefield of Eternity": {
+        "Lava Wave Timings": "18-18 seconds\n48-48 seconds",
+        "Minions Crash": "??-?? seconds",
+        "Objective Spawn": "180 seconds",
+        "Objective Respawn": "105 seconds (after laning Immortal death)",
+        "Rotation Time": "Bot-Top: ?? seconds"
+    },
+    "Blackheart's Bay": {
+        "Lava Wave Timings": "12-16-16 seconds\n42-46-46 seconds",
+        "Minions Crash": "33-24-38 seconds",
+        "Objective Spawn": "90 seconds",
+        "Objective Respawn": "180 seconds (after Chests collection)",
+        "Rotation Time": "Mid-Top: 7 seconds\nMid-Bot: 13 seconds"
+    },
+    "Braxis Holdout": {
+        "Lava Wave Timings": "16-16 seconds\n46-46 seconds",
+        "Minions Crash": "??-?? seconds",
+        "Objective Spawn": "90 seconds",
+        "Objective Respawn": "130 seconds (after Zergs death)",
+        "Rotation Time": "Bot-Top: ?? seconds"
+    },
+    "Cursed Hollow": {
+        "Lava Wave Timings": "14-18-14 seconds\n44-48-44 seconds",
+        "Minions Crash": "30-21-30 seconds",
+        "Objective Spawn": "180 seconds",
+        "Objective Respawn": "50~90 seconds (after Tribute capture)\n120~160 seconds (after Curse end)",
+        "Rotation Time": "Mid-Top: 10 seconds\nMid-Bot: 10 seconds"
+    },
+    "Dragon Shire": {
+        "Lava Wave Timings": "16-18-16 seconds\n46-48-46 seconds",
+        "Minions Crash": "25-20-25 seconds",
+        "Objective Spawn": "90 seconds",
+        "Objective Respawn": "120 seconds (after Dragon Knight death)",
+        "Rotation Time": "Mid-Top: 8 seconds\nMid-Bot: 6 seconds"
+    },
+    "Garden of Terror": {
+        "Lava Wave Timings": "14-18-14 seconds\n44-48-44 seconds",
+        "Minions Crash": "28-21-28 seconds",
+        "Objective Spawn": "150 seconds",
+        "Objective Respawn": "50~80 seconds (after Seed capture)\n90~120 seconds (after Garden Terrors death)",
+        "Rotation Time": "Mid-Top: 10 seconds\nMid-Bot: 10 seconds"
+    },
+    "Hanamura Temple": {
+        "Lava Wave Timings": "16-16 seconds\n46-46 seconds",
+        "Minions Crash": "??-?? seconds",
+        "Objective Spawn": "180 seconds",
+        "Objective Respawn": "180 seconds (after Payload delivery)",
+        "Rotation Time": "Bot-Top: ?? seconds"
+    },
+    "Haunted Mines": {
+        "Lava Wave Timings": "??-?? seconds\n??-?? seconds",
+        "Minions Crash": "??-?? seconds",
+        "Objective Spawn": "180 seconds",
+        "Objective Respawn": "120 seconds (after laning Golems death)",
+        "Rotation Time": "Bot-Top: ?? seconds"
+    },
+    "Infernal Shrines": {
+        "Lava Wave Timings": "14-18-14 seconds\n44-48-44 seconds",
+        "Minions Crash": "27-22-28 seconds",
+        "Objective Spawn": "180 seconds",
+        "Objective Respawn": "180 seconds (after Punisher death)",
+        "Rotation Time": "Mid-Top: 8 seconds\nMid-Bot: 7 seconds"
+    },
+    "Sky Temple": {
+        "Lava Wave Timings": "16-18-14 seconds\n46-48-44 seconds",
+        "Minions Crash": "24-21-29 seconds",
+        "Objective Spawn": "180 seconds",
+        "Objective Respawn": "120 seconds (after Temples end)",
+        "Rotation Time": "Mid-Top: 11 seconds\nMid-Bot: 8 seconds"
+    },
+    "Tomb of the Spider Queen": {
+        "Lava Wave Timings": "16-18-14 seconds\n46-48-44 seconds",
+        "Minions Crash": "24-21-28 seconds",
+        "Objective Spawn": "30 seconds",
+        "Objective Respawn": "15 seconds (after Webweavers death)",
+        "Rotation Time": "Mid-Top: 5 seconds\nMid-Bot: 7 seconds"
+    },
+    "Towers of Doom": {
+        "Lava Wave Timings": "24-24-24 seconds\n54-54-54 seconds",
+        "Minions Crash": "23-17-23 seconds",
+        "Objective Spawn": "180 seconds",
+        "Objective Respawn": "110 seconds (after Altars capture)",
+        "Rotation Time": "Mid-Top: 9 seconds\nMid-Bot: 8 seconds"
+    },
+    "Volskaya Foundry": {
+        "Lava Wave Timings": "16-18-16 seconds\n46-48-46 seconds",
+        "Minions Crash": "25-22-27 seconds",
+        "Objective Spawn": "180 seconds",
+        "Objective Respawn": "180 seconds (after Triglav Protector death)",
+        "Rotation Time": "Mid-Top: 7 seconds\nMid-Bot: 9 seconds\nBot-Mid: 7 seconds"
+    },
+    "Warhead Junction": {
+        "Lava Wave Timings": "14-18-14 seconds\n44-48-44 seconds",
+        "Minions Crash": "28-21-31 seconds",
+        "Objective Spawn": "180 seconds",
+        "Objective Respawn": "185 seconds (after Nukes collection)",
+        "Rotation Time": "Mid-Top: 12 seconds\nMid-Bot: 11 seconds\nTop-Bot: 12 seconds"
+    }
+}
