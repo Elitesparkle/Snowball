@@ -569,7 +569,7 @@ class Draft(commands.Cog):
                 assert command is not None and isinstance(command, discord.SlashCommand)
 
                 event = "Another draft going on."
-                content = f"{event[-1]} in this channel. Use {command.mention} first."
+                content = f"{event[:-1]} in this channel. Use {command.mention} first."
 
                 await context.respond(content=content, ephemeral=True)
                 Misc.send_log(context, event)
@@ -604,7 +604,7 @@ class Draft(commands.Cog):
             players.reverse()
 
         event = "Draft started."
-        content = f"{event[-1]}: {players[0].mention} against {players[1].mention}."
+        content = f"{event[:-1]}: {players[0].mention} against {players[1].mention}."
 
         await context.respond(
             content=content,
