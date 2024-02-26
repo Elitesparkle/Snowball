@@ -36,7 +36,7 @@ class Autocomplete:
     async def guides(context: discord.AutocompleteContext):
         input = Misc.alpha_unidecode_lower(context.value)
 
-        type = context.options["type"]
+        category = context.options["category"]
 
         gameplay_guides = [
             "Debug Mode Guide",
@@ -76,15 +76,15 @@ class Autocomplete:
             external_tips = json.load(file)
         tips = list(external_tips.keys())
 
-        if type == "Gameplay":
+        if category == "Gameplay":
             guides = gameplay_guides
-        elif type == "Map":
+        elif category == "Map":
             guides = map_guides
-        elif type == "Tier List":
+        elif category == "Tier List":
             guides = tierlists
-        elif type == "Tips of the Storm":
+        elif category == "Tips of the Storm":
             guides = tips
-        elif type == "Reddit":
+        elif category == "Reddit":
             guides = reddit_guides
         else:
             guides = gameplay_guides + map_guides + tierlists + tips

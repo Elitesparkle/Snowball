@@ -65,7 +65,11 @@ class Timing(commands.Cog):
                 color=discord.Color.blue(),
             )
 
-            with open("./data/misc/maps.json", "r", encoding="utf-8") as file:
+            with open(
+                "./data/misc/maps.json",
+                "r",
+                encoding="utf-8",
+            ) as file:
                 data = json.load(file)
 
             maps = await Map.catalog(map[5:-1])

@@ -174,6 +174,8 @@ class Quiz(commands.Cog):
 
             tier = self.tiers[secrets.randbelow(7)]
             talent = random.choice(data["talents"][str(tier)])
+            assert isinstance(talent, dict)
+
             name = talent.get("name")
             content = self.questions[question_id].format(talent=name)
 
@@ -197,8 +199,12 @@ class Quiz(commands.Cog):
                     encoding="utf-8",
                 ) as file:
                     data = json.load(file)
+                assert isinstance(data, dict)
 
-                for tier in data.get("talents"):
+                talents = data.get("talents")
+                assert talents is not None
+
+                for tier in talents:
                     for talent in tier:
                         if talent == name:
                             break
@@ -229,9 +235,12 @@ class Quiz(commands.Cog):
                     encoding="utf-8",
                 ) as file:
                     data = json.load(file)
+                assert isinstance(data, dict)
 
                 hero_code = data.get("hyperlinkId")
                 ability = random.choice(data["abilities"][hero_code])
+
+                assert isinstance(ability, dict)
                 ability_name = ability.get("name")
                 cooldown = ability.get("cooldown")
 

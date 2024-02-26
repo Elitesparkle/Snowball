@@ -1249,9 +1249,11 @@ class Draft(commands.Cog):
         )
 
         try:
-            content = (
-                f"{players[previous].mention}, use {command.mention} to {move} a Hero."
-            )
+            previous_player = players[previous]
+            assert isinstance(previous_player, discord.User)
+
+            previous_player = previous_player.mention
+            content = f"{previous_player}, use {command.mention} to {move} a Hero."
             await context.respond(
                 content,
                 embed=embed,

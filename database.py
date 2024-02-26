@@ -213,7 +213,9 @@ class Database:
                         "r",
                         encoding="utf-8",
                     ) as file:
-                        data = json.load(file)
+                        data: dict = json.load(file)
+
+                    assert isinstance(data, dict)
                     id = data.get("id")
                     name = data.get("name")
                     role = data.get("expandedRole")
@@ -341,7 +343,7 @@ class Database:
         # To add a period at the end when missing.
         if not (description.endswith(".") or description.endswith("!")):
             description += "."
-            
+
         return description
 
     @staticmethod
@@ -547,13 +549,18 @@ class Database:
                     resource = None
 
                     # Replace generic terms to handle Talents with the same ID across different Heroes.
-                    code = (
-                        talent.get("tooltipId")
-                        .replace("Generic", hero_code)
-                        .replace("Nexus", f"{hero_code}Nexus")
+                    assert isinstance(talent, dict)
+                    talent_id = talent.get("tooltipId")
+
+                    assert talent_id is not None and isinstance(talent_id, str)
+                    code = talent_id.replace("Generic", hero_code).replace(
+                        "Nexus", f"{hero_code}Nexus"
                     )
                     name = talent.get("name")
+                    assert name is not None
+
                     description = talent.get("description")
+                    assert description is not None
 
                     if level == 20 and code in [
                         "AlarakCounterStrike2ndHeroic",
@@ -566,6 +573,8 @@ class Database:
                             )
 
                         for ability in data["abilities"]["Alarak"]:
+                            assert isinstance(ability, dict)
+
                             title = ability.get("name")
                             if name == title:
                                 cost = ability.get("manaCost")
@@ -580,7 +589,9 @@ class Database:
                     description = Database.fix_description(description, hero, name)
 
                     try:
-                        cooldown = float(talent.get("cooldown"))
+                        cooldown = talent.get("cooldown")
+                        assert cooldown is not None
+                        cooldown = float(cooldown)
                     except TypeError:
                         expressions = [
                             r"This effect has a(.+?)second cooldown.",
@@ -610,13 +621,21 @@ class Database:
                             else:
                                 cooldown = None
 
-                    type = talent.get("type").capitalize()
+                    type = talent.get("type")
+                    assert isinstance(type, str)
+                    type = type.capitalize()
+
                     hotkey = talent.get("hotkey")
 
                     if level in [4, 10]:
-                        if type == "Heroic" and hero not in ["Deathwing", "Tracer"]:
+                        if type == "Heroic" and hero not in [
+                            "Deathwing",
+                            "Tracer",
+                        ]:
                             hotkey = "R"
                             for ability in data["abilities"][hero_code]:
+                                assert isinstance(ability, dict)
+
                                 title = ability.get("name")
                                 if name == title:
                                     cost = ability.get("manaCost")
@@ -630,7 +649,10 @@ class Database:
 
                     if hotkey is None:
                         if hero == "The Lost Vikings":
-                            if name in ["Spin To Win!", "Norse Force!"]:
+                            if name in [
+                                "Spin To Win!",
+                                "Norse Force!",
+                            ]:
                                 hotkey = "Q"
                             elif name == "Jump!":
                                 hotkey = "W"

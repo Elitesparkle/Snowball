@@ -34,7 +34,7 @@ class Guide(commands.Cog):
         description="Get a link to a guide.",
     )
     @option(
-        "type",
+        "category",
         description="Select a category.",
         autocomplete=Autocomplete.guide_types,
     )
@@ -46,12 +46,12 @@ class Guide(commands.Cog):
     async def guide(
         self,
         context: discord.ApplicationContext,
-        type: str,
+        category: str,
         title: str,
     ) -> None:
         thumbnail_url = "https://mir-s3-cdn-cf.behance.net/project_modules/fs/4cf28827382215.563643d0ae125.jpg"
 
-        if type == "Tips of the Storm":
+        if category == "Tips of the Storm":
             author = "Elitesparkle"
 
             with open(
@@ -61,7 +61,7 @@ class Guide(commands.Cog):
             ) as file:
                 guide = json.load(file)
             description, link = guide[title]
-        elif type == "Reddit":
+        elif category == "Reddit":
             author = "Elitesparkle"
 
             proficiency = title.split(" ")[0].lower()
@@ -84,13 +84,13 @@ class Guide(commands.Cog):
                 code = code.replace(remove, "")
             code = code.replace(" ", "-").replace("'", "").lower()
 
-            if type == "Gameplay":
+            if category == "Gameplay":
                 link = f"https://www.icy-veins.com/heroes/{code}"
             else:
-                if type == "Map":
+                if category == "Map":
                     link = f"https://www.icy-veins.com/heroes/{code}-introduction"
                     thumbnail_url = f"https://static.icy-veins.com/images/heroes/background-images/map-{code}.jpg"
-                elif type == "Tier List":
+                elif category == "Tier List":
                     link = f"https://www.icy-veins.com/heroes/heroes-of-the-storm-{code}-tier-list"
 
                     if title.replace(" Tier List", "") in await Map.catalog():
@@ -102,7 +102,7 @@ class Guide(commands.Cog):
                 markup=response.text,
                 features="html.parser",
             )
-            metas = soup.find_all("meta")
+            metas: list[BeautifulSoup] = soup.find_all("meta")
             descriptions = [
                 meta.attrs["content"]
                 for meta in metas
