@@ -4,6 +4,7 @@ import discord
 from discord import option
 from discord.ext import commands
 
+from main import MyBot
 from tools.autocomplete import Autocomplete
 from tools.map import Map
 from tools.misc import Misc
@@ -11,15 +12,25 @@ from tools.misc import Misc
 
 class Timing(commands.Cog):
 
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
+    def __init__(
+        self,
+        bot: MyBot,
+    ) -> None:
+        self.bot: MyBot = bot
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
         print("Timing extension loaded.")
 
-    @commands.slash_command(name="timings", description="View timings for Maps.")
-    @option("map", description="Select a Map.", autocomplete=Autocomplete.maps)
+    @commands.slash_command(
+        name="timings",
+        description="View timings for Maps.",
+    )
+    @option(
+        "map",
+        description="Select a Map.",
+        autocomplete=Autocomplete.maps,
+    )
     @option(
         "timing",
         description="Select the timing you are looking for.",
@@ -33,7 +44,11 @@ class Timing(commands.Cog):
         default="Minutes",
     )
     async def timings(
-        self, context: discord.ApplicationContext, map: str, timing: str, format: str
+        self,
+        context: discord.ApplicationContext,
+        map: str,
+        timing: str,
+        format: str,
     ) -> None:
         if "All" in map:
             if timing == "Lava Wave Timings":
@@ -45,7 +60,9 @@ class Timing(commands.Cog):
                     timing = "Objective Respawn"
 
             embed = discord.Embed(
-                title=timing, description=description, color=discord.Color.blue()
+                title=timing,
+                description=description,
+                color=discord.Color.blue(),
             )
 
             with open("./data/misc/maps.json", "r", encoding="utf-8") as file:
@@ -59,7 +76,11 @@ class Timing(commands.Cog):
                     value = data[map][timing]
 
                 if not "?" in value:
-                    embed.add_field(name=map, value=value, inline=False)
+                    embed.add_field(
+                        name=map,
+                        value=value,
+                        inline=False,
+                    )
 
             await context.respond(embed=embed)
         else:
@@ -71,59 +92,94 @@ class Timing(commands.Cog):
                 color=discord.Color.blue(),
             )
 
-            with open("./data/misc/maps.json", "r", encoding="utf-8") as file:
+            with open(
+                "./data/misc/maps.json",
+                "r",
+                encoding="utf-8",
+            ) as file:
                 data = json.load(file)
 
-            if timing in ["All Timings", "Objective Spawn", "Objective Timings"]:
+            if timing in [
+                "All Timings",
+                "Objective Spawn",
+                "Objective Timings",
+            ]:
 
                 try:
                     value = Map.format_timing(data[map]["Objective Spawn"], format)
                 except KeyError:
                     event = "Map not found."
+                    content = f"{event} Select an option from the list."
+
+                    await context.respond(content, ephemeral=True)
                     Misc.send_log(context, event)
 
-                    content = f"{event} Select an option from the list."
-                    await context.respond(content, ephemeral=True)
                     return
 
-                embed.add_field(name="Objective Spawn", value=value, inline=False)
+                embed.add_field(
+                    name="Objective Spawn",
+                    value=value,
+                    inline=False,
+                )
 
-            if timing in ["All Timings", "Objective Respawn", "Objective Timings"]:
+            if timing in [
+                "All Timings",
+                "Objective Respawn",
+                "Objective Timings",
+            ]:
                 value = Map.format_timing(data[map]["Objective Respawn"], format)
+                embed.add_field(
+                    name="Objective Respawn",
+                    value=value,
+                    inline=False,
+                )
 
-                embed.add_field(name="Objective Respawn", value=value, inline=False)
-
-            if timing in ["All Timings", "Lava Wave Timings", "Offlane Timings"]:
+            if timing in [
+                "All Timings",
+                "Lava Wave Timings",
+                "Offlane Timings",
+            ]:
                 value = data[map]["Lava Wave Timings"]
-
                 embed.add_field(
                     name="Lava Wave Timings",
                     value=f"{value}\n+1 second every 4 minutes",
                     inline=False,
                 )
 
-            if timing in ["All Timings", "Minions Crash", "Offlane Timings"]:
+            if timing in [
+                "All Timings",
+                "Minions Crash",
+                "Offlane Timings",
+            ]:
                 value = data[map]["Minions Crash"]
+                embed.add_field(
+                    name="Minions Crash",
+                    value=value,
+                    inline=False,
+                )
 
-                embed.add_field(name="Minions Crash", value=value, inline=False)
-
-            if timing in ["All Timings", "Rotation Time", "Offlane Timings"]:
+            if timing in [
+                "All Timings",
+                "Rotation Time",
+                "Offlane Timings",
+            ]:
                 value = data[map]["Rotation Time"]
-
-                embed.add_field(name="Rotation Time", value=value, inline=False)
+                embed.add_field(
+                    name="Rotation Time",
+                    value=value,
+                    inline=False,
+                )
 
             map_code = map.lower().replace(" ", "-").replace("'", "")
             filename = f"{map_code}-map-preview.png"
             path = f"./images/minimaps/{filename}"
             file = discord.File(path, filename)
-
             embed.set_image(url=f"attachment://{filename}")
-
             await context.respond(file=file, embed=embed)
 
         event = "Timings shared."
         Misc.send_log(context, event)
 
 
-def setup(bot) -> None:
+def setup(bot: MyBot) -> None:
     bot.add_cog(Timing(bot))

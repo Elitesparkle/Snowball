@@ -20,7 +20,10 @@ from tools.misc import Misc
 
 class Draft(commands.Cog):
 
-    draft = discord.SlashCommandGroup(name="draft", description="Draft simulation.")
+    draft = discord.SlashCommandGroup(
+        name="draft",
+        description="Draft simulation.",
+    )
 
     # Channels that are currently busy executing another draft command.
     busy_channels = []
@@ -30,24 +33,39 @@ class Draft(commands.Cog):
         0,
         1,
         0,
-        1,  # Early Bans
-        0,
-        1,
         1,
         0,
-        0,  # Early Picks
-        1,
-        0,  # Late Bans
         1,
         1,
         0,
         0,
-        1,  # Late Picks
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
     ]
 
     # Values used to check when it's turn to ban.
-    next_bans = [0, 1, 2, 3, 4, 10, 11]  # Early Bans  # Late Bans
-    previous_bans = [0, 1, 2, 3, 9, 10]  # Early Bans  # Late Bans
+    next_bans = [
+        0,
+        1,
+        2,
+        3,
+        4,
+        10,
+        11,
+    ]
+    previous_bans = [
+        0,
+        1,
+        2,
+        3,
+        9,
+        10,
+    ]
 
     # Coordinates used for placing Heroes in draft slots.
     layouts = {
@@ -55,41 +73,41 @@ class Draft(commands.Cog):
             (120, 50),
             (120, 520),
             (260, 50),
-            (260, 520),  # Early Bans
+            (260, 520),
             (50, 190),
             (50, 380),
             (190, 380),
             (190, 190),
-            (330, 190),  # Early Picks
+            (330, 190),
             (540, 520),
-            (540, 50),  # Late Bans
+            (540, 50),
             (330, 380),
             (470, 380),
             (470, 190),
             (610, 190),
-            (610, 380),  # Late Picks
+            (610, 380),
         ],
         "Vertical": [
             (120, 50),
             (450, 50),
             (120, 190),
-            (450, 190),  # Early Bans
+            (450, 190),
             (120, 330),
             (380, 330),
             (520, 330),
             (50, 470),
-            (190, 470),  # Early Picks
+            (190, 470),
             (450, 470),
-            (120, 610),  # Late Bans
+            (120, 610),
             (380, 610),
             (520, 610),
             (50, 750),
             (190, 750),
-            (450, 750),  # Late Picks
+            (450, 750),
         ],
     }
 
-    countdowns = [40, 24]  # First Ban  # Other Turns
+    countdowns = [40, 24]  # Countdowns for first ban and other turns.
 
     # Size values for Hero portraits.
     portrait_size = (90, 90)
@@ -112,7 +130,6 @@ class Draft(commands.Cog):
         else:
             Draft.busy_channels.append(channel_id)
             ready = True
-
         return ready
 
     @staticmethod
@@ -123,13 +140,38 @@ class Draft(commands.Cog):
             event = f"Channel {channel_id} already available."
             print(event)
 
+    @staticmethod
+    async def get_drafting_players(
+        bot: MyBot,
+        channel_id: int | None,
+    ) -> list[discord.User]:
+        query = """
+            SELECT UserID
+            FROM Teams
+            WHERE ChannelID = ?
+        """
+        values = (channel_id,)
+        async with database_connection.cursor() as cursor:
+            await cursor.execute(query, values)
+            results = await cursor.fetchall()
+
+        drafting_players = [
+            await bot.fetch_user(drafting_player)
+            for result in results
+            for drafting_player in result
+        ]
+        return drafting_players
+
     @commands.Cog.listener()
     async def on_ready(self) -> None:
         self.bot.add_view(self.CoinView(self.bot))
         print("Draft extension loaded.")
 
     class CoinView(discord.ui.View):
-        def __init__(self, bot) -> None:
+        def __init__(
+            self,
+            bot: MyBot,
+        ) -> None:
             self.bot: MyBot = bot
             super().__init__(timeout=None)
 
@@ -138,13 +180,23 @@ class Draft(commands.Cog):
             custom_id="Draft¦Pick",
             style=discord.ButtonStyle.blurple,
         )
-        async def first_pick(self, button, interaction) -> None:
+        async def first_pick(
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
+        ) -> None:
             await self.on_interaction(button, interaction)
 
         @discord.ui.button(
-            label="Map Choice", custom_id="Draft¦Map", style=discord.ButtonStyle.blurple
+            label="Map Choice",
+            custom_id="Draft¦Map",
+            style=discord.ButtonStyle.blurple,
         )
-        async def map_choice(self, button, interaction) -> None:
+        async def map_choice(
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
+        ) -> None:
             await self.on_interaction(button, interaction)
 
         @discord.ui.button(
@@ -152,43 +204,35 @@ class Draft(commands.Cog):
             custom_id="Draft¦Ask",
             style=discord.ButtonStyle.blurple,
         )
-        async def ask_opponent(self, button, interaction) -> None:
+        async def ask_opponent(
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
+        ) -> None:
             button.disabled = True
             await self.on_interaction(button, interaction)
 
         async def on_interaction(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
         ) -> None:
             channel_id = interaction.channel_id
             button_id = str(button.custom_id)
-
-            query = """
-                SELECT UserID
-                FROM Teams
-                WHERE ChannelID = ?
-            """
-            values = (interaction.channel_id,)
-            async with database_connection.cursor() as cursor:
-                await cursor.execute(query, values)
-                results = await cursor.fetchall()
-
-            # Extract the two battling players.
-            players = [
-                await self.bot.fetch_user(player)
-                for result in results
-                for player in result
-            ]
+            response = interaction.response
+            players = await Draft.get_drafting_players(self.bot, channel_id)
 
             try:
                 your_turn = interaction.user == players[0]
             except IndexError:
-                event = "Draft corrupted."
-                Misc.send_log(interaction, event)
-
                 command = self.bot.get_application_command("draft start")
                 assert command is not None and isinstance(command, discord.SlashCommand)
+
+                event = "Draft corrupted."
                 content = f"{event} Use {command.mention} to begin a new draft."
-                await interaction.response.send_message(content, ephemeral=True)
+
+                await response.send_message(content, ephemeral=True)
+                Misc.send_log(interaction, event)
 
                 Draft.ready_up(interaction.channel_id)
                 return
@@ -207,10 +251,9 @@ class Draft(commands.Cog):
                     if interaction.message is not None:
                         await interaction.message.delete()
 
-                    content = f"{players[0].mention}, your opponent passed. What do you prefer?"
-                    interaction = await interaction.response.send_message(
-                        content, view=self
-                    )
+                    player = players[0].mention
+                    content = f"{player}, your opponent passed. What do you prefer?"
+                    interaction = await response.send_message(content, view=self)
                 else:
                     if "Pick" in button_id:
                         event = "First pick."
@@ -229,20 +272,23 @@ class Draft(commands.Cog):
                     assert command is not None and isinstance(
                         command, discord.SlashCommand
                     )
-                    content = (
-                        f"{players[1].mention}, use {command.mention} to select a Map."
-                    )
-                    interaction = await interaction.response.send_message(content)
 
-                Misc.send_log(interaction, event)
+                    player = players[1].mention
+                    content = f"{player}, use {command.mention} to select a Map."
+                    interaction = await response.send_message(content)
+
                 message = await interaction.original_response()
+                Misc.send_log(interaction, event)
 
                 query = """
                     UPDATE Drafts
                     SET MessageID = ?
                     WHERE ChannelID = ?
                 """
-                values = (message.id, channel_id)
+                values = (
+                    message.id,
+                    channel_id,
+                )
                 async with database_connection.cursor() as cursor:
                     await cursor.execute(query, values)
 
@@ -262,7 +308,10 @@ class Draft(commands.Cog):
                         )
                         VALUES (?, ?)
                     """
-                    values = (player.id, channel_id)
+                    values = (
+                        player.id,
+                        channel_id,
+                    )
                     async with database_connection.cursor() as cursor:
                         await cursor.execute(query, values)
 
@@ -271,7 +320,10 @@ class Draft(commands.Cog):
 
     @staticmethod
     def craft_embed(
-        color_id: int, map: str, players: list, channel_id: int
+        color_id: int,
+        map: str,
+        players: list,
+        channel_id: int,
     ) -> discord.Embed:
         # https://gist.github.com/Soheab/d9cf3f40e34037cfa544f464fc7d919e
         colors = [
@@ -282,17 +334,28 @@ class Draft(commands.Cog):
         ]
 
         title = "Draft Simulation"
-        embed = discord.Embed(title=title, color=colors[color_id], description=map)
-        embed.add_field(
-            name="Blue Team", value=players[0].name.capitalize(), inline=True
+        embed = discord.Embed(
+            title=title,
+            color=colors[color_id],
+            description=map,
         )
         embed.add_field(
-            name="Red Team", value=players[1].name.capitalize(), inline=True
+            name="Blue Team",
+            value=players[0].name.capitalize(),
+            inline=True,
+        )
+        embed.add_field(
+            name="Red Team",
+            value=players[1].name.capitalize(),
+            inline=True,
         )
         embed.set_image(url=f"attachment://{channel_id}.png")
         return embed
 
-    def delete_image(self, path: str) -> None:
+    def delete_image(
+        self,
+        path: str,
+    ) -> None:
         try:
             os.remove(path)
         except FileNotFoundError:
@@ -301,15 +364,23 @@ class Draft(commands.Cog):
         except OSError:
             event = f"File {path} not accessible."
             print(event)
-        return
 
-    async def delete_message(self, channel_id: int | None, message_id: int) -> None:
+    async def delete_message(
+        self,
+        channel_id: int | None,
+        message_id: int,
+    ) -> None:
         assert channel_id is not None
         channel = self.bot.get_channel(channel_id)
         try:
             message = [discord.Object(id=message_id)]
             if isinstance(
-                channel, (discord.TextChannel, discord.Thread, discord.VoiceChannel)
+                channel,
+                (
+                    discord.TextChannel,
+                    discord.Thread,
+                    discord.VoiceChannel,
+                ),
             ):
                 await channel.delete_messages(message)
         except AttributeError:
@@ -351,7 +422,10 @@ class Draft(commands.Cog):
             FROM Drafts
             WHERE ? > Time + ?
         """
-        values = (time.time(), draft_settings.expiration_time)
+        values = (
+            time.time(),
+            draft_settings.expiration_time,
+        )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
             results = await cursor.fetchall()
@@ -365,9 +439,7 @@ class Draft(commands.Cog):
             if slot < 1:
                 await self.delete_message(channel_id, message_id)
 
-                days = (
-                    draft_settings.expiration_time // 86400
-                )  # 1 day = 60 seconds * 60 minutes * 24 hours = 86400 seconds
+                days = draft_settings.expiration_time // 86400  # 1 day
                 content = f"Draft expired after {days} days of inactivity."
 
                 if draft_settings.expiration_notification and slot < 16:
@@ -376,10 +448,17 @@ class Draft(commands.Cog):
                         channel = self.bot.get_channel(channel_id)
                         if isinstance(
                             channel,
-                            (discord.TextChannel, discord.Thread, discord.VoiceChannel),
+                            (
+                                discord.TextChannel,
+                                discord.Thread,
+                                discord.VoiceChannel,
+                            ),
                         ):
                             await channel.send(content)
-                    except (AttributeError, discord.errors.Forbidden):
+                    except (
+                        AttributeError,
+                        discord.errors.Forbidden,
+                    ):
                         event = f"Channel {channel_id} not accessible."
                         print(event)
 
@@ -417,7 +496,10 @@ class Draft(commands.Cog):
                 icon_url = "https://www.iconsdb.com/icons/preview/orange/clock-xxl.png"
 
             if amount > 0:
-                embed.set_footer(text=f"{amount} seconds", icon_url=icon_url)
+                embed.set_footer(
+                    text=f"{amount} seconds",
+                    icon_url=icon_url,
+                )
             else:
                 embed.set_footer(text=discord.Embed.Empty)
 
@@ -435,7 +517,10 @@ class Draft(commands.Cog):
 
     layout_choices = list(layouts.keys())
 
-    @draft.command(name="start", description="Start a draft simulation.")
+    @draft.command(
+        name="start",
+        description="Start a draft simulation.",
+    )
     @option(
         "opponent",
         discord.SlashCommandOptionType.user,
@@ -445,10 +530,17 @@ class Draft(commands.Cog):
         "coin",
         description="Select who should win the coin toss.",
         default="Random",
-        choices=["Me", "Opponent", "Random"],
+        choices=[
+            "Me",
+            "Opponent",
+            "Random",
+        ],
     )
     async def draft_start(
-        self, context: discord.ApplicationContext, opponent: discord.User, coin: str
+        self,
+        context: discord.ApplicationContext,
+        opponent: discord.User,
+        coin: str,
     ) -> None:
         ready = Draft.is_ready(context.channel_id)
         if not ready:
@@ -473,13 +565,14 @@ class Draft(commands.Cog):
             slot = results[0]
             # Check if there are picks remaining.
             if slot < 16:
-                event = "Another draft going on."
-                Misc.send_log(context, event)
-
                 command = self.bot.get_application_command("draft quit")
                 assert command is not None and isinstance(command, discord.SlashCommand)
-                content = f"Another draft going on in this channel. Use {command.mention} to abort it."
-                await context.respond(content, ephemeral=True)
+
+                event = "Another draft going on."
+                content = f"{event[-1]} in this channel. Use {command.mention} first."
+
+                await context.respond(content=content, ephemeral=True)
+                Misc.send_log(context, event)
 
                 Draft.ready_up(context.channel_id)
                 return
@@ -490,10 +583,9 @@ class Draft(commands.Cog):
         is_allowed = context.author.id in draft_settings.self_drafters
         if self_target and not is_owner and not is_allowed:
             event = "You can't draft against yourself."
-            Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
+            await context.respond(content=event, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
@@ -507,20 +599,23 @@ class Draft(commands.Cog):
             result = "won"
             random = secrets.randbelow(2)
 
-        players = (
+        players: list[discord.Member | discord.User] = (
             [opponent, context.author] if random == 0 else [context.author, opponent]
         )
 
         event = "Draft started."
+        content = f"{event[-1]}: {players[0].mention} against {players[1].mention}."
+
+        await context.respond(
+            content=content,
+            allowed_mentions=discord.AllowedMentions.none(),
+        )
         Misc.send_log(context, event)
 
-        content = f"Draft started: {players[0].mention} against {players[1].mention}."
-        await context.respond(content, allowed_mentions=discord.AllowedMentions.none())
-
-        content = (
-            f"{players[0].mention}, you {result} the coin toss. What do you prefer?"
-        )
+        player = players[0].mention
+        content = f"{player}, you {result} the coin toss. What do you prefer?"
         view = self.CoinView(self.bot)
+
         message = await context.respond(content, view=view)
 
         query = """
@@ -534,7 +629,14 @@ class Draft(commands.Cog):
             )
             VALUES (?, ?, ?, ?, ?, ?)
         """
-        values = (context.channel_id, message.id, None, None, None, time.time())
+        values = (
+            context.channel_id,
+            message.id,
+            None,
+            None,
+            None,
+            time.time(),
+        )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
 
@@ -546,7 +648,10 @@ class Draft(commands.Cog):
                 )
                 VALUES (?, ?)
             """
-            values = (player.id, context.channel_id)
+            values = (
+                player.id,
+                context.channel_id,
+            )
             async with database_connection.cursor() as cursor:
                 await cursor.execute(query, values)
 
@@ -563,9 +668,14 @@ class Draft(commands.Cog):
     del loop
 
     @draft.command(
-        name="map", description="Select a Map for the current draft simulation."
+        name="map",
+        description="Select a Map for the current draft simulation.",
     )
-    @option("map", description="Select a Map.", choices=map_choices)
+    @option(
+        "map",
+        description="Select a Map.",
+        choices=map_choices,
+    )
     @option(
         "layout",
         description="Select a layout, else use the default layout for this server.",
@@ -573,7 +683,10 @@ class Draft(commands.Cog):
         choices=layout_choices,
     )
     async def draft_map(
-        self, context: discord.ApplicationContext, map: str, layout: str
+        self,
+        context: discord.ApplicationContext,
+        map: str,
+        layout: str,
     ) -> None:
         ready = Draft.is_ready(context.channel_id)
         if not ready:
@@ -592,13 +705,14 @@ class Draft(commands.Cog):
 
         # Check if another draft is going on.
         if results is None:
-            event = "No draft going on."
-            Misc.send_log(context, event)
-
             command = self.bot.get_application_command("draft start")
             assert command is not None and isinstance(command, discord.SlashCommand)
+
+            event = "No draft going on."
             content = f"{event} Use {command.mention} to begin a new draft."
-            await context.respond(content, ephemeral=True)
+
+            await context.respond(content=content, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
@@ -606,13 +720,14 @@ class Draft(commands.Cog):
         message_id, image = results
 
         if image is not None:
-            event = "Map already selected."
-            Misc.send_log(context, event)
-
             command = self.bot.get_application_command("draft hero")
             assert command is not None and isinstance(command, discord.SlashCommand)
-            content = f"{event} Use {command.mention} to continue the draft."
+
+            event = "Map already selected."
+            content = content = f"{event} Use {command.mention} to continue the draft."
+
             await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
@@ -645,20 +760,7 @@ class Draft(commands.Cog):
             path = f"./draft/{context.channel_id}.png"
             image.save(path)
 
-        query = """
-            SELECT UserID
-            FROM Teams
-            WHERE ChannelID = ?
-        """
-        values = (context.channel_id,)
-        async with database_connection.cursor() as cursor:
-            await cursor.execute(query, values)
-            results = await cursor.fetchall()
-
-        # Extract the two battling players.
-        players = [
-            await self.bot.fetch_user(player) for result in results for player in result
-        ]
+        players = await Draft.get_drafting_players(self.bot, context.channel_id)
 
         # Check whose turn is.
         map_chooser = context.author == players[0]
@@ -666,35 +768,45 @@ class Draft(commands.Cog):
         is_allowed = context.author.id in draft_settings.self_drafters
         if map_chooser and not is_owner and not is_allowed:
             event = "Not your turn."
-            Misc.send_log(context, event)
-
             content = f"No, it's {players[1].mention}'s turn!"
+
             await context.respond(
-                content, allowed_mentions=discord.AllowedMentions.none(), ephemeral=True
+                content,
+                ephemeral=True,
+                allowed_mentions=discord.AllowedMentions.none(),
             )
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
 
         filename = f"{context.channel_id}.png"
         file = discord.File(path, filename)
+
         assert context.channel_id is not None
         embed = Draft.craft_embed(
-            color_id=2, map=map, players=players, channel_id=context.channel_id
+            color_id=2,
+            map=map,
+            players=players,
+            channel_id=context.channel_id,
         )
 
         command = self.bot.get_application_command("draft hero")
         assert command is not None and isinstance(command, discord.SlashCommand)
-        content = f"{players[0].mention}, use {command.mention} to ban a Hero."
 
         try:
-            interaction = await context.respond(file=file, embed=embed, content=content)
+            content = f"{players[0].mention}, use {command.mention} to ban a Hero."
+            interaction = await context.respond(
+                content,
+                embed=embed,
+                file=file,
+            )
         except discord.errors.DiscordServerError:
             event = "Discord error."
-            Misc.send_log(context, event)
-
             content = f"{event} Try again later."
+
             await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
@@ -719,7 +831,13 @@ class Draft(commands.Cog):
                 Map = ?
             WHERE ChannelID = ?
         """
-        values = (message.id, image, layout, map, context.channel_id)
+        values = (
+            message.id,
+            image,
+            layout,
+            map,
+            context.channel_id,
+        )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
 
@@ -728,10 +846,19 @@ class Draft(commands.Cog):
         await self.draft_countdown(context, message, self.countdowns[0])
 
     @draft.command(
-        name="hero", description="Pick or ban a Hero for the current draft simulation."
+        name="hero",
+        description="Pick or ban a Hero for the current draft simulation.",
     )
-    @option("hero", description="Select a Hero.", autocomplete=Autocomplete.heroes)
-    async def draft_hero(self, context: discord.ApplicationContext, hero: str) -> None:
+    @option(
+        "hero",
+        description="Select a Hero.",
+        autocomplete=Autocomplete.heroes,
+    )
+    async def draft_hero(
+        self,
+        context: discord.ApplicationContext,
+        hero: str,
+    ) -> None:
         ready = Draft.is_ready(context.channel_id)
         if not ready:
             return
@@ -751,13 +878,14 @@ class Draft(commands.Cog):
 
         # Check if another draft is going on.
         if results is None:
-            event = "No draft going on."
-            Misc.send_log(context, event)
-
             command = self.bot.get_application_command("draft start")
             assert command is not None and isinstance(command, discord.SlashCommand)
+
+            event = "No draft going on."
             content = f"{event} Use {command.mention} to begin a new draft."
+
             await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
@@ -767,9 +895,9 @@ class Draft(commands.Cog):
         # Check if another draft is going on.
         if map is None:
             event = "Map missing."
-            Misc.send_log(context, event)
-
             content = "Map not selected yet."
+
+            Misc.send_log(context, event)
             await context.respond(content, ephemeral=True)
 
             Draft.ready_up(context.channel_id)
@@ -793,31 +921,19 @@ class Draft(commands.Cog):
 
         # Check if there are picks remaining.
         if slot == 16:
-            event = "No picks remaining."
-            Misc.send_log(context, event)
-
             command = self.bot.get_application_command("draft start")
             assert command is not None and isinstance(command, discord.SlashCommand)
+
+            event = "No picks remaining."
             content = f"{event} Use {command.mention} to begin a new draft."
+
             await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
 
-        query = """
-            SELECT UserID
-            FROM Teams
-            WHERE ChannelID = ?
-        """
-        values = (context.channel_id,)
-        async with database_connection.cursor() as cursor:
-            await cursor.execute(query, values)
-            results = await cursor.fetchall()
-
-        # Extract the two battling players.
-        players = [
-            await self.bot.fetch_user(player) for result in results for player in result
-        ]
+        players = await Draft.get_drafting_players(self.bot, context.channel_id)
 
         # Check whose turn is.
         next = self.turns[slot]
@@ -826,12 +942,14 @@ class Draft(commands.Cog):
         is_allowed = context.author.id in draft_settings.self_drafters
         if self_target and not is_owner and not is_allowed:
             event = "Not your turn."
-            Misc.send_log(context, event)
-
             content = f"No, it's {players[next].mention}'s turn!"
+
             await context.respond(
-                content, allowed_mentions=discord.AllowedMentions.none(), ephemeral=True
+                content,
+                ephemeral=True,
+                allowed_mentions=discord.AllowedMentions.none(),
             )
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
@@ -840,10 +958,9 @@ class Draft(commands.Cog):
         hero = await Hero.fix_name(hero)
         if hero is None:
             event = "Hero not valid."
-            Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
+            await context.respond(content=event, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
@@ -856,10 +973,10 @@ class Draft(commands.Cog):
             verb = "have" if hero == "The Lost Vikings" else "has"
 
             event = "Hero not available."
-            Misc.send_log(context, event)
-
             content = f"{hero} {verb} already been {move} before."
+
             await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
@@ -885,17 +1002,20 @@ class Draft(commands.Cog):
         verb = "have" if hero == "The Lost Vikings" else "has"
 
         event = f"Turn {slot + 1}: {hero} {move}."
-        Misc.send_log(context, event)
 
         if draft_settings.actions_history:
-            content = event
-            await context.respond(content)
+            await context.respond(content=event)
+        Misc.send_log(context, event)
 
         if slot < 15:
             next = self.turns[slot + 1]
-            move, color_id = (
-                ("ban", 2) if slot + 1 in self.previous_bans else ("pick", next)
-            )
+
+            if slot + 1 in self.previous_bans:
+                move = "ban"
+                color_id = 2
+            else:
+                move = "pick"
+                color_id = next
 
             portrait = Image.open("./draft/slots/next.png")
             portrait = portrait.resize(self.portrait_size)
@@ -903,9 +1023,10 @@ class Draft(commands.Cog):
 
             command = self.bot.get_application_command("draft hero")
             assert command is not None and isinstance(command, discord.SlashCommand)
-            content = (
-                f"{players[next].mention}, use {command.mention} to {move} a Hero."
-            )
+
+            next_player = players[next].mention
+            content = f"{next_player}, use {command.mention} to {move} a Hero."
+
             allowed_mentions = discord.AllowedMentions.all()
         else:
             color_id = 3
@@ -916,9 +1037,13 @@ class Draft(commands.Cog):
 
         filename = f"{context.channel_id}.png"
         file = discord.File(path, filename)
+
         assert context.channel_id is not None
         embed = Draft.craft_embed(
-            color_id=color_id, map=map, players=players, channel_id=context.channel_id
+            color_id=color_id,
+            map=map,
+            players=players,
+            channel_id=context.channel_id,
         )
 
         try:
@@ -930,10 +1055,9 @@ class Draft(commands.Cog):
             )
         except discord.errors.DiscordServerError:
             event = "Discord error."
-            Misc.send_log(context, event)
-
             content = f"{event} Try again later."
             await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
             return
 
         message = await context.interaction.original_response()
@@ -957,7 +1081,12 @@ class Draft(commands.Cog):
                 Time = ?
             WHERE ChannelID = ?
         """
-        values = (message.id, image, time.time(), context.channel_id)
+        values = (
+            message.id,
+            image,
+            time.time(),
+            context.channel_id,
+        )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
 
@@ -970,7 +1099,10 @@ class Draft(commands.Cog):
             )
             VALUES (?, ?)
         """
-        values = (context.channel_id, hero_id)
+        values = (
+            context.channel_id,
+            hero_id,
+        )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
 
@@ -983,7 +1115,10 @@ class Draft(commands.Cog):
         name="undo",
         description="Undo your previous move for the current draft simulation.",
     )
-    async def draft_undo(self, context: discord.ApplicationContext) -> None:
+    async def draft_undo(
+        self,
+        context: discord.ApplicationContext,
+    ) -> None:
         ready = Draft.is_ready(context.channel_id)
         if not ready:
             return
@@ -1003,13 +1138,14 @@ class Draft(commands.Cog):
 
         # Check if another draft is going on.
         if results is None:
-            event = "No draft going on."
-            Misc.send_log(context, event)
-
             command = self.bot.get_application_command("draft start")
             assert command is not None and isinstance(command, discord.SlashCommand)
+
+            event = "No draft going on."
             content = f"{event} Use {command.mention} to begin a new draft."
+
             await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
@@ -1028,37 +1164,25 @@ class Draft(commands.Cog):
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
             results = await cursor.fetchone()
-            assert results is not None
 
+        assert results is not None
         slot, hero = results
 
         # Check if there are moves to undo.
         if slot == 0:
-            event = "No moves to undo."
-            Misc.send_log(context, event)
-
             command = self.bot.get_application_command("draft start")
             assert command is not None and isinstance(command, discord.SlashCommand)
+
+            event = "No moves to undo."
             content = f"{event} Use {command.mention} to begin a new draft."
+
             await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
 
-        query = """
-            SELECT UserID
-            FROM Teams
-            WHERE ChannelID = ?
-        """
-        values = (context.channel_id,)
-        async with database_connection.cursor() as cursor:
-            await cursor.execute(query, values)
-            results = await cursor.fetchall()
-
-        # Extract the two battling players.
-        players = [
-            await self.bot.fetch_user(player) for result in results for player in result
-        ]
+        players = await Draft.get_drafting_players(self.bot, context.channel_id)
 
         # Check whose turn was.
         previous = self.turns[slot - 1]
@@ -1067,10 +1191,10 @@ class Draft(commands.Cog):
         is_allowed = context.author.id in draft_settings.self_drafters
         if self_target and not is_owner and not is_allowed:
             event = "Not your turn."
-            Misc.send_log(context, event)
-
             content = "You can only undo your own moves."
+
             await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
@@ -1090,43 +1214,55 @@ class Draft(commands.Cog):
             image.paste(portrait, self.layouts[layout][slot])
 
         move = "banned" if slot in self.next_bans else "picked"
-
         event = f"Turn {slot - 1}: {hero} un{move}."
-        Misc.send_log(context, event)
+        content = event
 
         if draft_settings.actions_history:
-            content = event
             await context.respond(content)
+        Misc.send_log(context, event)
 
-        move, color_id = ("ban", 2) if slot in self.next_bans else ("pick", previous)
+        if slot in self.next_bans:
+            move = "ban"
+            color_id = 2
+        else:
+            move = "pick"
+            color_id = previous
 
         portrait = Image.open("./draft/slots/next.png")
         portrait = portrait.resize(self.portrait_size)
         slot -= 1
         image.paste(portrait, self.layouts[layout][slot])
-
         image.save(path)
+
         command = self.bot.get_application_command("draft hero")
         assert command is not None and isinstance(command, discord.SlashCommand)
-        content = (
-            f"{players[previous].mention}, use {command.mention} to {move} a Hero."
-        )
 
         filename = f"{context.channel_id}.png"
         file = discord.File(path, filename)
+
         assert context.channel_id is not None
         embed = Draft.craft_embed(
-            color_id=color_id, map=map, players=players, channel_id=context.channel_id
+            color_id=color_id,
+            map=map,
+            players=players,
+            channel_id=context.channel_id,
         )
 
         try:
-            await context.respond(file=file, embed=embed, content=content)
+            content = (
+                f"{players[previous].mention}, use {command.mention} to {move} a Hero."
+            )
+            await context.respond(
+                content,
+                embed=embed,
+                file=file,
+            )
         except discord.errors.DiscordServerError:
             event = "Discord error."
+            content = f"{content} Try again later."
+            await context.respond(content, ephemeral=True)
             Misc.send_log(context, event)
 
-            content = f"{event} Try again later."
-            await context.respond(content, ephemeral=True)
             return
 
         message = await context.interaction.original_response()
@@ -1148,7 +1284,12 @@ class Draft(commands.Cog):
                 Time = ?
             WHERE ChannelID = ?
         """
-        values = (message.id, image, time.time(), context.channel_id)
+        values = (
+            message.id,
+            image,
+            time.time(),
+            context.channel_id,
+        )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
 
@@ -1168,8 +1309,14 @@ class Draft(commands.Cog):
         await database_connection.commit()
         Draft.ready_up(context.channel_id)
 
-    @draft.command(name="quit", description="Quit the current draft simulation.")
-    async def draft_quit(self, context: discord.ApplicationContext) -> None:
+    @draft.command(
+        name="quit",
+        description="Quit the current draft simulation.",
+    )
+    async def draft_quit(
+        self,
+        context: discord.ApplicationContext,
+    ) -> None:
         ready = Draft.is_ready(context.channel_id)
         if not ready:
             return
@@ -1191,13 +1338,14 @@ class Draft(commands.Cog):
 
         # Check if another draft is going on.
         if results is None:
-            event = "No draft going on."
-            Misc.send_log(context, event)
-
             command = self.bot.get_application_command("draft start")
             assert command is not None and isinstance(command, discord.SlashCommand)
+
+            event = "No draft going on."
             content = f"{event} Use {command.mention} to begin a new draft."
+
             await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
             return
@@ -1218,14 +1366,13 @@ class Draft(commands.Cog):
             if slot < 1:
                 await self.delete_message(context.channel_id, message_id)
             event = "Draft aborted."
-        Misc.send_log(context, event)
 
-        content = event
-        await context.respond(content)
+        await context.respond(content=event)
+        Misc.send_log(context, event)
 
         await database_connection.commit()
         Draft.ready_up(context.channel_id)
 
 
-def setup(bot) -> None:
+def setup(bot: MyBot) -> None:
     bot.add_cog(Draft(bot))

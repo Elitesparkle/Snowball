@@ -5,12 +5,15 @@ from unidecode import unidecode  # pip install unidecode
 class Misc:
 
     @staticmethod
-    def display_time(seconds: int, granularity: int = 2) -> str:
+    def display_time(
+        seconds: int,
+        granularity: int = 2,
+    ) -> str:
         intervals = (
-            ("weeks", 604800),  # 7 days * 24 hours * 60 minutes * 60 seconds
-            ("days", 86400),  # 24 hours * 60 minutes * 60 seconds
-            ("hours", 3600),  # 60 minutes * 60 seconds
-            ("minutes", 60),  # 60 seconds
+            ("weeks", 604800),
+            ("days", 86400),
+            ("hours", 3600),
+            ("minutes", 60),
             ("seconds", 1),
         )
 
@@ -22,6 +25,7 @@ class Misc:
                 if value == 1:
                     name = name.rstrip("s")
                 result.append(f"{value} {name}")
+
         time = ", ".join(result[:granularity])
         return time
 
@@ -35,23 +39,20 @@ class Misc:
 
     @staticmethod
     def send_log(
-        context: discord.ApplicationContext | discord.Interaction, event: str
+        context: discord.ApplicationContext | discord.Interaction,
+        event: str,
     ) -> None:
-
         if context.guild is None:
             channel_info = f"private messages with {context.user}"
         else:
             guild_name = unidecode(context.guild.name)
-            guild_id = context.guild_id
-
             channel_name = (
                 unidecode(context.channel.name)
                 if isinstance(context.channel, discord.abc.GuildChannel)
                 else ""
             )
-            channel_id = context.channel_id
-
-            channel_info = f"{guild_name} ({guild_id}) #{channel_name} ({channel_id})"
+            channel_info = f"{guild_name} ({context.guild_id}) \
+                #{channel_name} ({context.channel_id})"
 
         log = f"{event[:-1]} in {channel_info}."
         print(log)

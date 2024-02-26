@@ -7,6 +7,7 @@ from discord.ext import commands
 from unidecode import unidecode
 
 from database import database_connection
+from main import MyBot
 from tools.autocomplete import Autocomplete
 from tools.hero import Hero
 from tools.misc import Misc
@@ -17,23 +18,30 @@ class Tooltip(commands.Cog):
     busy_channels = []
     stop_searching = []
 
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
+    def __init__(
+        self,
+        bot: MyBot,
+    ) -> None:
+        self.bot: MyBot = bot
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
         print("Tooltip extension loaded.")
 
     @staticmethod
-    def format_description(description: str, hero: str, name: str) -> str:
+    def format_description(
+        description: str,
+        hero: str,
+        name: str,
+    ) -> str:
         # https://qwerty.dev/whitespace/
         quest_icon = " !"
         reward_icon = "?"
 
-        # To align icons.
+        # Align icons.
         quest_icon = "\N{HAIR SPACE}" + quest_icon + "\N{HAIR SPACE}"
 
-        # To format exceptions.
+        # Format exceptions.
         if hero == "Alexstrasza":
             description = description.replace(
                 "Dragonqueen: Cast", "**Dragonqueen:** Cast"
@@ -68,7 +76,7 @@ class Tooltip(commands.Cog):
         elif hero == "Sgt. Hammer":
             description = description.replace("Siege Mode:", "**Siege Mode:**")
 
-        # To highlight keywords and add icons.
+        # Highlight keywords and add icons.
         description = description.replace("Gambit:", "**Gambit:**")
         description = description.replace("Quest:", f"**{quest_icon} Quest:**")
         description = description.replace("Reward:", f"**{reward_icon} Reward:**")
@@ -76,19 +84,36 @@ class Tooltip(commands.Cog):
         description = description.replace("Passive:", "**Passive:**")
         description = description.replace("Vector Targeting ", "**Vector Targeting**  ")
 
-        # To separate paragraphs.
+        # Aeparate paragraphs.
         description = description.replace("  ", "\n")
 
-        # To make bold a title having a new line character at the end, even with [hotkey] at the end.
+        # Make bold a title having a new line character at the end, even with [hotkey] at the end.
         pattern = r"(?m)(?<=\n^)([^\*\s]\w+.+\w+)(\s\[\w+\])?$"
         description = re.sub(pattern, r"__**\g<1>**__\g<2>", description)
 
         return description
 
-    hotkeys = ["Q", "W", "E", "R", "D", "Z", "1"]
-    levels = [0, 1, 4, 7, 10, 13, 16, 20]
+    hotkeys = [
+        "Q",
+        "W",
+        "E",
+        "R",
+        "D",
+        "Z",
+        "1",
+    ]
+    levels = [
+        0,
+        1,
+        4,
+        7,
+        10,
+        13,
+        16,
+        20,
+    ]
 
-    # To change Keywords, update the function in the Database cog too.
+    # Warning! To change Keywords, update the function in the Database cog too.
     keywords = [
         "Cleanse",
         "Block",
@@ -102,7 +127,13 @@ class Tooltip(commands.Cog):
         "Healing Reduction",
     ]
 
-    resources = ["Brew", "Energy", "Fury", "Mana", "Scrap"]
+    resources = [
+        "Brew",
+        "Energy",
+        "Fury",
+        "Mana",
+        "Scrap",
+    ]
 
     types = [
         "Active",
@@ -118,7 +149,8 @@ class Tooltip(commands.Cog):
     ]
 
     @commands.slash_command(
-        name="tooltip", description="Search for tooltips or cancel the current search."
+        name="tooltip",
+        description="Search for tooltips or cancel the current search.",
     )
     @option(
         "amount",
@@ -126,7 +158,11 @@ class Tooltip(commands.Cog):
         min_value=1,
         default=None,
     )
-    @option("cooldown", description="Insert a cooldown value.", default=None)
+    @option(
+        "cooldown",
+        description="Insert a cooldown value.",
+        default=None,
+    )
     @option(
         "cost",
         description="Insert a cost value.",
@@ -145,18 +181,41 @@ class Tooltip(commands.Cog):
         autocomplete=Autocomplete.heroes,
         default=None,
     )
-    @option("hotkey", description="Select an hotkey.", default=None, choices=hotkeys)
-    @option("keyword", description="Select a keyword.", default=None, choices=keywords)
-    @option("level", description="Select a level.", default=None, choices=levels)
     @option(
-        "resource", description="Select a resource.", default=None, choices=resources
+        "hotkey",
+        description="Select an hotkey.",
+        default=None,
+        choices=hotkeys,
+    )
+    @option(
+        "keyword",
+        description="Select a keyword.",
+        default=None,
+        choices=keywords,
+    )
+    @option(
+        "level",
+        description="Select a level.",
+        default=None,
+        choices=levels,
+    )
+    @option(
+        "resource",
+        description="Select a resource.",
+        default=None,
+        choices=resources,
     )
     @option(
         "title",
         description="Insert the name of an Ability or Talent, or part of it.",
         default=None,
     )
-    @option("type", description="Select a type.", default=None, choices=types)
+    @option(
+        "type",
+        description="Select a type.",
+        default=None,
+        choices=types,
+    )
     async def tooltip(
         self,
         context: discord.ApplicationContext,
@@ -175,14 +234,13 @@ class Tooltip(commands.Cog):
         if context.channel_id in self.busy_channels:
             self.stop_searching.append(context.channel_id)
 
-            # To avoid having tooltips after the abort message.
+            # Add delay to avoid having tooltips after the abort message.
             await asyncio.sleep(1)
 
             event = "Search aborted."
-            Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
+            await context.respond(content=event, ephemeral=True)
+            Misc.send_log(context, event)
 
             self.busy_channels.remove(context.channel_id)
         else:
@@ -266,144 +324,147 @@ class Tooltip(commands.Cog):
                 query += " AND Tooltips.Type = ?"
                 values += (type,)
 
-            # To remove duplicates and fix order.
+            # Remove duplicates and fix order.
             query += """
                 GROUP BY Tooltips.TooltipID
                 ORDER BY Tooltips.rowid
             """
 
-            if "AND" in query:
-                async with database_connection.cursor() as cursor:
-                    await cursor.execute(query, values)
-                    results = await cursor.fetchall()
-                results = list(results)
-
-                if context.channel_id in self.busy_channels:
-                    event = "Another search going on."
-                    Misc.send_log(context, event)
-
-                    content = "Another search going on in this channel. Use `/search quit` to abort it."
-                    await context.respond(content, ephemeral=True)
-                    return
-                self.busy_channels.append(context.channel_id)
-
-                event = "Search started."
-                Misc.send_log(context, event)
-
-                tooltips = []
-                total = 0
-                followup = False
-                interrupted = False
-
-                for index, result in enumerate(results):
-
-                    if context.channel_id in self.stop_searching:
-                        self.stop_searching.remove(context.channel_id)
-                        return
-
-                    if index == amount:
-                        interrupted = True
-                        break
-
-                    (
-                        _,
-                        name,
-                        cooldown,
-                        cost,
-                        description,
-                        hotkey,
-                        icon,
-                        level,
-                        resource,
-                        type,
-                        unit,
-                        hero,
-                    ) = result
-
-                    rows = []
-                    total += 1
-
-                    # Abilities
-                    if level is None:
-                        form = await Hero.fix_name(unit)
-                        subcategory = "Baseline" if form == hero else "Special"
-                        rows.append(f"{hero} ★ {subcategory}")
-
-                    # Talents
-                    else:
-                        if hero == "Chromie" and level > 3:
-                            level -= 2
-                        rows.append(f"{hero} ★ Level {level}")
-
-                    if hotkey is None:
-                        rows.append(f"**__{name}__**")
-                    else:
-                        rows.append(f"**__{name}__** [{hotkey}]")
-
-                    if cost is not None:
-                        if name == "Life Tap":
-                            resource = "(+4% per level) " + resource
-                        if cost != 1 and resource == "Scrap":
-                            resource += "s"
-                        rows.append(f"**Cost:** {cost} {resource}")
-
-                    if cooldown is not None:
-                        label = "second"
-                        if cooldown != 1:
-                            label += "s"
-
-                        rows.append(f"**Cooldown:** {cooldown:g} {label}")
-
-                    description = Tooltip.format_description(description, hero, name)
-                    rows.append(description)
-
-                    embed = discord.Embed(
-                        color=discord.Color.blue(), description="\n".join(rows)
-                    )
-
-                    # Link to images in the public repository.
-                    embed.set_thumbnail(
-                        url=f"https://raw.githubusercontent.com/Elitesparkle/Snowball/main/images/talents/{icon}"
-                    )
-                    tooltips.append(embed)
-
-                    if (
-                        len(tooltips) == 10
-                        or index == len(results) - 1
-                        or (amount and index == amount - 1)
-                    ):
-
-                        await context.respond(embeds=tooltips)
-                        followup = True if not followup else False
-                        tooltips = []
-
-                        if index < len(results) - 1:
-                            # Dynamic delay to work around Discord API limitations.
-                            await asyncio.sleep(index * 0.1 * len(self.busy_channels))
-
-                event = "Search completed."
-                Misc.send_log(context, event)
-
-                content = f"{context.author.mention}, search completed."
-
-                if not interrupted:
-                    total_label = "tooltip" if total == 1 else "tooltips"
-                    content += f"\nA total of {total} {total_label} has been found."
-                else:
-                    amount_label = "tooltip" if amount == 1 else "tooltips"
-                    content += f"\nDue to the search being limited at {amount} {amount_label}, some are missing."
-                    content += "\nTo see more results, set a custom value for the `amount` field."
-
-                await context.respond(content, ephemeral=True)
-
-                self.busy_channels.remove(context.channel_id)
-            else:
+            if not "AND" in query:
                 event = "Invalid input."
+                content = f"{event} Select at least one option besides `amount`."
+
+                await context.respond(content, ephemeral=True)
                 Misc.send_log(context, event)
 
-                content = "Invalid input. Select at least one option besides `amount`."
+                return
+
+            async with database_connection.cursor() as cursor:
+                await cursor.execute(query, values)
+                results = await cursor.fetchall()
+            results = list(results)
+
+            if context.channel_id in self.busy_channels:
+                event = "Another search going on."
+                content = "Another search going on in this channel. Use `/search quit` to abort it."
+
                 await context.respond(content, ephemeral=True)
+                Misc.send_log(context, event)
+
+                return
+
+            self.busy_channels.append(context.channel_id)
+
+            event = "Search started."
+            Misc.send_log(context, event)
+
+            tooltips = []
+            total = 0
+            followup = False
+            interrupted = False
+
+            for index, result in enumerate(results):
+                if context.channel_id in self.stop_searching:
+                    self.stop_searching.remove(context.channel_id)
+                    return
+
+                if index == amount:
+                    interrupted = True
+                    break
+
+                (
+                    _,
+                    name,
+                    cooldown,
+                    cost,
+                    description,
+                    hotkey,
+                    icon,
+                    level,
+                    resource,
+                    type,
+                    unit,
+                    hero,
+                ) = result
+
+                rows = []
+                total += 1
+
+                # Abilities
+                if level is None:
+                    form = await Hero.fix_name(unit)
+                    subcategory = "Baseline" if form == hero else "Special"
+                    rows.append(f"{hero} ★ {subcategory}")
+
+                # Talents
+                else:
+                    if hero == "Chromie" and level > 3:
+                        level -= 2
+                    rows.append(f"{hero} ★ Level {level}")
+
+                if hotkey is None:
+                    rows.append(f"**__{name}__**")
+                else:
+                    rows.append(f"**__{name}__** [{hotkey}]")
+
+                if cost is not None:
+                    if name == "Life Tap":
+                        resource = "(+4% per level) " + resource
+                    if cost != 1 and resource == "Scrap":
+                        resource += "s"
+                    rows.append(f"**Cost:** {cost} {resource}")
+
+                if cooldown is not None:
+                    label = "second"
+                    if cooldown != 1:
+                        label += "s"
+
+                    rows.append(f"**Cooldown:** {cooldown:g} {label}")
+
+                description = Tooltip.format_description(description, hero, name)
+                rows.append(description)
+
+                embed = discord.Embed(
+                    color=discord.Color.blue(),
+                    description="\n".join(rows),
+                )
+
+                # Link to images in the public repository.
+                thumbnail_url = f"https://raw.githubusercontent.com/Elitesparkle/Snowball/main/images/talents/{icon}"
+                embed.set_thumbnail(url=thumbnail_url)
+                tooltips.append(embed)
+
+                if (
+                    len(tooltips) == 10
+                    or index == len(results) - 1
+                    or (amount and index == amount - 1)
+                ):
+                    await context.respond(embeds=tooltips)
+                    followup = True if not followup else False
+                    tooltips = []
+
+                    if index < len(results) - 1:
+                        # Add dynamic delay to work around Discord API limitations.
+                        await asyncio.sleep(index * 0.1 * len(self.busy_channels))
+
+            event = "Search completed."
+            content = f"{context.author.mention}, search completed."
+
+            if not interrupted:
+                total_label = "tooltip" if total == 1 else "tooltips"
+                content += f"\nA total of {total} {total_label} has been found."
+            else:
+                amount_label = "tooltip" if amount == 1 else "tooltips"
+                content += (
+                    f"\nDue to the search being limited at {amount} {amount_label}, some are missing."
+                    "\nTo see more results, set a custom value for the `amount` field."
+                )
+
+            await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
+
+            self.busy_channels.remove(context.channel_id)
 
 
-def setup(bot) -> None:
+def setup(bot: MyBot) -> None:
     bot.add_cog(Tooltip(bot))

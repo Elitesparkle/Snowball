@@ -24,6 +24,7 @@ class Hero:
                 "Valeera",
                 "Zeratul",
             ]
+
             heroes = await Hero.catalog("Bruiser") + non_bruisers
             heroes.sort()
         else:
@@ -66,8 +67,8 @@ class Hero:
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
             results = await cursor.fetchone()
-            assert results is not None
 
+        assert results is not None
         try:
             hero_id = int(results[0])
         except TypeError:
@@ -86,8 +87,8 @@ class Hero:
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
             results = await cursor.fetchone()
-            assert results is not None
 
+        assert results is not None
         return results[0]
 
     @staticmethod
@@ -101,10 +102,9 @@ class Hero:
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
             results = await cursor.fetchone()
-            assert results is not None
 
+        assert results is not None
         acronym = results[0]
-
         return acronym
 
     @staticmethod
@@ -132,18 +132,24 @@ class Hero:
                 INSTR(Name, ?),
                 Name
         """
-        values = (fix_name, f"%{fix_name}%", fix_name)
+        values = (
+            fix_name,
+            f"%{fix_name}%",
+            fix_name,
+        )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
             results = await cursor.fetchone()
-            assert results is not None
 
+        assert results is not None
         fix_name = results[0]
-
         return fix_name
 
     @staticmethod
-    def get_code(hero_name: str, company: str) -> str | None:
+    def get_code(
+        hero_name: str,
+        company: str,
+    ) -> str | None:
         hero_code = unidecode(hero_name)
 
         if company is not None:

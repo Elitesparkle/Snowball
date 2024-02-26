@@ -15,10 +15,14 @@ from tools.misc import Misc
 class Matchup(commands.Cog):
 
     matchup = discord.SlashCommandGroup(
-        name="matchup", description="Matchup information."
+        name="matchup",
+        description="Matchup information.",
     )
 
-    def __init__(self, bot: MyBot) -> None:
+    def __init__(
+        self,
+        bot: MyBot,
+    ) -> None:
         self.bot: MyBot = bot
 
     @commands.Cog.listener()
@@ -27,8 +31,10 @@ class Matchup(commands.Cog):
         self.bot.add_view(self.TipsView(self.bot))
         self.bot.add_view(self.PermissionView(self.bot))
         self.bot.add_view(self.NotificationView(self.bot))
+
         print("Matchup extension loaded.")
 
+    # See here every colour and method the discord.Colour class has:
     # https://gist.github.com/Soheab/d9cf3f40e34037cfa544f464fc7d919e
     @staticmethod
     def get_color(win_chance) -> discord.Color:
@@ -42,7 +48,8 @@ class Matchup(commands.Cog):
 
     @staticmethod
     async def get_tips(
-        your_hero: str, enemy_hero: str
+        your_hero: str,
+        enemy_hero: str,
     ) -> tuple[discord.Embed, discord.File]:
         your_hero_id = await Hero.get_id(your_hero)
         enemy_hero_id = await Hero.get_id(enemy_hero)
@@ -56,7 +63,10 @@ class Matchup(commands.Cog):
                 AND EnemyHeroID = ?
             ORDER BY Time DESC
         """
-        values = (your_hero_id, enemy_hero_id)
+        values = (
+            your_hero_id,
+            enemy_hero_id,
+        )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
             results = await cursor.fetchone()
@@ -73,6 +83,7 @@ class Matchup(commands.Cog):
                 color=discord.Color.blue(),
             )
             embed.set_thumbnail(url=f"attachment://{filename}")
+
             return embed, file
 
         matchup_id, win_chance, notes = results
@@ -104,19 +115,31 @@ class Matchup(commands.Cog):
                 tip = escape_mentions(tip)
                 tip = remove_markdown(tip)
 
-                embed.add_field(name=f"Tip {index + 1}", value=tip, inline=False)
+                embed.add_field(
+                    name=f"Tip {index + 1}",
+                    value=tip,
+                    inline=False,
+                )
 
         if notes and not notes.isspace():
             notes = escape_mentions(notes)
             notes = remove_markdown(notes)
 
-            embed.add_field(name="Notes", value=notes, inline=False)
+            embed.add_field(
+                name="Notes",
+                value=notes,
+                inline=False,
+            )
 
         embed.set_thumbnail(url=f"attachment://{filename}")
+
         return embed, file
 
     class TipsView(discord.ui.View):
-        def __init__(self, bot) -> None:
+        def __init__(
+            self,
+            bot: MyBot,
+        ) -> None:
             self.bot: MyBot = bot
             super().__init__(timeout=None)
 
@@ -126,32 +149,46 @@ class Matchup(commands.Cog):
             style=discord.ButtonStyle.blurple,
         )
         async def switch_callback(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
         ) -> None:
             assert interaction.message is not None
             embed_title = interaction.message.embeds[0].title
+
             assert isinstance(embed_title, str)
             enemy_hero, your_hero = embed_title.split(" vs ")
 
             embed, file = await Matchup.get_tips(your_hero, enemy_hero)
             await interaction.response.edit_message(
-                embeds=[embed], file=file, view=Matchup.TipsView(self.bot)
+                embeds=[embed],
+                file=file,
+                view=Matchup.TipsView(self.bot),
             )
 
     @staticmethod
-    def list_matchups(embed: discord.Embed, name: str, matchups: list) -> discord.Embed:
+    def list_matchups(
+        embed: discord.Embed,
+        name: str,
+        matchups: list,
+    ) -> discord.Embed:
         if len(matchups) == 0:
             value = "-"
         else:
             matchups.sort()
             value = "• " + "\n• ".join(matchups)
 
-        embed.add_field(name=name, value=value, inline=True)
+        embed.add_field(
+            name=name,
+            value=value,
+            inline=True,
+        )
         return embed
 
     @staticmethod
     async def get_matchups(
-        your_hero: str, show_missing: bool = False
+        your_hero: str,
+        show_missing: bool = False,
     ) -> tuple[discord.Embed, discord.File]:
         your_hero_id = await Hero.get_id(your_hero)
 
@@ -193,9 +230,10 @@ class Matchup(commands.Cog):
             offlaners = await Hero.catalog("Offlaner")
             offlaners.remove(your_hero)
 
-            stored_matchups = favored_matchups + even_matchups + unfavored_matchups
             missing_matchups = [
-                hero for hero in offlaners if hero not in stored_matchups
+                hero
+                for hero in offlaners
+                if hero not in favored_matchups + even_matchups + unfavored_matchups
             ]
 
             embed.title = str(embed.title) + " (2/2)"
@@ -216,7 +254,10 @@ class Matchup(commands.Cog):
         return embed, file
 
     class NotificationView(discord.ui.View):
-        def __init__(self, bot) -> None:
+        def __init__(
+            self,
+            bot: MyBot,
+        ) -> None:
             self.bot: MyBot = bot
             super().__init__(timeout=None)
 
@@ -226,7 +267,9 @@ class Matchup(commands.Cog):
             style=discord.ButtonStyle.blurple,
         )
         async def accept_callback(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
         ) -> None:
             button.style = discord.ButtonStyle.green
             button.disabled = True
@@ -244,7 +287,9 @@ class Matchup(commands.Cog):
             style=discord.ButtonStyle.blurple,
         )
         async def decline_callback(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
         ) -> None:
             button.style = discord.ButtonStyle.red
             button.disabled = True
@@ -258,8 +303,10 @@ class Matchup(commands.Cog):
 
             assert interaction.message is not None
             embed_title = interaction.message.embeds[0].title
+
             assert isinstance(embed_title, str)
             your_hero, enemy_hero = embed_title.split(" vs ")
+
             your_hero_id = await Hero.get_id(your_hero)
             enemy_hero_id = await Hero.get_id(enemy_hero)
 
@@ -284,7 +331,13 @@ class Matchup(commands.Cog):
                 await cursor.execute(query, values)
 
     class MatchupModal(discord.ui.Modal):
-        def __init__(self, bot, texts, *args, **kwargs) -> None:
+        def __init__(
+            self,
+            bot: MyBot,
+            texts: list[str],
+            *args,
+            **kwargs,
+        ) -> None:
             self.bot: MyBot = bot
             super().__init__(*args, **kwargs)
 
@@ -317,18 +370,25 @@ class Matchup(commands.Cog):
                 )
             )
 
-        async def callback(self, interaction: discord.Interaction) -> None:
+        async def callback(
+            self,
+            interaction: discord.Interaction,
+        ) -> None:
             assert interaction.user is not None
             user_id = interaction.user.id
+
             assert interaction.custom_id is not None
             your_hero, enemy_hero, win_chance = interaction.custom_id.split("|")
 
             your_hero_id = await Hero.get_id(your_hero)
             enemy_hero_id = await Hero.get_id(enemy_hero)
 
-            win_chance = (
-                1 if win_chance == "Favored" else -1 if win_chance == "Unfavored" else 0
-            )
+            win_chance = 0
+            if win_chance == "Favored":
+                win_chance = 1
+            elif win_chance == "Unfavored":
+                win_chance = -1
+
             notes = self.children[-1].value
 
             query = """
@@ -363,12 +423,16 @@ class Matchup(commands.Cog):
                     AND EnemyHeroID = ?
                 ORDER BY Time DESC
             """
-            values = (user_id, your_hero_id, enemy_hero_id)
+            values = (
+                user_id,
+                your_hero_id,
+                enemy_hero_id,
+            )
             async with database_connection.cursor() as cursor:
                 await cursor.execute(query, values)
                 results = await cursor.fetchone()
-                assert results is not None
 
+            assert results is not None
             matchup_id = results[0]
 
             tips = []
@@ -386,7 +450,10 @@ class Matchup(commands.Cog):
                     )
                     VALUES (?, ?)
                 """
-                values = (matchup_id, tip)
+                values = (
+                    matchup_id,
+                    tip,
+                )
                 async with database_connection.cursor() as cursor:
                     await cursor.execute(query, values)
 
@@ -394,30 +461,36 @@ class Matchup(commands.Cog):
 
             embed, file = await Matchup.get_tips(your_hero, enemy_hero)
             await interaction.response.send_message(
-                content=f"Matchup updated.", embeds=[embed], file=file, ephemeral=True
+                content=f"Matchup updated.",
+                embeds=[embed],
+                file=file,
+                ephemeral=True,
             )
 
             content = f"Matchup updated by {interaction.user.mention}."
             embed, file = await Matchup.get_tips(your_hero, enemy_hero)
 
             admin = self.bot.admin
-            if admin:
-                await admin.send(
-                    content=content,
-                    embeds=[embed],
-                    file=file,
-                    view=Matchup.NotificationView(self.bot),
-                )
-            else:
+            if not admin:
                 event = "Admin not found."
+
+                await interaction.response.send_message(content=event, ephemeral=True)
                 Misc.send_log(interaction, event)
 
-                content = event
-                await interaction.response.send_message(content, ephemeral=True)
                 return
 
+            await admin.send(
+                content=content,
+                embeds=[embed],
+                file=file,
+                view=Matchup.NotificationView(self.bot),
+            )
+
     class PermissionView(discord.ui.View):
-        def __init__(self, bot) -> None:
+        def __init__(
+            self,
+            bot: MyBot,
+        ) -> None:
             self.bot: MyBot = bot
             super().__init__(timeout=None)
 
@@ -428,7 +501,9 @@ class Matchup(commands.Cog):
         )
         @commands.is_owner()
         async def accept_callback(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
         ) -> None:
             await self.on_interaction(button, interaction)
 
@@ -439,12 +514,16 @@ class Matchup(commands.Cog):
         )
         @commands.is_owner()
         async def decline_callback(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
         ) -> None:
             await self.on_interaction(button, interaction)
 
         async def on_interaction(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
         ) -> None:
             assert interaction.message is not None
             user_id = interaction.message.raw_mentions[0]
@@ -464,6 +543,7 @@ class Matchup(commands.Cog):
             assert isinstance(other_button, discord.Button)
             other_button.style = discord.ButtonStyle.blurple
             other_button.disabled = False
+
             await interaction.response.edit_message(view=self)
 
             query = """
@@ -471,7 +551,10 @@ class Matchup(commands.Cog):
                 SET Permission = ?
                 WHERE UserID = ?
             """
-            values = (permission, user_id)
+            values = (
+                permission,
+                user_id,
+            )
             async with database_connection.cursor() as cursor:
                 await cursor.execute(query, values)
 
@@ -480,17 +563,20 @@ class Matchup(commands.Cog):
             user = await self.bot.my_fetch_user(user_id)
             if user is not None and not self.bot.my_is_owner(user_id):
                 content = f"Matchups permission {action}."
-                await user.send(content=content)
+                await user.send(content)
 
     @matchup.command(
         name="permission",
         description="Ask for permission to edit matchups.",
     )
-    async def matchup_permission(self, context: discord.ApplicationContext) -> None:
+    async def matchup_permission(
+        self,
+        context: discord.ApplicationContext,
+    ) -> None:
         if await self.bot.my_is_owner(context.author.id):
             bot_name = self.bot.user.name if self.bot.user is not None else "Bot"
             content = f"{bot_name}'s owners don't have to ask for permission to edit matchups."
-            await context.respond(content=content, ephemeral=True)
+            await context.respond(content, ephemeral=True)
             return
 
         query = """
@@ -505,7 +591,7 @@ class Matchup(commands.Cog):
 
         if results is not None:
             content = "You cannot ask again for permission to edit matchups."
-            await context.respond(content=content, ephemeral=True)
+            await context.respond(content, ephemeral=True)
             return
 
         permission = 0
@@ -517,7 +603,10 @@ class Matchup(commands.Cog):
             )
             VALUES (?, ?)
         """
-        values = (context.author.id, permission)
+        values = (
+            context.author.id,
+            permission,
+        )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
 
@@ -538,28 +627,42 @@ class Matchup(commands.Cog):
             if index >= 25:
                 break
 
-            embed.add_field(name=f"Guild {index + 1}", value=guild.name, inline=False)
+            embed.add_field(
+                name=f"Guild {index + 1}",
+                value=guild.name,
+                inline=False,
+            )
 
         admin = self.bot.admin
+        view = Matchup.PermissionView(self.bot)
         if admin:
             await admin.send(
-                content=content, embeds=[embed], view=Matchup.PermissionView(self.bot)
+                content=content,
+                embeds=[embed],
+                view=view,
             )
         else:
             event = "Admin not found."
+
+            await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
             return
 
         assert self.bot.user is not None
-        content = f"Matchups permission asked. Your request will be reviewed and then you will receive a private message from {self.bot.user.mention}."
-        await context.respond(content=content, ephemeral=True)
+
+        event = "Matchups permission asked."
+        content = f"{event} Your request will be reviewed and then you will receive a private message from {self.bot.user.mention}."
+
+        await context.respond(content, ephemeral=True)
+        Misc.send_log(context, event)
 
     class HeroView(discord.ui.View):
-        def __init__(self, bot) -> None:
-            self.bot = bot
+        def __init__(
+            self,
+            bot: MyBot,
+        ) -> None:
+            self.bot: MyBot = bot
             super().__init__(timeout=None)
 
         @discord.ui.button(
@@ -569,7 +672,9 @@ class Matchup(commands.Cog):
             disabled=True,
         )
         async def available_callback(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
         ) -> None:
             await self.on_interaction(button, interaction)
 
@@ -579,19 +684,25 @@ class Matchup(commands.Cog):
             style=discord.ButtonStyle.blurple,
         )
         async def missing_callback(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
         ) -> None:
             await self.on_interaction(button, interaction)
 
         async def on_interaction(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
         ) -> None:
             assert interaction.message is not None
             embed_title = interaction.message.embeds[0].title
+
             assert isinstance(embed_title, str)
             your_hero = embed_title.split(" Matchups")[0]
+
             show_missing = button.custom_id == "Matchup¦Missing"
-            embed, file = await Matchup.get_matchups(your_hero, show_missing)
+            embed, _ = await Matchup.get_matchups(your_hero, show_missing)
 
             self.enable_all_items()
             button.disabled = True
@@ -603,24 +714,32 @@ class Matchup(commands.Cog):
         description="View the matchups available for a given Hero.",
     )
     @option(
-        "your_hero", description="Select your Hero.", autocomplete=Autocomplete.heroes
+        "your_hero",
+        description="Select your Hero.",
+        autocomplete=Autocomplete.heroes,
     )
     async def matchup_list(
-        self, context: discord.ApplicationContext, your_hero: str
+        self,
+        context: discord.ApplicationContext,
+        your_hero: str,
     ) -> None:
         command = self.bot.get_application_command("matchup tips")
 
         your_hero = await Hero.fix_name(your_hero)
-
         embed, _ = await Matchup.get_matchups(your_hero)
+
         assert command is not None and isinstance(command, discord.SlashCommand)
-        await context.respond(
-            content=f"Use **{command.mention} <your_hero> <enemy_hero>** to {Misc.decapitalize(command.description)}",
-            embeds=[embed],
-            view=Matchup.HeroView(self.bot),
-        )
+        command_description = Misc.decapitalize(command.description)
 
         event = "Matchup List shared."
+        content = f"Use **{command.mention} <your_hero> <enemy_hero>** to {command_description}"
+        view = Matchup.HeroView(self.bot)
+
+        await context.respond(
+            content,
+            embeds=[embed],
+            view=view,
+        )
         Misc.send_log(context, event)
 
     @matchup.command(
@@ -628,7 +747,9 @@ class Matchup(commands.Cog):
         description="View the tips for a specific matchup.",
     )
     @option(
-        "your_hero", description="Select your Hero.", autocomplete=Autocomplete.heroes
+        "your_hero",
+        description="Select your Hero.",
+        autocomplete=Autocomplete.heroes,
     )
     @option(
         "enemy_hero",
@@ -636,7 +757,10 @@ class Matchup(commands.Cog):
         autocomplete=Autocomplete.heroes,
     )
     async def matchup_tips(
-        self, context: discord.ApplicationContext, your_hero: str, enemy_hero: str
+        self,
+        context: discord.ApplicationContext,
+        your_hero: str,
+        enemy_hero: str,
     ) -> None:
         command = self.bot.get_application_command("matchup list")
 
@@ -649,21 +773,27 @@ class Matchup(commands.Cog):
 
         if are_both_offlaners or is_not_mirror:
             event = "Matchup not valid."
+
+            await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
-            content = event
-            await context.respond(content, ephemeral=True)
+            
             return
 
         embed, file = await Matchup.get_tips(your_hero, enemy_hero)
+
         assert command is not None and isinstance(command, discord.SlashCommand)
-        await context.respond(
-            content=f"Use **{command.mention}** to {Misc.decapitalize(command.description)}",
-            embeds=[embed],
-            file=file,
-            view=Matchup.TipsView(self.bot),
-        )
+        command_description = Misc.decapitalize(command.description)
 
         event = "Matchup Tips shared."
+        content = f"Use **{command.mention}** to {command_description}"
+        view = Matchup.TipsView(self.bot)
+
+        await context.respond(
+            content,
+            embeds=[embed],
+            file=file,
+            view=view,
+        )
         Misc.send_log(context, event)
 
     @matchup.command(
@@ -671,7 +801,9 @@ class Matchup(commands.Cog):
         description="Edit the information about matchups.",
     )
     @option(
-        "your_hero", description="Select your Hero.", autocomplete=Autocomplete.heroes
+        "your_hero",
+        description="Select your Hero.",
+        autocomplete=Autocomplete.heroes,
     )
     @option(
         "enemy_hero",
@@ -681,7 +813,11 @@ class Matchup(commands.Cog):
     @option(
         "win_chance",
         description="Select the expected chance to win.",
-        choices=["Favored", "Even", "Unfavored"],
+        choices=[
+            "Favored",
+            "Even",
+            "Unfavored",
+        ],
         required=False,
     )
     async def matchup_edit(
@@ -712,7 +848,10 @@ class Matchup(commands.Cog):
                     SET Permission = ?
                     WHERE UserID = ?
                 """
-                values = (permission, context.author.id)
+                values = (
+                    permission,
+                    context.author.id,
+                )
             else:
                 query = """
                     INSERT INTO Users (
@@ -721,7 +860,10 @@ class Matchup(commands.Cog):
                     )
                     VALUES (?, ?)
                 """
-                values = (context.author.id, permission)
+                values = (
+                    context.author.id,
+                    permission,
+                )
             async with database_connection.cursor() as cursor:
                 await cursor.execute(query, values)
 
@@ -737,13 +879,18 @@ class Matchup(commands.Cog):
             results = await cursor.fetchall()
 
         contributors = [contributor for result in results for contributor in result]
-
         no_permission = context.author.id not in contributors
+
         if no_permission:
             command = self.bot.get_application_command("matchup permission")
             assert command is not None and isinstance(command, discord.SlashCommand)
+
+            event = "No matchup permissions."
             content = f"Forbidden. Please, use {command.mention} to ask for permission."
-            await context.respond(content=content, ephemeral=True)
+
+            await context.respond(content, ephemeral=True)
+            Misc.send_log(context, event)
+
             return
 
         offlaners = await Hero.catalog("Offlaner")
@@ -752,9 +899,10 @@ class Matchup(commands.Cog):
 
         if are_both_offlaners or is_not_mirror:
             event = "Matchup not valid."
+
+            await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
-            content = event
-            await context.respond(content, ephemeral=True)
+
             return
 
         your_hero_id = await Hero.get_id(your_hero)
@@ -767,22 +915,26 @@ class Matchup(commands.Cog):
                 AND EnemyHeroID = ?
             ORDER BY Time DESC
         """
-        values = (your_hero_id, enemy_hero_id)
+        values = (
+            your_hero_id,
+            enemy_hero_id,
+        )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
             results = await cursor.fetchone()
-            assert results is not None
 
+        assert results is not None
         try:
             if win_chance is None:
                 matchup_id, win_chance, notes = results
-                win_chance = (
-                    "Favored"
-                    if int(win_chance) > 0
-                    else "Unfavored" if int(win_chance) < 0 else "Even"
-                )
+
+                win_chance = "Even"
+                if int(win_chance) > 0:
+                    win_chance = "Favored"
+                elif int(win_chance) < 0:
+                    win_chance = "Unfavored"
             else:
-                matchup_id, _, notes = results
+                (matchup_id, _, notes) = results
         except TypeError:
             if win_chance is None:
                 win_chance = "Even"
@@ -818,5 +970,5 @@ class Matchup(commands.Cog):
         await context.send_modal(modal)
 
 
-def setup(bot) -> None:
+def setup(bot: MyBot) -> None:
     bot.add_cog(Matchup(bot))

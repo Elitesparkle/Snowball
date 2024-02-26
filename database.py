@@ -8,7 +8,8 @@ import aiosqlite  # python -m pip install aiosqlite
 
 class Database:
 
-    async def create_heroes(self) -> None:
+    @staticmethod
+    async def create_heroes() -> None:
         query = """
             CREATE TABLE IF NOT EXISTS Heroes (
                 HeroID INTEGER,
@@ -22,7 +23,8 @@ class Database:
             await cursor.execute(query)
         print("Heroes table created.")
 
-    async def create_maps(self) -> None:
+    @staticmethod
+    async def create_maps() -> None:
         query = """
             CREATE TABLE IF NOT EXISTS Maps (
                 MapID INTEGER,
@@ -36,7 +38,8 @@ class Database:
             await cursor.execute(query)
         print("Maps table created.")
 
-    async def create_drafts(self) -> None:
+    @staticmethod
+    async def create_drafts() -> None:
         query = """
             CREATE TABLE IF NOT EXISTS Drafts (
                 ChannelID INTEGER,
@@ -51,7 +54,8 @@ class Database:
             await cursor.execute(query)
         print("Drafts table created.")
 
-    async def create_teams(self) -> None:
+    @staticmethod
+    async def create_teams() -> None:
         query = """
             CREATE TABLE IF NOT EXISTS Teams (
                 TeamID INTEGER,
@@ -67,7 +71,8 @@ class Database:
             await cursor.execute(query)
         print("Teams table created.")
 
-    async def create_selections(self) -> None:
+    @staticmethod
+    async def create_selections() -> None:
         query = """
             CREATE TABLE IF NOT EXISTS Selections (
                 SelectionID INTEGER,
@@ -86,7 +91,8 @@ class Database:
             await cursor.execute(query)
         print("Selections table created.")
 
-    async def create_tooltips(self) -> None:
+    @staticmethod
+    async def create_tooltips() -> None:
         query = """
             CREATE TABLE IF NOT EXISTS Tooltips (
                 TooltipID TEXT,
@@ -111,7 +117,8 @@ class Database:
             await cursor.execute(query)
         print("Tooltips table created.")
 
-    async def create_keywords(self) -> None:
+    @staticmethod
+    async def create_keywords() -> None:
         query = """
             CREATE TABLE IF NOT EXISTS Keywords (
                 KeywordID INTEGER,
@@ -127,7 +134,8 @@ class Database:
             await cursor.execute(query)
         print("Keywords table created.")
 
-    async def create_matchups(self) -> None:
+    @staticmethod
+    async def create_matchups() -> None:
         query = """
             CREATE TABLE IF NOT EXISTS Matchups (
                 MatchupID INTEGER,
@@ -153,7 +161,8 @@ class Database:
             await cursor.execute(query)
         print("Matchups table created.")
 
-    async def create_matchup_tips(self) -> None:
+    @staticmethod
+    async def create_matchup_tips() -> None:
         query = """
             CREATE TABLE IF NOT EXISTS MatchupTips (
                 MatchupTipID INTEGER,
@@ -169,7 +178,8 @@ class Database:
             await cursor.execute(query)
         print("Matchup Tips table created.")
 
-    async def create_matchup_contributors(self) -> None:
+    @staticmethod
+    async def create_matchup_contributors() -> None:
         query = """
             CREATE TABLE IF NOT EXISTS Users (
                 UserID INTEGER,
@@ -181,7 +191,8 @@ class Database:
             await cursor.execute(query)
         print("Matchup Contributors table created.")
 
-    async def insert_heroes(self) -> None:
+    @staticmethod
+    async def insert_heroes() -> None:
         query = """
             SELECT COUNT(*)
             FROM Heroes
@@ -197,14 +208,20 @@ class Database:
         else:
             for file in os.listdir("./data/heroes/"):
                 if file.endswith(".json"):
-                    with open(f"./data/heroes/{file}", "r", encoding="utf-8") as file:
+                    with open(
+                        f"./data/heroes/{file}",
+                        "r",
+                        encoding="utf-8",
+                    ) as file:
                         data = json.load(file)
                     id = data.get("id")
                     name = data.get("name")
                     role = data.get("expandedRole")
 
                     with open(
-                        "./data/misc/acronyms.json", "r", encoding="utf-8"
+                        "./data/misc/acronyms.json",
+                        "r",
+                        encoding="utf-8",
                     ) as file:
                         data = json.load(file)
                     acronym = data.get(name)
@@ -218,7 +235,12 @@ class Database:
                         )
                         VALUES (?, ?, ?, ?)
                     """
-                    values = (id, name, role, acronym)
+                    values = (
+                        id,
+                        name,
+                        role,
+                        acronym,
+                    )
                     async with database_connection.cursor() as cursor:
                         await cursor.execute(query, values)
 
@@ -226,9 +248,17 @@ class Database:
             print("Heroes data added.")
 
     @staticmethod
-    def fix_description(description: str, hero: str, title: str) -> str:
+    def fix_description(
+        description: str,
+        hero: str,
+        title: str,
+    ) -> str:
         # To customize tooltips.
-        with open(f"./data/misc/corrections.json", "r", encoding="utf-8") as file:
+        with open(
+            f"./data/misc/corrections.json",
+            "r",
+            encoding="utf-8",
+        ) as file:
             data = json.load(file)
 
         try:
@@ -311,6 +341,7 @@ class Database:
         # To add a period at the end when missing.
         if not (description.endswith(".") or description.endswith("!")):
             description += "."
+            
         return description
 
     @staticmethod
@@ -333,142 +364,320 @@ class Database:
             await cursor.execute(query)
 
         for file in os.listdir("./data/heroes/"):
-            if file.endswith(".json"):
-                with open(f"./data/heroes/{file}", "r", encoding="utf-8") as file:
-                    data = json.load(file)
+            if not file.endswith(".json"):
+                continue
 
-                hero_id = int(data.get("id"))
-                hero_code = data.get("hyperlinkId")
-                hero = data.get("name")
+            with open(
+                f"./data/heroes/{file}",
+                "r",
+                encoding="utf-8",
+            ) as file:
+                data = json.load(file)
 
-                # Abilities
-                for unit in data["abilities"]:
-                    for ability in data["abilities"][unit]:
-                        new = True
-                        level = None
+            hero_id = int(data.get("id"))
+            hero_code = data.get("hyperlinkId")
+            hero = data.get("name")
 
-                        code = ability.get("abilityId")
-                        if code in [
-                            "Alexstrasza|R4",
-                            "LostVikings|Q1",
-                            "LostVikings|Q2",
-                            "LostVikings|W1",
-                            "LostVikings|W2",
-                            "LostVikings|E1",
-                            "Ragnaros|R3",
-                        ]:
-                            continue
+            # Abilities
+            for unit in data["abilities"]:
+                for ability in data["abilities"][unit]:
+                    is_new = True
+                    level = None
 
-                        name = ability.get("name")
+                    code = ability.get("abilityId")
+                    if code in [
+                        "Alexstrasza|R4",
+                        "LostVikings|Q1",
+                        "LostVikings|Q2",
+                        "LostVikings|W1",
+                        "LostVikings|W2",
+                        "LostVikings|E1",
+                        "Ragnaros|R3",
+                    ]:
+                        continue
 
-                        try:
-                            cooldown = float(ability.get("cooldown"))
-                        except TypeError:
-                            cooldown = None
+                    name = ability.get("name")
 
-                        description = ability.get("description")
-                        description = Database.fix_description(description, hero, name)
+                    try:
+                        cooldown = float(ability.get("cooldown"))
+                    except TypeError:
+                        cooldown = None
 
-                        hotkey = ability.get("hotkey")
+                    description = ability.get("description")
+                    description = Database.fix_description(description, hero, name)
 
-                        if name == "Nordic Attack Squad":
-                            hotkey = None
+                    hotkey = ability.get("hotkey")
 
-                        icon = ability.get("icon")
+                    if name == "Nordic Attack Squad":
+                        hotkey = None
 
-                        try:
-                            cost = float(ability.get("manaCost"))
-                            resource = (
-                                resources.get(hero)
-                                if hero in list(resources)
-                                else "Mana"
+                    icon = ability.get("icon")
+
+                    try:
+                        cost = float(ability.get("manaCost"))
+                        resource = (
+                            resources.get(hero) if hero in list(resources) else "Mana"
+                        )
+                    except TypeError:
+                        cost = None
+                        resource = None
+
+                    if code == "Guldan|D1":
+                        cost = 222
+                        resource = "Health"
+                    elif code == "Gazlowe|Q1":
+                        resource = "Scrap"
+                    elif code == "Samuro|21":
+                        icon = "storm_ui_ingame_heroselect_btn_samuro.png"
+                    elif code == "LostVikings|41":
+                        name = "Select All"
+                        description = "Issue orders to Olaf, Baleog, and Erik."
+                    elif code == "LtMorales|Q1":
+                        cooldown = 1
+                    elif code == "Stitches|D1":
+                        description = description.replace(
+                            "Vile Gas Hitting", "Vile Gas  Hitting"
+                        )
+
+                    type = ability.get("type").capitalize()
+                    if type == "Heroic":
+                        for tier in [4, 10]:
+                            for talent in data["talents"][str(tier)]:
+                                title = talent.get("name")
+                                if name == title:
+                                    is_new = False
+                                    continue
+                    elif type == "Activable":
+                        type = "Active"
+                    elif type == "Subunit":
+                        type = "Special"
+                    elif type == "Trait" and "Activate to" in description:
+                        hotkey = "D"
+
+                    if is_new:
+                        query = """
+                            INSERT INTO Tooltips (
+                                TooltipID,
+                                Title,
+                                Cooldown,
+                                Cost,
+                                Description,
+                                Hotkey,
+                                Icon,
+                                Level,
+                                Resource,
+                                Type,
+                                Unit,
+                                HeroID
                             )
-                        except TypeError:
-                            cost = None
-                            resource = None
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """
+                        values = (
+                            code,
+                            name,
+                            cooldown,
+                            cost,
+                            description,
+                            hotkey,
+                            icon,
+                            level,
+                            resource,
+                            type,
+                            unit,
+                            hero_id,
+                        )
+                        async with database_connection.cursor() as cursor:
+                            await cursor.execute(query, values)
+                        await Database.insert_keyword(code, description)
 
-                        if code == "Guldan|D1":
-                            cost = 222
-                            resource = "Health"
-                        elif code == "Gazlowe|Q1":
-                            resource = "Scrap"
-                        elif code == "Samuro|21":
-                            icon = "storm_ui_ingame_heroselect_btn_samuro.png"
-                        elif code == "LostVikings|41":
-                            name = "Select All"
-                            description = "Issue orders to Olaf, Baleog, and Erik."
-                        elif code == "LtMorales|Q1":
-                            cooldown = 1
-                        elif code == "Stitches|D1":
-                            description = description.replace(
-                                "Vile Gas Hitting", "Vile Gas  Hitting"
-                            )
+            # Missing from data, being added manually.
+            if hero == "Samuro":
+                code = "Samuro|D1"
+                name = "Image Transmission"
+                cooldown = 14
+                cost = None
+                description = "Activate to switch places with a target Mirror Image, removing most negative effects from Samuro and the Mirror Image.  Advancing Strikes  Basic Attacks against enemy Heroes increase Samuro's Movement Speed by 25% for 2 seconds."
+                hotkey = "D"
+                icon = "storm_ui_icon_samuro_flowingstrikes.png"
+                type = "Trait"
+                unit = "Samuro"
+                hero_id = 58
 
-                        type = ability.get("type").capitalize()
+                query = """
+                    INSERT OR REPLACE INTO Tooltips (
+                        TooltipID,
+                        Title,
+                        Cooldown,
+                        Cost,
+                        Description,
+                        Hotkey,
+                        Icon,
+                        Level,
+                        Resource,
+                        Type,
+                        Unit,
+                        HeroID
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """
+                values = (
+                    code,
+                    name,
+                    cooldown,
+                    cost,
+                    description,
+                    hotkey,
+                    icon,
+                    level,
+                    resource,
+                    type,
+                    unit,
+                    hero_id,
+                )
+                async with database_connection.cursor() as cursor:
+                    await cursor.execute(query, values)
+                await Database.insert_keyword(code, description)
 
-                        if type == "Heroic":
-                            for tier in [4, 10]:
-                                for talent in data["talents"][str(tier)]:
-                                    title = talent.get("name")
-                                    if name == title:
-                                        new = False
-                                        continue
-                        elif type == "Activable":
-                            type = "Active"
-                        elif type == "Subunit":
-                            type = "Special"
-                        elif type == "Trait" and "Activate to" in description:
-                            hotkey = "D"
-
-                        if new:
-                            query = """
-                                INSERT INTO Tooltips (
-                                    TooltipID,
-                                    Title,
-                                    Cooldown,
-                                    Cost,
-                                    Description,
-                                    Hotkey,
-                                    Icon,
-                                    Level,
-                                    Resource,
-                                    Type,
-                                    Unit,
-                                    HeroID
-                                )
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                            """
-                            values = (
-                                code,
-                                name,
-                                cooldown,
-                                cost,
-                                description,
-                                hotkey,
-                                icon,
-                                level,
-                                resource,
-                                type,
-                                unit,
-                                hero_id,
-                            )
-                            async with database_connection.cursor() as cursor:
-                                await cursor.execute(query, values)
-
-                            await Database.insert_keyword(code, description)
-
-                # Missing from data, being added manually.
-                if hero == "Samuro":
-                    code = "Samuro|D1"
-                    name = "Image Transmission"
-                    cooldown = 14
+            # Talents
+            for level in [1, 4, 7, 10, 13, 16, 20]:
+                for talent in data["talents"][str(level)]:
                     cost = None
-                    description = "Activate to switch places with a target Mirror Image, removing most negative effects from Samuro and the Mirror Image.  Advancing Strikes  Basic Attacks against enemy Heroes increase Samuro's Movement Speed by 25% for 2 seconds."
-                    hotkey = "D"
-                    icon = "storm_ui_icon_samuro_flowingstrikes.png"
-                    type = "Trait"
-                    unit = "Samuro"
-                    hero_id = 58
+                    cooldown = None
+                    unit = None
+                    resource = None
+
+                    # Replace generic terms to handle Talents with the same ID across different Heroes.
+                    code = (
+                        talent.get("tooltipId")
+                        .replace("Generic", hero_code)
+                        .replace("Nexus", f"{hero_code}Nexus")
+                    )
+                    name = talent.get("name")
+                    description = talent.get("description")
+
+                    if level == 20 and code in [
+                        "AlarakCounterStrike2ndHeroic",
+                        "AlarakDeadlyCharge",
+                    ]:
+                        if name == "Deadly Charge":
+                            code += "2ndHeroic"
+                            description += (
+                                " This ability will take over Alarak's Trait button."
+                            )
+
+                        for ability in data["abilities"]["Alarak"]:
+                            title = ability.get("name")
+                            if name == title:
+                                cost = ability.get("manaCost")
+                                if cost is not None:
+                                    cost = float(cost)
+                                    resource = (
+                                        resources.get(hero)
+                                        if hero in list(resources)
+                                        else "Mana"
+                                    )
+
+                    description = Database.fix_description(description, hero, name)
+
+                    try:
+                        cooldown = float(talent.get("cooldown"))
+                    except TypeError:
+                        expressions = [
+                            r"This effect has a(.+?)second cooldown.",
+                            r"This effect can only happen once every(.+?)seconds.",
+                            r"This can only occur every(.+?)seconds.",
+                            r"Can only trigger once every(.+?)seconds.",
+                            r"Every(.+?)seconds, ",
+                            r"Additionally, every(.+?)seconds, ",
+                            r"Can only occur once every(.+?)seconds",
+                            r"every(.+?)seconds.",
+                        ]
+                        for expression in expressions:
+                            if match := re.search(expression, description):
+                                try:
+                                    cooldown = float(match.group(1))
+
+                                    # To ignore periodic effects that match some expressions.
+                                    if cooldown < 5 or name in [
+                                        "Evolutionary Link",
+                                        "Fortified Bunker",
+                                    ]:
+                                        cooldown = None
+
+                                    break
+                                except ValueError:
+                                    cooldown = None
+                            else:
+                                cooldown = None
+
+                    type = talent.get("type").capitalize()
+                    hotkey = talent.get("hotkey")
+
+                    if level in [4, 10]:
+                        if type == "Heroic" and hero not in ["Deathwing", "Tracer"]:
+                            hotkey = "R"
+                            for ability in data["abilities"][hero_code]:
+                                title = ability.get("name")
+                                if name == title:
+                                    cost = ability.get("manaCost")
+                                    if cost is not None:
+                                        cost = float(cost)
+                                        resource = (
+                                            resources.get(hero)
+                                            if hero in list(resources)
+                                            else "Mana"
+                                        )
+
+                    if hotkey is None:
+                        if hero == "The Lost Vikings":
+                            if name in ["Spin To Win!", "Norse Force!"]:
+                                hotkey = "Q"
+                            elif name == "Jump!":
+                                hotkey = "W"
+                            elif name == "Viking Bribery":
+                                hotkey = "E"
+                        elif hero == "Tassadar":
+                            if name == "Oracle":
+                                hotkey = "D"
+                                type = "Trait"
+
+                        trait_tests = [
+                            "Activate",
+                            "Cancel",
+                            "can be activated to",
+                            "Stop channeling",
+                            "can activate",
+                        ]
+
+                        active_tests = [
+                            "Can be toggled",
+                            "can activate",
+                            "Activate to",
+                        ]
+
+                        if name == "Rite of Rak'Shir":
+                            hotkey = "1"
+                            type = "Active"
+                        elif name == "Seasoned Soldier":
+                            hotkey = None
+                            type = "Passive"
+                        elif name == "Legion of Beetles":
+                            hotkey = "1"
+                            type = "Active"
+                        elif type == "Trait" and any(
+                            string in description for string in trait_tests
+                        ):
+                            hotkey = "D"
+                        elif (type == "Active" and name != "Amani Hide") or any(
+                            string in description for string in active_tests
+                        ):
+                            hotkey = "1"
+                    else:
+                        if hero == "The Lost Vikings":
+                            if name == "Nordic Attack Squad":
+                                hotkey = None
+
+                    icon = talent.get("icon")
 
                     query = """
                         INSERT OR REPLACE INTO Tooltips (
@@ -506,187 +715,15 @@ class Database:
 
                     await Database.insert_keyword(code, description)
 
-                # Talents
-                for level in [1, 4, 7, 10, 13, 16, 20]:
-                    for talent in data["talents"][str(level)]:
-                        cost = None
-                        cooldown = None
-                        unit = None
-                        resource = None
-
-                        # Replace generic terms to handle Talents with the same ID across different Heroes.
-                        code = (
-                            talent.get("tooltipId")
-                            .replace("Generic", hero_code)
-                            .replace("Nexus", f"{hero_code}Nexus")
-                        )
-                        name = talent.get("name")
-                        description = talent.get("description")
-
-                        if level == 20 and code in [
-                            "AlarakCounterStrike2ndHeroic",
-                            "AlarakDeadlyCharge",
-                        ]:
-                            if name == "Deadly Charge":
-                                code += "2ndHeroic"
-                                description += " This ability will take over Alarak's Trait button."
-
-                            for ability in data["abilities"]["Alarak"]:
-                                title = ability.get("name")
-                                if name == title:
-                                    cost = ability.get("manaCost")
-                                    if cost is not None:
-                                        cost = float(cost)
-                                        resource = (
-                                            resources.get(hero)
-                                            if hero in list(resources)
-                                            else "Mana"
-                                        )
-
-                        description = Database.fix_description(description, hero, name)
-
-                        try:
-                            cooldown = float(talent.get("cooldown"))
-                        except TypeError:
-                            expressions = [
-                                r"This effect has a(.+?)second cooldown.",
-                                r"This effect can only happen once every(.+?)seconds.",
-                                r"This can only occur every(.+?)seconds.",
-                                r"Can only trigger once every(.+?)seconds.",
-                                r"Every(.+?)seconds, ",
-                                r"Additionally, every(.+?)seconds, ",
-                                r"Can only occur once every(.+?)seconds",
-                                r"every(.+?)seconds.",
-                            ]
-                            for expression in expressions:
-                                if match := re.search(expression, description):
-                                    try:
-                                        cooldown = float(match.group(1))
-
-                                        # To ignore periodic effects that match some expressions.
-                                        if cooldown < 5 or name in [
-                                            "Evolutionary Link",
-                                            "Fortified Bunker",
-                                        ]:
-                                            cooldown = None
-
-                                        break
-                                    except ValueError:
-                                        cooldown = None
-                                else:
-                                    cooldown = None
-
-                        type = talent.get("type").capitalize()
-                        hotkey = talent.get("hotkey")
-
-                        if level in [4, 10]:
-                            if type == "Heroic" and hero not in ["Deathwing", "Tracer"]:
-                                hotkey = "R"
-                                for ability in data["abilities"][hero_code]:
-                                    title = ability.get("name")
-                                    if name == title:
-                                        cost = ability.get("manaCost")
-                                        if cost is not None:
-                                            cost = float(cost)
-                                            resource = (
-                                                resources.get(hero)
-                                                if hero in list(resources)
-                                                else "Mana"
-                                            )
-
-                        if hotkey is None:
-                            if hero == "The Lost Vikings":
-                                if name in ["Spin To Win!", "Norse Force!"]:
-                                    hotkey = "Q"
-                                elif name == "Jump!":
-                                    hotkey = "W"
-                                elif name == "Viking Bribery":
-                                    hotkey = "E"
-                            elif hero == "Tassadar":
-                                if name == "Oracle":
-                                    hotkey = "D"
-                                    type = "Trait"
-
-                            trait_tests = [
-                                "Activate",
-                                "Cancel",
-                                "can be activated to",
-                                "Stop channeling",
-                                "can activate",
-                            ]
-
-                            active_tests = [
-                                "Can be toggled",
-                                "can activate",
-                                "Activate to",
-                            ]
-
-                            if name == "Rite of Rak'Shir":
-                                hotkey = "1"
-                                type = "Active"
-                            elif name == "Seasoned Soldier":
-                                hotkey = None
-                                type = "Passive"
-                            elif name == "Legion of Beetles":
-                                hotkey = "1"
-                                type = "Active"
-                            elif type == "Trait" and any(
-                                string in description for string in trait_tests
-                            ):
-                                hotkey = "D"
-                            elif (type == "Active" and name != "Amani Hide") or any(
-                                string in description for string in active_tests
-                            ):
-                                hotkey = "1"
-                        else:
-                            if hero == "The Lost Vikings":
-                                if name == "Nordic Attack Squad":
-                                    hotkey = None
-
-                        icon = talent.get("icon")
-
-                        query = """
-                            INSERT OR REPLACE INTO Tooltips (
-                                TooltipID,
-                                Title,
-                                Cooldown,
-                                Cost,
-                                Description,
-                                Hotkey,
-                                Icon,
-                                Level,
-                                Resource,
-                                Type,
-                                Unit,
-                                HeroID
-                            )
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                        """
-                        values = (
-                            code,
-                            name,
-                            cooldown,
-                            cost,
-                            description,
-                            hotkey,
-                            icon,
-                            level,
-                            resource,
-                            type,
-                            unit,
-                            hero_id,
-                        )
-                        async with database_connection.cursor() as cursor:
-                            await cursor.execute(query, values)
-
-                        await Database.insert_keyword(code, description)
-
         await database_connection.commit()
         print("Tooltips data updated.")
 
     # To change Keywords, update the list in the Search cog too.
     @staticmethod
-    async def insert_keyword(code: str, description: str) -> None:
+    async def insert_keyword(
+        code: str,
+        description: str,
+    ) -> None:
         keywords = []
 
         if "Armor" in description:
@@ -717,16 +754,13 @@ class Database:
                 keywords.append("Armor Reduction")
 
             if "Physical Armor" in description:
-                if (
-                    "0 Physical Armor" in description
-                    or "5 Physical Armor" in description
-                ):
+                if "0 Physical A" in description or "5 Physical A" in description:
                     keywords.append("Physical Armor")
 
                 checks = [
-                    "decrease the Physical Armor",
-                    "reduce their Physical Armor",
-                    "reduces Physical Armor",
+                    "decrease the Physical A",
+                    "reduce their Physical A",
+                    "reduces Physical A",
                 ]
                 if any(string in description for string in checks):
                     keywords.append("Physical Armor Reduction")
@@ -735,13 +769,16 @@ class Database:
                     keywords.append("Block")
 
             if "Spell Armor" in description:
-                if "0 Spell Armor" in description or "5 Spell Armor" in description:
+                if "0 Spell A" in description or "5 Spell A" in description:
                     keywords.append("Spell Armor")
 
                 if "toggled to allow" in description:
                     keywords.append("Spell Shield")
 
-                checks = ["reduces their Spell Armor", "their Spell Armor reduced"]
+                checks = [
+                    "reduces their Spell A",
+                    "their Spell Armor reduced",
+                ]
                 if any(string in description for string in checks):
                     keywords.append("Spell Armor Reduction")
 
@@ -787,7 +824,10 @@ class Database:
                 )
                 VALUES (?, ?)
             """
-            values = (code, keyword)
+            values = (
+                code,
+                keyword,
+            )
             async with database_connection.cursor() as cursor:
                 await cursor.execute(query, values)
 
@@ -823,7 +863,9 @@ class Database:
                 "Warhead Junction",
             ]
 
-            quick_match_bans = ["Haunted Mines"]
+            quick_match_bans = [
+                "Haunted Mines",
+            ]
 
             storm_league_bans = [
                 "Blackheart's Bay",
@@ -843,7 +885,11 @@ class Database:
                     )
                     VALUES (?, ?, ?)
                 """
-                values = (map, quick_match, storm_league)
+                values = (
+                    map,
+                    quick_match,
+                    storm_league,
+                )
                 async with database_connection.cursor() as cursor:
                     await cursor.execute(query, values)
 

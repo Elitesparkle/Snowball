@@ -2,6 +2,7 @@ import discord
 from discord import option
 from discord.ext import commands
 
+from main import MyBot
 from tools.autocomplete import Autocomplete
 from tools.hero import Hero
 from tools.misc import Misc
@@ -9,26 +10,38 @@ from tools.misc import Misc
 
 class Spray(commands.Cog):
 
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
+    def __init__(
+        self,
+        bot: MyBot,
+    ) -> None:
+        self.bot: MyBot = bot
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
         print("Spray extension loaded.")
 
     @commands.slash_command(
-        name="spray", description="Use a Spray made by Carbot Animations."
+        name="spray",
+        description="Use a Spray made by Carbot Animations.",
     )
-    @option("hero", description="Select a Hero.", autocomplete=Autocomplete.heroes)
-    async def spray_use(self, context: discord.ApplicationContext, hero: str) -> None:
+    @option(
+        "hero",
+        description="Select a Hero.",
+        autocomplete=Autocomplete.heroes,
+    )
+    async def spray_use(
+        self,
+        context: discord.ApplicationContext,
+        hero: str,
+    ) -> None:
         hero = await Hero.fix_name(hero)
 
         if hero is None:
             event = "Hero not valid."
+
+            await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
             return
 
         hero_code = Hero.get_code(hero, "Blizzard")
@@ -44,9 +57,9 @@ class Spray(commands.Cog):
             await context.respond(content, ephemeral=True)
         else:
             event = "Spray used."
-        finally:
-            Misc.send_log(context, event)
+
+        Misc.send_log(context, event)
 
 
-def setup(bot) -> None:
+def setup(bot: MyBot) -> None:
     bot.add_cog(Spray(bot))

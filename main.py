@@ -1,25 +1,39 @@
 import asyncio
 import os
 
-import discord  # py -m pip install py-cord; py -m pip install --upgrade py-cord
+# py -m pip install py-cord
+# py -m pip install --upgrade py-cord
+import discord
 
 from config import bot_settings
 import database
 
 
 class MyBot(discord.Bot):
-    def __init__(self, activity):
+    def __init__(
+        self,
+        activity: discord.Activity,
+    ):
         self.admin: discord.User | None = None
         super().__init__(activity=activity)
 
-    async def my_fetch_user(self, user_id: int) -> discord.User | None:
+    async def my_fetch_user(
+        self,
+        user_id: int,
+    ) -> discord.User | None:
         try:
             user = await self.fetch_user(user_id)
-        except (discord.NotFound, discord.HTTPException):
+        except (
+            discord.NotFound,
+            discord.HTTPException,
+        ):
             user = None
         return user
 
-    async def my_is_owner(self, user_id: int) -> bool:
+    async def my_is_owner(
+        self,
+        user_id: int,
+    ) -> bool:
         user = await self.my_fetch_user(user_id)
         is_owner = await self.is_owner(user) if user is not None else False
         return is_owner
@@ -27,7 +41,8 @@ class MyBot(discord.Bot):
 
 # Configure the activity that will be shown for the bot's user.
 activity = discord.Activity(
-    name="Heroes of the Storm", type=discord.ActivityType.playing
+    name="Heroes of the Storm",
+    type=discord.ActivityType.playing,
 )
 
 # Configure the bot.
@@ -55,12 +70,10 @@ async def on_connect() -> None:
             and bot.user.id == bot_settings.debug_bot
         ):
             debug_servers = bot_settings.debug_servers
-            print("Debug servers in use. Slash Commands are registered instantly.")
+            print("Debug mode: Slash Commands are registered instantly.")
         else:
             debug_servers = None
-            print(
-                "Live servers in use. Slash Commands may take up to an hour to register."
-            )
+            print("Release mode: Slash Commands may take up to an hour to register.")
 
         try:
             await bot.sync_commands(guild_ids=debug_servers)

@@ -7,23 +7,38 @@ from discord import option
 from discord.ext import commands
 
 from config import quiz_settings
+from main import MyBot
 from tools.hero import Hero
 from tools.misc import Misc
 
 
 class Quiz(commands.Cog):
 
-    types = ["Talent → Hero", "Ability → Cooldown"]
+    types = [
+        "Talent → Hero",
+        "Ability → Cooldown",
+    ]
 
     questions = [
         "Who has a Talent named `{talent}`?",
         "What is the cooldown of `{ability}`?",
     ]
 
-    tiers = [1, 4, 7, 10, 13, 16, 20]
+    tiers = [
+        1,
+        4,
+        7,
+        10,
+        13,
+        16,
+        20,
+    ]
 
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
+    def __init__(
+        self,
+        bot: MyBot,
+    ) -> None:
+        self.bot: MyBot = bot
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
@@ -31,28 +46,52 @@ class Quiz(commands.Cog):
         print("Draft extension loaded.")
 
     class QuizView(discord.ui.View):
-        def __init__(self, bot) -> None:
-            self.bot = bot
+        def __init__(
+            self,
+            bot: MyBot,
+        ) -> None:
+            self.bot: MyBot = bot
             super().__init__(timeout=None)
 
-        @discord.ui.button(custom_id="Quiz¦Option A", style=discord.ButtonStyle.blurple)
-        async def option_a(self, button, interaction) -> None:
+        @discord.ui.button(
+            custom_id="Quiz¦Option A",
+            style=discord.ButtonStyle.blurple,
+        )
+        async def option_a(
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
+        ) -> None:
             self.disable_all_items()
             await self.on_interaction(button, interaction)
 
             event = f"{button.label} selected."
             Misc.send_log(interaction, event)
 
-        @discord.ui.button(custom_id="Quiz¦Option B", style=discord.ButtonStyle.blurple)
-        async def option_b(self, button, interaction) -> None:
+        @discord.ui.button(
+            custom_id="Quiz¦Option B",
+            style=discord.ButtonStyle.blurple,
+        )
+        async def option_b(
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
+        ) -> None:
             self.disable_all_items()
             await self.on_interaction(button, interaction)
 
             event = f"{button.label} selected."
             Misc.send_log(interaction, event)
 
-        @discord.ui.button(custom_id="Quiz¦Option C", style=discord.ButtonStyle.blurple)
-        async def option_c(self, button, interaction) -> None:
+        @discord.ui.button(
+            custom_id="Quiz¦Option C",
+            style=discord.ButtonStyle.blurple,
+        )
+        async def option_c(
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
+        ) -> None:
             self.disable_all_items()
             await self.on_interaction(button, interaction)
 
@@ -60,7 +99,9 @@ class Quiz(commands.Cog):
             Misc.send_log(interaction, event)
 
         async def on_interaction(
-            self, button: discord.ui.Button, interaction: discord.Interaction
+            self,
+            button: discord.ui.Button,
+            interaction: discord.Interaction,
         ) -> None:
 
             # Check if it's a URL button.
@@ -92,12 +133,20 @@ class Quiz(commands.Cog):
             await interaction.response.edit_message(view=self)
 
     @commands.slash_command(
-        name="quiz", description="Get a random question to test your game knowledge."
+        name="quiz",
+        description="Get a random question to test your game knowledge.",
     )
     @option(
-        "type", description="Select a type of question.", default=None, choices=types
+        "type",
+        description="Select a type of question.",
+        default=None,
+        choices=types,
     )
-    async def quiz(self, context: discord.ApplicationContext, type: str) -> None:
+    async def quiz(
+        self,
+        context: discord.ApplicationContext,
+        type: str,
+    ) -> None:
         # If a type has not been selected, randomly choose one.
         try:
             question_id = self.types.index(type)
@@ -116,7 +165,11 @@ class Quiz(commands.Cog):
                 return
 
             hero_code = Hero.get_code(hero, "Blizzard")
-            with open(f"./data/heroes/{hero_code}.json", "r", encoding="utf-8") as file:
+            with open(
+                f"./data/heroes/{hero_code}.json",
+                "r",
+                encoding="utf-8",
+            ) as file:
                 data = json.load(file)
 
             tier = self.tiers[secrets.randbelow(7)]
@@ -139,7 +192,9 @@ class Quiz(commands.Cog):
 
                 hero_code = Hero.get_code(hero, "Blizzard")
                 with open(
-                    f"./data/heroes/{hero_code}.json", "r", encoding="utf-8"
+                    f"./data/heroes/{hero_code}.json",
+                    "r",
+                    encoding="utf-8",
                 ) as file:
                     data = json.load(file)
 
@@ -168,7 +223,9 @@ class Quiz(commands.Cog):
 
                 hero_code = Hero.get_code(hero, "Blizzard")
                 with open(
-                    f"./data/heroes/{hero_code}.json", "r", encoding="utf-8"
+                    f"./data/heroes/{hero_code}.json",
+                    "r",
+                    encoding="utf-8",
                 ) as file:
                     data = json.load(file)
 
@@ -182,7 +239,8 @@ class Quiz(commands.Cog):
                     break
 
             content = self.questions[question_id].format(
-                ability=ability_name, hero=hero_code
+                ability=ability_name,
+                hero=hero_code,
             )
 
             answers = []
@@ -217,8 +275,8 @@ class Quiz(commands.Cog):
                 child.label = str(answers[index])
                 child.custom_id = f"Quiz¦{answers[0]}|{answers[1]}|{answers[2]}¦{encoded_index}¦{encoded_solution}"
 
-        await context.respond(content=content, view=view)
+        await context.respond(content, view=view)
 
 
-def setup(bot) -> None:
+def setup(bot: MyBot) -> None:
     bot.add_cog(Quiz(bot))

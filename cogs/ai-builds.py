@@ -9,6 +9,7 @@ import discord
 from discord.ext import commands
 
 from config import ai_build_settings
+from main import MyBot
 from tools.hero import Hero
 from tools.misc import Misc
 
@@ -21,8 +22,11 @@ class AIBuilds(commands.Cog):
         guild_ids=ai_build_settings.allowed_servers,
     )
 
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
+    def __init__(
+        self,
+        bot: MyBot,
+    ) -> None:
+        self.bot: MyBot = bot
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
@@ -30,18 +34,21 @@ class AIBuilds(commands.Cog):
 
     @staticmethod
     async def fix_build_code(
-        context: discord.ApplicationContext, build_code: str
+        context: discord.ApplicationContext,
+        build_code: str,
     ) -> str | None:
         build_search = re.search(
-            r"\[T\d{7}\,[úa-z\s\.\-\']+]", build_code, re.IGNORECASE
+            r"\[T\d{7}\,[úa-z\s\.\-\']+]",
+            build_code,
+            re.IGNORECASE,
         )
 
         if build_search is None:
             event = "Build Code not valid."
+
+            await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
             return
 
         build_code = build_search.group(0)  # Extract "[T<Build>,<Hero>]"
@@ -51,29 +58,43 @@ class AIBuilds(commands.Cog):
 
         if hero is None:
             event = "Hero not valid."
+
+            await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
             return
 
         return build_code.replace(build_code[10:-1], hero)
 
     @staticmethod
     async def craft_xml(
-        context: discord.ApplicationContext, build_code: str, player_id: int
+        context: discord.ApplicationContext,
+        build_code: str,
+        player_id: int,
     ) -> tuple[str, str] | None:
 
         hero = build_code[10:-1]
         hero_code = Hero.get_code(hero, "Blizzard")
         file = f"{hero_code}.json"
-        with open(f"./data/heroes/{file}", "r", encoding="utf-8") as file:
+        with open(
+            f"./data/heroes/{file}",
+            "r",
+            encoding="utf-8",
+        ) as file:
             data = json.load(file)
 
         selected_sorts = [int(number) for number in build_code[2:9]]
         selected_talents = []
 
-        tiers = ["1", "4", "7", "10", "13", "16", "20"]
+        tiers = [
+            "1",
+            "4",
+            "7",
+            "10",
+            "13",
+            "16",
+            "20",
+        ]
         for index, tier in enumerate(tiers):
             for talent in data["talents"][tier]:
                 if talent["sort"] == selected_sorts[index]:
@@ -85,10 +106,10 @@ class AIBuilds(commands.Cog):
                 event = "Not enough Talents selected."
             else:
                 event = "Too many Talents selected."
+
+            await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
             return
 
         internal_hero_id = data["cHeroId"]
@@ -124,14 +145,21 @@ class AIBuilds(commands.Cog):
 
         # Indent XML.
         dom = minidom.parseString(text)
-        xml = dom.toprettyxml(indent=" " * 4, encoding="us-ascii").decode("us-ascii")
-
+        xml = dom.toprettyxml(
+            indent=" " * 4,
+            encoding="us-ascii",
+        ).decode("us-ascii")
         return xml, hero
 
     class AIBuildsModal(discord.ui.Modal):
-        def __init__(self, context, *args, **kwargs) -> None:
+        def __init__(
+            self,
+            context: discord.ApplicationContext,
+            *args,
+            **kwargs,
+        ) -> None:
             super().__init__(*args, **kwargs)
-            self.context = context
+            self.context: discord.ApplicationContext = context
 
             self.add_item(
                 discord.ui.InputText(
@@ -143,10 +171,15 @@ class AIBuilds(commands.Cog):
                 )
             )
 
-        async def callback(self, interaction: discord.Interaction) -> None:
+        async def callback(
+            self,
+            interaction: discord.Interaction,
+        ) -> None:
             input_string = self.children[0].value
+
             assert input_string is not None
             input_rows = input_string.split("\n")
+
             assert interaction.user is not None
             folder = f"./temp/{interaction.user.id}/"
 
@@ -178,6 +211,7 @@ class AIBuilds(commands.Cog):
                         player_id = index
 
                 build_code = await AIBuilds.fix_build_code(self.context, build_code)
+
                 assert build_code is not None
                 craft = await AIBuilds.craft_xml(self.context, build_code, player_id)
                 if craft is None:
@@ -197,11 +231,15 @@ class AIBuilds(commands.Cog):
                 )
 
                 filename = f"Player{player_id}Data.xml"
-                with open(f"{folder}/{filename}", "w", encoding="us-ascii") as file:
+                with open(
+                    f"{folder}/{filename}",
+                    "w",
+                    encoding="us-ascii",
+                ) as file:
                     file.write(xml)
 
                 event = f"AI Build for {hero} created."
-                Misc.send_log(self.context, event)
+                Misc.send_log(self.context, event=event)
 
             if len(input_rows) > 1:
 
@@ -217,7 +255,11 @@ class AIBuilds(commands.Cog):
 
                 filename = f"{interaction.user.id}.zip"
                 path = f"./temp/{filename}"
-                with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as zipf:
+                with zipfile.ZipFile(
+                    path,
+                    "w",
+                    zipfile.ZIP_DEFLATED,
+                ) as zipf:
                     zipdir(folder, zipf)
 
                 file = discord.File(path, "AIBuilds.zip")
@@ -238,11 +280,17 @@ class AIBuilds(commands.Cog):
             # Delete temporary files after being sent.
             os.remove(path)
 
-    @ai.command(name="builds", description="Create new Builds for AI.")
-    async def ai_builds(self, context: discord.ApplicationContext) -> None:
+    @ai.command(
+        name="builds",
+        description="Create new Builds for AI.",
+    )
+    async def ai_builds(
+        self,
+        context: discord.ApplicationContext,
+    ) -> None:
         modal = self.AIBuildsModal(context=context, title="AI Builds")
         await context.send_modal(modal)
 
 
-def setup(bot) -> None:
+def setup(bot: MyBot) -> None:
     bot.add_cog(AIBuilds(bot))

@@ -5,6 +5,7 @@ from discord import option
 from discord.ext import commands
 
 from config import authors
+from main import MyBot
 from tools.autocomplete import Autocomplete
 from tools.hero import Hero
 from tools.misc import Misc
@@ -12,8 +13,11 @@ from tools.misc import Misc
 
 class Build(commands.Cog):
 
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
+    def __init__(
+        self,
+        bot: MyBot,
+    ) -> None:
+        self.bot: MyBot = bot
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
@@ -21,23 +25,24 @@ class Build(commands.Cog):
 
     @staticmethod
     async def build_conversion(
-        context: discord.ApplicationContext, code: str | None = None
+        context: discord.ApplicationContext,
+        code: str | None = None,
     ) -> None:
         if code is None:
             event = "Build Code not present."
+
+            await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
             return
 
         build_search = re.search(r"\[T\d{7}\,[úa-z\s\.\-\'A-Z]+]", code)
         if build_search is None:
             event = "Build Code not valid."
+
+            await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
             return
 
         build_code = build_search.group(0)  # Extract "[T<Build>,<Hero>]"
@@ -47,10 +52,10 @@ class Build(commands.Cog):
 
         if hero is None:
             event = "Hero not valid."
+
+            await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
             return
 
         # Psionic Storm Talent Builder
@@ -67,26 +72,41 @@ class Build(commands.Cog):
         title = f"{hero} Talent Calculator {build_code}"
         description = f"Check this {hero} Build via Talent Calculator and easily share it with your friends."
         embed = discord.Embed(
-            title=title, url=link, description=description, color=discord.Color.blue()
+            title=title,
+            url=link,
+            description=description,
+            color=discord.Color.blue(),
         )
         embed.set_thumbnail(url=f"attachment://{filename}")
         embed.set_author(**authors["Psionic Storm"])
-        await context.respond(file=file, embed=embed)
 
         event = f"{hero} Talent Calculator shared."
-        Misc.send_log(context, event)
 
-    @commands.slash_command(name="build", description="Get a link to a Build.")
-    @option("hero", description="Select a Hero.", autocomplete=Autocomplete.heroes)
-    async def share_build(self, context: discord.ApplicationContext, hero: str) -> None:
+        await context.respond(file=file, embed=embed)
+        Misc.send_log(context, event=event)
+
+    @commands.slash_command(
+        name="build",
+        description="Get a link to a Build.",
+    )
+    @option(
+        "hero",
+        description="Select a Hero.",
+        autocomplete=Autocomplete.heroes,
+    )
+    async def share_build(
+        self,
+        context: discord.ApplicationContext,
+        hero: str,
+    ) -> None:
         hero = await Hero.fix_name(hero)
 
         if hero is None:
             event = "Hero not valid."
+
+            await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
 
-            content = event
-            await context.respond(content, ephemeral=True)
             return
 
         hero_code = Hero.get_code(hero, "Icy Veins")
@@ -101,26 +121,35 @@ class Build(commands.Cog):
         file = discord.File(path, filename)
 
         embed = discord.Embed(
-            title=title, url=link, description=description, color=discord.Color.blue()
+            title=title,
+            url=link,
+            description=description,
+            color=discord.Color.blue(),
         )
         embed.set_thumbnail(url=f"attachment://{filename}")
         embed.set_author(**authors["Icy Veins"])
 
-        await context.respond(file=file, embed=embed)
-
         event = f"{hero} Build Guide shared."
-        Misc.send_log(context, event)
+
+        await context.respond(file=file, embed=embed)
+        Misc.send_log(context, event=event)
 
     @commands.slash_command(
         name="convert",
         description="Convert an in-game Build Code into a link to a Build.",
     )
-    @option("code", description="Insert a valid in-game Build Code.", required=True)
+    @option(
+        "code",
+        description="Insert a valid in-game Build Code.",
+        required=True,
+    )
     async def convert_build_code(
-        self, context: discord.ApplicationContext, code: str
+        self,
+        context: discord.ApplicationContext,
+        code: str,
     ) -> None:
         await self.build_conversion(context, code)
 
 
-def setup(bot) -> None:
+def setup(bot: MyBot) -> None:
     bot.add_cog(Build(bot))

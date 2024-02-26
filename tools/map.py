@@ -16,7 +16,10 @@ class Map:
             ORDER BY Name
         """
 
-        if game_mode in ["Quick Match", "Storm League"]:
+        if game_mode in [
+            "Quick Match",
+            "Storm League",
+        ]:
             # Replace the placeholder in the query with the name of the selected column.
             query = query.replace("?", game_mode.replace(" ", ""))
         else:
@@ -27,12 +30,14 @@ class Map:
             results = await cursor.fetchall()
 
         maps = [map for result in results for map in result]
-
         return maps
 
-    # To convert "S seconds" into "M:SS minutes"
+    # Convert "S seconds" into "M:SS minutes".
     @staticmethod
-    def format_timing(timing: str, format: str) -> str:
+    def format_timing(
+        timing: str,
+        format: str,
+    ) -> str:
         if format == "Minutes":
             values_in_seconds = re.findall("[0-9]+", timing)
             values_in_minutes = [
@@ -78,11 +83,13 @@ class Map:
                 INSTR(Name, ?),
                 Name
         """
-        values = (f"%{fixed_name}%", fixed_name)
+        values = (
+            f"%{fixed_name}%",
+            fixed_name,
+        )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
             results = await cursor.fetchone()
 
         fixed_name = results[0] if results else None
-
         return fixed_name

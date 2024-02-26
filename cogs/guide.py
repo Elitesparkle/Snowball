@@ -7,27 +7,47 @@ from discord.ext import commands
 import requests  # pip install requests
 
 from config import authors
+from main import MyBot
 from tools.autocomplete import Autocomplete
 from tools.map import Map
 from tools.misc import Misc
 
 
+class NoDescription(Exception):
+    pass
+
+
 class Guide(commands.Cog):
 
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
+    def __init__(
+        self,
+        bot: MyBot,
+    ) -> None:
+        self.bot: MyBot = bot
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
         print("Guide extension loaded.")
 
-    @commands.slash_command(name="guide", description="Get a link to a guide.")
-    @option(
-        "type", description="Select a category.", autocomplete=Autocomplete.guide_types
+    @commands.slash_command(
+        name="guide",
+        description="Get a link to a guide.",
     )
-    @option("title", description="Select a title.", autocomplete=Autocomplete.guides)
+    @option(
+        "type",
+        description="Select a category.",
+        autocomplete=Autocomplete.guide_types,
+    )
+    @option(
+        "title",
+        description="Select a title.",
+        autocomplete=Autocomplete.guides,
+    )
     async def guide(
-        self, context: discord.ApplicationContext, type: str, title: str
+        self,
+        context: discord.ApplicationContext,
+        type: str,
+        title: str,
     ) -> None:
         thumbnail_url = "https://mir-s3-cdn-cf.behance.net/project_modules/fs/4cf28827382215.563643d0ae125.jpg"
 
@@ -35,7 +55,9 @@ class Guide(commands.Cog):
             author = "Elitesparkle"
 
             with open(
-                "data/misc/tips-of-the-storm.json", "r", encoding="utf-8"
+                "data/misc/tips-of-the-storm.json",
+                "r",
+                encoding="utf-8",
             ) as file:
                 guide = json.load(file)
             description, link = guide[title]
@@ -76,16 +98,16 @@ class Guide(commands.Cog):
 
             # Get the meta description for the selected page.
             response = requests.get(link)
-            soup = BeautifulSoup(markup=response.text, features="html.parser")
+            soup = BeautifulSoup(
+                markup=response.text,
+                features="html.parser",
+            )
             metas = soup.find_all("meta")
             descriptions = [
                 meta.attrs["content"]
                 for meta in metas
                 if "name" in meta.attrs and meta.attrs["name"] == "description"
             ]
-
-            class NoDescription(Exception):
-                pass
 
             try:
                 description = descriptions[0]
@@ -96,16 +118,18 @@ class Guide(commands.Cog):
                 raise NoDescription
 
         embed = discord.Embed(
-            title=title, url=link, description=description, color=discord.Color.blue()
+            title=title,
+            url=link,
+            description=description,
+            color=discord.Color.blue(),
         )
         embed.set_thumbnail(url=thumbnail_url)
         embed.set_author(**authors[author])
 
-        await context.respond(embed=embed)
-
         event = f"{title} shared."
+        await context.respond(embed=embed)
         Misc.send_log(context, event)
 
 
-def setup(bot) -> None:
+def setup(bot: MyBot) -> None:
     bot.add_cog(Guide(bot))

@@ -14,10 +14,15 @@ from PIL import Image
 class Admin(commands.Cog):
 
     admin = discord.SlashCommandGroup(
-        name="admin", description="Admin tools.", guild_ids=bot_settings.debug_servers
+        name="admin",
+        description="Admin tools.",
+        guild_ids=bot_settings.debug_servers,
     )
 
-    def __init__(self, bot) -> None:
+    def __init__(
+        self,
+        bot: MyBot,
+    ) -> None:
         self.bot: MyBot = bot
 
     @commands.Cog.listener()
@@ -25,7 +30,8 @@ class Admin(commands.Cog):
         print("Admin extension loaded.")
 
     @admin.command(
-        name="clear", description="Clear private messages sent to you by this bot."
+        name="clear",
+        description="Clear private messages sent to you by this bot.",
     )
     @option(
         "amount",
@@ -35,7 +41,9 @@ class Admin(commands.Cog):
     )
     @commands.is_owner()
     async def admin_clear(
-        self, context: discord.ApplicationContext, amount: int
+        self,
+        context: discord.ApplicationContext,
+        amount: int,
     ) -> None:
         # Defer the response, to have more time for responding.
         await context.defer(ephemeral=True)
@@ -53,20 +61,31 @@ class Admin(commands.Cog):
                 index += 1
 
         content = f"{index} private messages received by this bot cleared."
-        await context.respond(content=content, ephemeral=True)
+        await context.respond(content, ephemeral=True)
         print(content)
 
-    @admin.command(name="load", description="Load an extension.")
+    @staticmethod
+    def get_cog_choices() -> list[str]:
+        cog_choices = []
+        for cog in os.listdir("./cogs"):
+            if cog.endswith(".py"):
+                cog_choices.append(cog[:-3].capitalize())
+        return cog_choices
+
+    @admin.command(
+        name="load",
+        description="Load an extension.",
+    )
     @option(
         "extension",
         description="Select an extension.",
-        choices=[
-            cog[:-3].capitalize() for cog in os.listdir("./cogs") if cog.endswith(".py")
-        ],
+        choices=get_cog_choices(),
     )
     @commands.is_owner()
     async def admin_load(
-        self, context: discord.ApplicationContext, extension: str
+        self,
+        context: discord.ApplicationContext,
+        extension: str,
     ) -> None:
         extension = extension.lower()
 
@@ -76,22 +95,25 @@ class Admin(commands.Cog):
             event = "not active."
         else:
             event = "loaded"
-        finally:
-            content = f"{extension.capitalize()} extension {event}."
-            await context.respond(content=content, ephemeral=True)
-            print(content)
 
-    @admin.command(name="reload", description="Reload an extension.")
+        content = f"{extension.capitalize()} extension {event}."
+        await context.respond(content, ephemeral=True)
+        print(content)
+
+    @admin.command(
+        name="reload",
+        description="Reload an extension.",
+    )
     @option(
         "extension",
         description="Select an extension.",
-        choices=[
-            cog[:-3].capitalize() for cog in os.listdir("./cogs") if cog.endswith(".py")
-        ],
+        choices=get_cog_choices(),
     )
     @commands.is_owner()
     async def admin_reload(
-        self, context: discord.ApplicationContext, extension: str
+        self,
+        context: discord.ApplicationContext,
+        extension: str,
     ) -> None:
         extension = extension.lower()
         try:
@@ -103,18 +125,27 @@ class Admin(commands.Cog):
             event = "already loaded"
         else:
             event = "reloaded"
-        finally:
-            content = f"{extension.capitalize()} extension {event}."
-            await context.respond(content=content, ephemeral=True)
-            print(content)
 
-    @admin.command(name="resize", description="Resize images.")
+        content = f"{extension.capitalize()} extension {event}."
+        await context.respond(content, ephemeral=True)
+        print(content)
+
+    @admin.command(
+        name="resize",
+        description="Resize images.",
+    )
     @option(
         "source",
         description="Choose a source folder by writing its path (eg. `./images/source`).",
     )
-    @option("extension", description='Choose a file extension (eg. `(".png")`).')
-    @option("size", description="Choose the new size (eg. `100` for 100 x 100).")
+    @option(
+        "extension",
+        description='Choose a file extension (eg. `(".png")`).',
+    )
+    @option(
+        "size",
+        description="Choose the new size (eg. `100` for 100 x 100).",
+    )
     @option(
         "destination",
         description="Choose a destination folder by writing its path (eg. `./images/destination`).",
@@ -137,20 +168,23 @@ class Admin(commands.Cog):
                     image.save(f"{destination}/{name}.png", "PNG")
 
         content = f"All `{extension}` images in `{source}` resized and saved in `{destination}`."
-        await context.respond(content=content, ephemeral=True)
+        await context.respond(content, ephemeral=True)
         print(content)
 
-    @admin.command(name="unload", description="Unload an extension.")
+    @admin.command(
+        name="unload",
+        description="Unload an extension.",
+    )
     @option(
         "extension",
         description="Select an extension.",
-        choices=[
-            cog[:-3].capitalize() for cog in os.listdir("./cogs") if cog.endswith(".py")
-        ],
+        choices=get_cog_choices(),
     )
     @commands.is_owner()
     async def admin_unload(
-        self, context: discord.ApplicationContext, extension: str
+        self,
+        context: discord.ApplicationContext,
+        extension: str,
     ) -> None:
         extension = extension.lower()
         try:
@@ -161,12 +195,18 @@ class Admin(commands.Cog):
             event = "unloaded"
 
         content = f"{extension.capitalize()} extension {event}."
-        await context.respond(content=content, ephemeral=True)
+        await context.respond(content, ephemeral=True)
         print(content)
 
-    @admin.command(name="draft", description="Create draft layouts.")
+    @admin.command(
+        name="draft",
+        description="Create draft layouts.",
+    )
     @commands.is_owner()
-    async def admin_draft(self, context: discord.ApplicationContext) -> None:
+    async def admin_draft(
+        self,
+        context: discord.ApplicationContext,
+    ) -> None:
         # Size values for Hero borders.
         border_modifier = 5
         border_width = Draft.portrait_size[0] + border_modifier * 2
@@ -206,21 +246,30 @@ class Admin(commands.Cog):
                 slot += 1
 
         content = "Draft layouts crafted."
-        await context.respond(content=content, ephemeral=True)
+        await context.respond(content, ephemeral=True)
         print(content)
 
-    @admin.command(name="update", description="Update data in the database.")
-    @option("table", description="Select a table to update.", choices=["Tooltips"])
+    @admin.command(
+        name="update",
+        description="Update data in the database.",
+    )
+    @option(
+        "table",
+        description="Select a table to update.",
+        choices=["Tooltips"],
+    )
     @commands.is_owner()
     async def admin_update(
-        self, context: discord.ApplicationContext, table: str
+        self,
+        context: discord.ApplicationContext,
+        table: str,
     ) -> None:
         if table == "Tooltips":
             await Database.update_tooltips_and_keywords()
 
         content = f"{table} data updated."
-        await context.respond(content=content, ephemeral=True)
+        await context.respond(content, ephemeral=True)
 
 
-def setup(bot) -> None:
+def setup(bot: MyBot) -> None:
     bot.add_cog(Admin(bot))
