@@ -118,7 +118,7 @@ class Quiz(commands.Cog):
                 index = self.children.index(child)
                 encoded_index = str(index + quiz_settings.offset_value)
 
-                if isinstance(child, discord.Button):
+                if isinstance(child, discord.ui.Button):
                     if index == selection_id:
                         if selection_id == solution_id:
                             child.style = discord.ButtonStyle.green
@@ -210,6 +210,7 @@ class Quiz(commands.Cog):
             answers.append(solution)
             random.shuffle(answers)
             solution_id = answers.index(solution)
+
         elif question_id == 1:
             while True:
                 hero = await Hero.random()
@@ -271,7 +272,7 @@ class Quiz(commands.Cog):
             index = view.children.index(child)
             encoded_index = str(index + quiz_settings.offset_value)
 
-            if isinstance(child, discord.Button):
+            if isinstance(child, discord.ui.Button):
                 child.label = str(answers[index])
                 child.custom_id = f"Quiz¦{answers[0]}|{answers[1]}|{answers[2]}¦{encoded_index}¦{encoded_solution}"
 
