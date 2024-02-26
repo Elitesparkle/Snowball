@@ -333,7 +333,12 @@ class Database:
             description = description.replace(old_string, new_string)
 
         # To split paragraphs near keywords.
-        keywords = ["Active", "Passive", "Quest", "Reward"]
+        keywords = [
+            "Active",
+            "Passive",
+            "Quest",
+            "Reward",
+        ]
         for keyword in keywords:
             description = description.replace(f". {keyword}:", f".  {keyword}:")
 
@@ -383,10 +388,14 @@ class Database:
             # Abilities
             for unit in data["abilities"]:
                 for ability in data["abilities"][unit]:
+                    assert isinstance(ability, dict)
+
                     is_new = True
                     level = None
 
                     code = ability.get("abilityId")
+                    assert code is not None
+
                     if code in [
                         "Alexstrasza|R4",
                         "LostVikings|Q1",
@@ -399,13 +408,18 @@ class Database:
                         continue
 
                     name = ability.get("name")
+                    assert name is not None
 
                     try:
-                        cooldown = float(ability.get("cooldown"))
+                        cooldown = ability.get("cooldown")
+                        assert cooldown is not None
+                        cooldown = float(cooldown)
                     except TypeError:
                         cooldown = None
 
                     description = ability.get("description")
+                    assert description is not None
+
                     description = Database.fix_description(description, hero, name)
 
                     hotkey = ability.get("hotkey")
@@ -416,10 +430,14 @@ class Database:
                     icon = ability.get("icon")
 
                     try:
-                        cost = float(ability.get("manaCost"))
-                        resource = (
-                            resources.get(hero) if hero in list(resources) else "Mana"
-                        )
+                        cost = ability.get("manaCost")
+                        assert cost is not None
+                        cost = float(cost)
+
+                        if hero in list(resources):
+                            resource = resources.get(hero)
+                        else:
+                            resource = "Mana"
                     except TypeError:
                         cost = None
                         resource = None
@@ -427,33 +445,44 @@ class Database:
                     if code == "Guldan|D1":
                         cost = 222
                         resource = "Health"
+
                     elif code == "Gazlowe|Q1":
                         resource = "Scrap"
+
                     elif code == "Samuro|21":
                         icon = "storm_ui_ingame_heroselect_btn_samuro.png"
+
                     elif code == "LostVikings|41":
                         name = "Select All"
                         description = "Issue orders to Olaf, Baleog, and Erik."
+
                     elif code == "LtMorales|Q1":
                         cooldown = 1
+
                     elif code == "Stitches|D1":
                         description = description.replace(
                             "Vile Gas Hitting", "Vile Gas  Hitting"
                         )
 
-                    type = ability.get("type").capitalize()
-                    if type == "Heroic":
+                    category = ability.get("type")
+                    assert isinstance(category, str)
+                    category = category.capitalize()
+
+                    if category == "Heroic":
                         for tier in [4, 10]:
                             for talent in data["talents"][str(tier)]:
                                 title = talent.get("name")
                                 if name == title:
                                     is_new = False
                                     continue
-                    elif type == "Activable":
-                        type = "Active"
-                    elif type == "Subunit":
-                        type = "Special"
-                    elif type == "Trait" and "Activate to" in description:
+
+                    elif category == "Activable":
+                        category = "Active"
+
+                    elif category == "Subunit":
+                        category = "Special"
+
+                    elif category == "Trait" and "Activate to" in description:
                         hotkey = "D"
 
                     if is_new:
@@ -484,7 +513,7 @@ class Database:
                             icon,
                             level,
                             resource,
-                            type,
+                            category,
                             unit,
                             hero_id,
                         )
@@ -501,7 +530,7 @@ class Database:
                 description = "Activate to switch places with a target Mirror Image, removing most negative effects from Samuro and the Mirror Image.  Advancing Strikes  Basic Attacks against enemy Heroes increase Samuro's Movement Speed by 25% for 2 seconds."
                 hotkey = "D"
                 icon = "storm_ui_icon_samuro_flowingstrikes.png"
-                type = "Trait"
+                category = "Trait"
                 unit = "Samuro"
                 hero_id = 58
 
@@ -532,7 +561,7 @@ class Database:
                     icon,
                     level,
                     resource,
-                    type,
+                    category,
                     unit,
                     hero_id,
                 )
@@ -621,14 +650,14 @@ class Database:
                             else:
                                 cooldown = None
 
-                    type = talent.get("type")
-                    assert isinstance(type, str)
-                    type = type.capitalize()
+                    category = talent.get("type")
+                    assert isinstance(category, str)
+                    category = category.capitalize()
 
                     hotkey = talent.get("hotkey")
 
                     if level in [4, 10]:
-                        if type == "Heroic" and hero not in [
+                        if category == "Heroic" and hero not in [
                             "Deathwing",
                             "Tracer",
                         ]:
@@ -661,7 +690,7 @@ class Database:
                         elif hero == "Tassadar":
                             if name == "Oracle":
                                 hotkey = "D"
-                                type = "Trait"
+                                category = "Trait"
 
                         trait_tests = [
                             "Activate",
@@ -679,18 +708,18 @@ class Database:
 
                         if name == "Rite of Rak'Shir":
                             hotkey = "1"
-                            type = "Active"
+                            category = "Active"
                         elif name == "Seasoned Soldier":
                             hotkey = None
-                            type = "Passive"
+                            category = "Passive"
                         elif name == "Legion of Beetles":
                             hotkey = "1"
-                            type = "Active"
-                        elif type == "Trait" and any(
+                            category = "Active"
+                        elif category == "Trait" and any(
                             string in description for string in trait_tests
                         ):
                             hotkey = "D"
-                        elif (type == "Active" and name != "Amani Hide") or any(
+                        elif (category == "Active" and name != "Amani Hide") or any(
                             string in description for string in active_tests
                         ):
                             hotkey = "1"
@@ -728,7 +757,7 @@ class Database:
                         icon,
                         level,
                         resource,
-                        type,
+                        category,
                         unit,
                         hero_id,
                     )

@@ -135,7 +135,7 @@ class Tooltip(commands.Cog):
         "Scrap",
     ]
 
-    types = [
+    slots = [
         "Active",
         "Basic",
         "Heroic",
@@ -206,15 +206,15 @@ class Tooltip(commands.Cog):
         choices=resources,
     )
     @option(
+        "slot",
+        description="Select a slot.",
+        default=None,
+        choices=slots,
+    )
+    @option(
         "title",
         description="Insert the name of an Ability or Talent, or part of it.",
         default=None,
-    )
-    @option(
-        "type",
-        description="Select a type.",
-        default=None,
-        choices=types,
     )
     async def tooltip(
         self,
@@ -228,8 +228,8 @@ class Tooltip(commands.Cog):
         keyword: str,
         level: int,
         resource: str,
+        slot: str,
         title: str,
-        type: str,
     ) -> None:
         if context.channel_id in self.busy_channels:
             self.stop_searching.append(context.channel_id)
@@ -312,17 +312,17 @@ class Tooltip(commands.Cog):
                 query += " AND Tooltips.Resource = ?"
                 values += (resource,)
 
+            if slot is not None:
+                slot = slot.replace(" Talent", "")
+
+                query += " AND Tooltips.Type = ?"
+                values += (slot,)
+
             if title is not None:
                 title = unidecode(title)
 
                 query += " AND Tooltips.Title LIKE ?"
                 values += (f"%{title}%",)
-
-            if type is not None:
-                type = type.replace(" Talent", "")
-
-                query += " AND Tooltips.Type = ?"
-                values += (type,)
 
             # Remove duplicates and fix order.
             query += """
@@ -382,7 +382,7 @@ class Tooltip(commands.Cog):
                     icon,
                     level,
                     resource,
-                    type,
+                    slot,
                     unit,
                     hero,
                 ) = result
@@ -410,8 +410,10 @@ class Tooltip(commands.Cog):
                 if cost is not None:
                     if name == "Life Tap":
                         resource = "(+4% per level) " + resource
+
                     if cost != 1 and resource == "Scrap":
                         resource += "s"
+
                     rows.append(f"**Cost:** {cost} {resource}")
 
                 if cooldown is not None:

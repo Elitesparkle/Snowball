@@ -14,7 +14,7 @@ from tools.misc import Misc
 
 class Quiz(commands.Cog):
 
-    types = [
+    categories = [
         "Talent → Hero",
         "Ability → Cooldown",
     ]
@@ -137,21 +137,21 @@ class Quiz(commands.Cog):
         description="Get a random question to test your game knowledge.",
     )
     @option(
-        "type",
+        "category",
         description="Select a type of question.",
         default=None,
-        choices=types,
+        choices=categories,
     )
     async def quiz(
         self,
         context: discord.ApplicationContext,
-        type: str,
+        category: str,
     ) -> None:
-        # If a type has not been selected, randomly choose one.
-        try:
-            question_id = self.types.index(type)
-        except ValueError:
+        # If a category has not been selected, randomly choose one.
+        if category is None:
             question_id = secrets.randbelow(len(self.questions))
+        else:
+            question_id = self.categories.index(category)
 
         if question_id == 0:
             hero = await Hero.random()

@@ -36,7 +36,7 @@ class Guide(commands.Cog):
     @option(
         "category",
         description="Select a category.",
-        autocomplete=Autocomplete.guide_types,
+        autocomplete=Autocomplete.categories,
     )
     @option(
         "title",

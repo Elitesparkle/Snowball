@@ -108,8 +108,8 @@ class Help(commands.Cog):
             "Utility": [
                 "/build <hero>",
                 "/convert <code>",
-                "/guide [type] [title]",
-                "/timings [map] [type] [format]",
+                "/guide [category] [title]",
+                "/timings [map] [category] [format]",
                 "/tooltip [options]",
             ],
             "Draft": [
@@ -123,7 +123,7 @@ class Help(commands.Cog):
                 "/artwork",
                 "/joke",
                 "/spray <hero>",
-                "/quiz [type]",
+                "/quiz [category]",
             ],
             "Matchup": [
                 "/matchup list <your_hero>",

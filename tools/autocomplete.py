@@ -15,10 +15,10 @@ class MatchupsException(Exception):
 class Autocomplete:
 
     @staticmethod
-    async def guide_types(context: discord.AutocompleteContext):
+    async def categories(context: discord.AutocompleteContext):
         input = Misc.alpha_unidecode_lower(context.value)
 
-        guide_types = [
+        categories = [
             "Gameplay",
             "Map",
             "Reddit",
@@ -27,9 +27,9 @@ class Autocomplete:
         ]
 
         return [
-            guide_type
-            for guide_type in guide_types
-            if input in Misc.alpha_unidecode_lower(guide_type)
+            category
+            for category in categories
+            if input in Misc.alpha_unidecode_lower(category)
         ]
 
     @staticmethod
