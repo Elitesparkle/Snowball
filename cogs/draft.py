@@ -247,7 +247,7 @@ class Draft(commands.Cog):
                 if "Ask" in button_id:
                     event = "Ask opponent."
 
-                    players[0], players[1] = players[1], players[0]
+                    players.reverse()
                     if interaction.message is not None:
                         await interaction.message.delete()
 
@@ -264,7 +264,7 @@ class Draft(commands.Cog):
                     elif "Map" in button_id:
                         event = "Map choice."
 
-                        players[0], players[1] = players[1], players[0]
+                        players.reverse()
                         if interaction.message is not None:
                             await interaction.message.delete()
 
@@ -322,7 +322,7 @@ class Draft(commands.Cog):
     def craft_embed(
         color_id: int,
         map: str,
-        players: list,
+        players: list[discord.User],
         channel_id: int,
     ) -> discord.Embed:
         # https://gist.github.com/Soheab/d9cf3f40e34037cfa544f464fc7d919e
@@ -599,9 +599,9 @@ class Draft(commands.Cog):
             result = "won"
             random = secrets.randbelow(2)
 
-        players: list[discord.Member | discord.User] = (
-            [opponent, context.author] if random == 0 else [context.author, opponent]
-        )
+        players: list[discord.Member | discord.User] = [opponent, context.author]
+        if random == 0:
+            players.reverse()
 
         event = "Draft started."
         content = f"{event[-1]}: {players[0].mention} against {players[1].mention}."

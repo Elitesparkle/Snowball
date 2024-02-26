@@ -170,7 +170,7 @@ class Matchup(commands.Cog):
     def list_matchups(
         embed: discord.Embed,
         name: str,
-        matchups: list,
+        matchups: list[str],
     ) -> discord.Embed:
         if len(matchups) == 0:
             value = "-"
