@@ -104,7 +104,7 @@ class Database:
                 Icon TEXT,
                 Level INTEGER,
                 Resource TEXT,
-                Type TEXT,
+                Slot TEXT,
                 Unit TEXT,
                 HeroID INTEGER,
                 PRIMARY KEY (TooltipID),
@@ -497,7 +497,7 @@ class Database:
                                 Icon,
                                 Level,
                                 Resource,
-                                Type,
+                                Slot,
                                 Unit,
                                 HeroID
                             )
@@ -545,7 +545,7 @@ class Database:
                         Icon,
                         Level,
                         Resource,
-                        Type,
+                        Slot,
                         Unit,
                         HeroID
                     )
@@ -741,7 +741,7 @@ class Database:
                             Icon,
                             Level,
                             Resource,
-                            Type,
+                            Slot,
                             Unit,
                             HeroID
                         )

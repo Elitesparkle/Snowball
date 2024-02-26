@@ -254,7 +254,7 @@ class Tooltip(commands.Cog):
                     Icon,
                     Level,
                     Resource,
-                    Type,
+                    Slot,
                     Unit,
                     (
                         SELECT Name
@@ -315,7 +315,7 @@ class Tooltip(commands.Cog):
             if slot is not None:
                 slot = slot.replace(" Talent", "")
 
-                query += " AND Tooltips.Type = ?"
+                query += " AND Tooltips.Slot = ?"
                 values += (slot,)
 
             if title is not None:
