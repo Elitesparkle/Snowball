@@ -141,8 +141,10 @@ class Hero:
             await cursor.execute(query, values)
             results = await cursor.fetchone()
 
-        assert results is not None
-        fix_name = results[0]
+        if results is not None:
+            fix_name = results[0]
+        else:
+            fix_name = ""
         return fix_name
 
     @staticmethod
