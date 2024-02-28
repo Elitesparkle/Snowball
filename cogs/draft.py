@@ -325,7 +325,6 @@ class Draft(commands.Cog):
         players: list[discord.User],
         channel_id: int,
     ) -> discord.Embed:
-        # https://gist.github.com/Soheab/d9cf3f40e34037cfa544f464fc7d919e
         colors = [
             discord.Color.dark_blue(),  # Blue Team
             discord.Color.dark_red(),  # Red Team
@@ -603,8 +602,10 @@ class Draft(commands.Cog):
         if random == 0:
             players.reverse()
 
+        player_a = players[0].mention
+        player_b = players[1].mention
         event = "Draft started."
-        content = f"{event[:-1]}: {players[0].mention} against {players[1].mention}."
+        content = f"{event[:-1]}: {player_a} against {player_b}."
 
         await context.respond(
             content=content,
@@ -612,8 +613,7 @@ class Draft(commands.Cog):
         )
         Misc.send_log(context, event)
 
-        player = players[0].mention
-        content = f"{player}, you {result} the coin toss. What do you prefer?"
+        content = f"{player_a}, you {result} the coin toss. What do you prefer?"
         view = self.CoinView(self.bot)
 
         message = await context.respond(content, view=view)
@@ -892,7 +892,7 @@ class Draft(commands.Cog):
 
         message_id, image, layout, map = results
 
-        # Check if another draft is going on.
+        # Check if a Map has been selected.
         if map is None:
             event = "Map missing."
             content = "Map not selected yet."

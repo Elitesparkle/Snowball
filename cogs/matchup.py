@@ -34,8 +34,6 @@ class Matchup(commands.Cog):
 
         print("Matchup extension loaded.")
 
-    # See here every colour and method the discord.Colour class has:
-    # https://gist.github.com/Soheab/d9cf3f40e34037cfa544f464fc7d919e
     @staticmethod
     def get_color(win_chance) -> discord.Color:
         if win_chance == "Favored":
@@ -776,7 +774,7 @@ class Matchup(commands.Cog):
 
             await context.respond(content=event, ephemeral=True)
             Misc.send_log(context, event)
-            
+
             return
 
         embed, file = await Matchup.get_tips(your_hero, enemy_hero)
@@ -934,7 +932,7 @@ class Matchup(commands.Cog):
                 elif int(win_chance) < 0:
                     win_chance = "Unfavored"
             else:
-                (matchup_id, _, notes) = results
+                matchup_id, _, notes = results
         except TypeError:
             if win_chance is None:
                 win_chance = "Even"
