@@ -332,11 +332,17 @@ class Matchup(commands.Cog):
         def __init__(
             self,
             bot: MyBot,
+            your_hero: str,
+            enemy_hero: str,
+            win_chance: int,
             texts: list[str],
             *args,
             **kwargs,
         ) -> None:
             self.bot: MyBot = bot
+            self.your_hero: str = your_hero
+            self.enemy_hero: str = enemy_hero
+            self.win_chance: int = win_chance
             super().__init__(*args, **kwargs)
 
             tips = texts[0:4]
@@ -375,11 +381,8 @@ class Matchup(commands.Cog):
             assert interaction.user is not None
             user_id = interaction.user.id
 
-            assert interaction.custom_id is not None
-            your_hero, enemy_hero, win_chance = interaction.custom_id.split("|")
-
-            your_hero_id = await Hero.get_id(your_hero)
-            enemy_hero_id = await Hero.get_id(enemy_hero)
+            your_hero_id = await Hero.get_id(self.your_hero)
+            enemy_hero_id = await Hero.get_id(self.enemy_hero)
 
             notes = self.children[-1].value
 
@@ -398,7 +401,7 @@ class Matchup(commands.Cog):
                 user_id,
                 your_hero_id,
                 enemy_hero_id,
-                int(win_chance),
+                self.win_chance,
                 time.time(),
                 notes,
             )
@@ -451,7 +454,7 @@ class Matchup(commands.Cog):
 
             await database_connection.commit()
 
-            embed, file = await Matchup.get_tips(your_hero, enemy_hero)
+            embed, file = await Matchup.get_tips(self.your_hero, self.enemy_hero)
             await interaction.response.send_message(
                 content=f"Matchup updated.",
                 embeds=[embed],
@@ -460,7 +463,7 @@ class Matchup(commands.Cog):
             )
 
             content = f"Matchup updated by {interaction.user.mention}."
-            embed, file = await Matchup.get_tips(your_hero, enemy_hero)
+            embed, file = await Matchup.get_tips(self.your_hero, self.enemy_hero)
 
             admin = self.bot.admin
             if not admin:
@@ -953,9 +956,11 @@ class Matchup(commands.Cog):
 
         modal = self.MatchupModal(
             bot=self.bot,
+            your_hero=your_hero,
+            enemy_hero=enemy_hero,
+            win_chance=win_chance,
             texts=texts,
             title=f"{your_hero} vs {enemy_hero}",
-            custom_id="|".join([your_hero, enemy_hero, str(win_chance)]),
         )
         await context.send_modal(modal)
 
