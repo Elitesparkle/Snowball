@@ -381,12 +381,6 @@ class Matchup(commands.Cog):
             your_hero_id = await Hero.get_id(your_hero)
             enemy_hero_id = await Hero.get_id(enemy_hero)
 
-            win_chance = 0
-            if win_chance == "Favored":
-                win_chance = 1
-            elif win_chance == "Unfavored":
-                win_chance = -1
-
             notes = self.children[-1].value
 
             query = """
@@ -404,7 +398,7 @@ class Matchup(commands.Cog):
                 user_id,
                 your_hero_id,
                 enemy_hero_id,
-                win_chance,
+                int(win_chance),
                 time.time(),
                 notes,
             )
@@ -812,18 +806,18 @@ class Matchup(commands.Cog):
         "win_chance",
         description="Select the expected chance to win.",
         choices=[
-            "Favored",
-            "Even",
-            "Unfavored",
+            discord.OptionChoice("Favored", 1),
+            discord.OptionChoice("Even", 0),
+            discord.OptionChoice("Unfavored", -1),
         ],
-        required=False,
+        default=None,
     )
     async def matchup_edit(
         self,
         context: discord.ApplicationContext,
         your_hero: str,
         enemy_hero: str,
-        win_chance: str,
+        win_chance: int,
     ) -> None:
         your_hero = await Hero.fix_name(your_hero)
         enemy_hero = await Hero.fix_name(enemy_hero)
@@ -921,24 +915,22 @@ class Matchup(commands.Cog):
             await cursor.execute(query, values)
             results = await cursor.fetchone()
 
-        assert results is not None
-        try:
-            if win_chance is None:
-                matchup_id, win_chance, notes = results
-
-                win_chance = "Even"
-                if int(win_chance) > 0:
-                    win_chance = "Favored"
-                elif int(win_chance) < 0:
-                    win_chance = "Unfavored"
-            else:
-                matchup_id, _, notes = results
-        except TypeError:
-            if win_chance is None:
-                win_chance = "Even"
-
+        if results is None:
             texts = [""] * 5
+
+            if win_chance is None:
+                event = "Win chance missing."
+                content = "Please, insert a win chance when adding a new matchup."
+
+                await context.respond(content, ephemeral=True)
+                Misc.send_log(context, event)
+
+                return
         else:
+            matchup_id, previous_win_chance, notes = results
+            if win_chance is None:
+                win_chance = previous_win_chance
+
             query = """
                 SELECT Text
                 FROM MatchupTips
@@ -963,7 +955,7 @@ class Matchup(commands.Cog):
             bot=self.bot,
             texts=texts,
             title=f"{your_hero} vs {enemy_hero}",
-            custom_id="|".join([your_hero, enemy_hero, win_chance]),
+            custom_id="|".join([your_hero, enemy_hero, str(win_chance)]),
         )
         await context.send_modal(modal)
 
