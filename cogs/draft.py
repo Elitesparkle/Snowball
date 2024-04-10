@@ -591,15 +591,15 @@ class Draft(commands.Cog):
 
         result = '"won"'
         if coin == "Opponent":
-            random = 0
-        elif coin == "Me":
             random = 1
+        elif coin == "Me":
+            random = 0
         else:
             result = "won"
             random = secrets.randbelow(2)
 
-        players: list[discord.Member | discord.User] = [opponent, context.author]
-        if random == 0:
+        players: list[discord.Member | discord.User] = [context.author, opponent]
+        if random == 1:
             players.reverse()
 
         player_a = players[0].mention
