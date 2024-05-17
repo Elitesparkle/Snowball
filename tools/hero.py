@@ -112,7 +112,7 @@ class Hero:
         try:
             fix_name = Misc.alpha_unidecode_lower(hero_name)
         except AttributeError:
-            fix_name = ""
+            fix_name = None
             return fix_name
 
         query = """
@@ -144,7 +144,7 @@ class Hero:
         if results is not None:
             fix_name = results[0]
         else:
-            fix_name = ""
+            fix_name = None
         return fix_name
 
     @staticmethod
