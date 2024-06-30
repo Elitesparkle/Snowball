@@ -412,8 +412,8 @@ class Database:
 
                     try:
                         cooldown = ability.get("cooldown")
-                        assert cooldown is not None
-                        cooldown = float(cooldown)
+                        if cooldown is not None:
+                            cooldown = float(cooldown)
                     except TypeError:
                         cooldown = None
 
@@ -431,8 +431,8 @@ class Database:
 
                     try:
                         cost = ability.get("manaCost")
-                        assert cost is not None
-                        cost = float(cost)
+                        if cost is not None:
+                            cost = float(cost)
 
                         if hero in list(resources):
                             resource = resources.get(hero)
@@ -619,8 +619,8 @@ class Database:
 
                     try:
                         cooldown = talent.get("cooldown")
-                        assert cooldown is not None
-                        cooldown = float(cooldown)
+                        if cooldown is not None:
+                            cooldown = float(cooldown)
                     except TypeError:
                         expressions = [
                             r"This effect has a(.+?)second cooldown.",
