@@ -66,7 +66,7 @@
       {
         "uid": "e1d349",
         "name": "Cleansing Flame",
-        "description": "After 1.25 seconds, take to the sky and drop 5 fireballs over 6 seconds at the position of the mouse cursor. Fireballs deal 135 (+4% per level) damage to enemies and heal allied Heroes for 300 (+4% per level) Health.  2 seconds after dropping all fireballs, Alexstrasza lands at the position of the mouse cursor.",
+        "description": "After 1.25 seconds, take to the sky and drop 5 fireballs over 6 seconds at the position of the mouse cursor. Fireballs deal 0 (+4% per level) damage to enemies and heal allied Heroes for 0 (+4% per level) Health.  2 seconds after dropping all fireballs, Alexstrasza lands at the position of the mouse cursor.",
         "hotkey": "R",
         "abilityId": "Alexstrasza|R2",
         "cooldown": 100,
@@ -129,7 +129,7 @@
       {
         "uid": "60a035",
         "name": "Cleansing Flame",
-        "description": "Take to the sky and drop 5 fireballs over 6 seconds at the position of the mouse cursor. Fireballs deal 135 (+4% per level) damage to enemies and heal allied Heroes for 300 (+4% per level) Health.  2 seconds after dropping all fireballs, Alexstrasza lands at the position of the mouse cursor.",
+        "description": "Take to the sky and drop 5 fireballs over 6 seconds at the position of the mouse cursor. Fireballs deal 0 (+4% per level) damage to enemies and heal allied Heroes for 0 (+4% per level) Health.  2 seconds after dropping all fireballs, Alexstrasza lands at the position of the mouse cursor.",
         "hotkey": "R",
         "abilityId": "Alexstrasza|R4",
         "cooldown": 100,
@@ -281,7 +281,7 @@
         "tooltipId": "AlexstraszaCleansingFlame",
         "talentTreeId": "AlexstraszaCleansingFlame",
         "name": "Cleansing Flame",
-        "description": "After 1.25 seconds, take to the sky and drop 5 fireballs over 6 seconds at the position of the mouse cursor. Fireballs deal 135 (+4% per level) damage to enemies and heal allied Heroes for 300 (+4% per level) Health.  2 seconds after dropping all fireballs, Alexstrasza lands at the position of the mouse cursor.",
+        "description": "After 1.25 seconds, take to the sky and drop 5 fireballs over 6 seconds at the position of the mouse cursor. Fireballs deal 0 (+4% per level) damage to enemies and heal allied Heroes for 0 (+4% per level) Health.  2 seconds after dropping all fireballs, Alexstrasza lands at the position of the mouse cursor.",
         "icon": "storm_ui_icon_alexstrasza_cleansing_flame.png",
         "type": "Heroic",
         "sort": 2,

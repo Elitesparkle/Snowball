@@ -24,7 +24,7 @@
       {
         "uid": "7bb3a3",
         "name": "Death Coil",
-        "description": "Deals 164 (+4% per level) damage to target enemy.  Can be self-cast to heal for 262 (+4% per level) Health.",
+        "description": "Deals 164 (+4% per level) damage to target enemy.  Can be self-cast to heal for 290 (+4% per level) Health.",
         "hotkey": "Q",
         "abilityId": "Arthas|Q1",
         "cooldown": 9,
@@ -50,7 +50,7 @@
         "hotkey": "E",
         "abilityId": "Arthas|E1",
         "cooldown": 1,
-        "manaCost": 13,
+        "manaCost": 11,
         "manaPerSecond": true,
         "icon": "storm_ui_icon_arthas_frosentempest.png",
         "type": "basic"

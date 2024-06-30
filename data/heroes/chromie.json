@@ -367,10 +367,7 @@
         "type": "Active",
         "sort": 4,
         "cooldown": 30,
-        "abilityId": "Chromie|Active",
-        "abilityLinks": [
-          "Chromie|D1"
-        ]
+        "abilityId": "Chromie|Active"
       }
     ]
   }

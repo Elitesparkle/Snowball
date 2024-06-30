@@ -126,7 +126,11 @@
         "description": "Entangling Roots Sleeps enemy Heroes for 2 seconds after its Root expires.",
         "icon": "storm_ui_icon_malfurion_entanglingroots_a.png",
         "type": "E",
-        "sort": 3
+        "sort": 3,
+        "abilityId": "Malfurion|E1",
+        "abilityLinks": [
+          "Malfurion|E1"
+        ]
       }
     ],
     "4": [

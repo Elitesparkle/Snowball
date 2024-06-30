@@ -90,6 +90,15 @@
     ],
     "D.VaPilot": [
       {
+        "uid": "d090e0",
+        "name": "Self-Destruct",
+        "description": "Eject from the Mech, setting it to self-destruct after 4 seconds. Deals 400 (+4% per level) to 1100 (+4% per level) damage in a large area, depending on distance from center. Deals 50% damage against Structures.  Gain 1% Charge for every 2 seconds spent Basic Attacking, and 25% Charge per 100% of Mech Health lost.",
+        "hotkey": "1",
+        "abilityId": "DVa|11",
+        "icon": "storm_ui_icon_dva_selfdestruct.png",
+        "type": "activable"
+      },
+      {
         "uid": "e0fee7",
         "name": "Retarget Defense Matrix",
         "description": "Retarget Defense Matrix",
@@ -170,8 +179,7 @@
         "sort": 1,
         "abilityId": "DVa|D1",
         "abilityLinks": [
-          "DVa|D1",
-          "DVa|E2"
+          "DVa|D1"
         ]
       },
       {
@@ -185,7 +193,6 @@
         "abilityId": "DVa|D1",
         "abilityLinks": [
           "DVa|D1",
-          "DVa|D3",
           "DVa|E2"
         ]
       },
@@ -228,7 +235,8 @@
         "sort": 2,
         "abilityId": "DVa|W1",
         "abilityLinks": [
-          "DVa|W1"
+          "DVa|W1",
+          "DVa|W2"
         ]
       },
       {
@@ -241,6 +249,7 @@
         "sort": 3,
         "abilityId": "DVa|E1",
         "abilityLinks": [
+          "DVa|11",
           "DVa|E1",
           "DVa|R4"
         ]
@@ -283,7 +292,8 @@
         "sort": 3,
         "abilityId": "DVa|W1",
         "abilityLinks": [
-          "DVa|W1"
+          "DVa|W1",
+          "DVa|W2"
         ]
       }
     ],
@@ -328,7 +338,8 @@
         "sort": 1,
         "abilityId": "DVa|W1",
         "abilityLinks": [
-          "DVa|W1"
+          "DVa|W1",
+          "DVa|W2"
         ]
       },
       {
@@ -338,11 +349,7 @@
         "description": "Pilot Mode: Unlocks the Torpedo Dash and Concussive Pulse abilities.  Torpedo Dash: Dash a short distance. 10 second cooldown.  Concussive Pulse: Deal 120 (+4% per level) damage to enemies in a cone and knock them back. 10 second cooldown.",
         "icon": "storm_ui_icon_dva_pilotmode.png",
         "type": "Trait",
-        "sort": 2,
-        "abilityId": "DVa|D3",
-        "abilityLinks": [
-          "DVa|D3"
-        ]
+        "sort": 2
       },
       {
         "tooltipId": "DVaBigShotPewPewPew",
@@ -382,7 +389,8 @@
         "sort": 2,
         "abilityId": "DVa|W1",
         "abilityLinks": [
-          "DVa|W1"
+          "DVa|W1",
+          "DVa|W2"
         ]
       },
       {
@@ -423,7 +431,6 @@
         "sort": 2,
         "abilityId": "DVa|R2",
         "abilityLinks": [
-          "DVa|E1",
           "DVa|R2"
         ]
       },

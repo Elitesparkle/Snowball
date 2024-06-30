@@ -212,7 +212,6 @@
         "icon": "storm_ui_icon_garrosh_intothefray.png",
         "type": "Active",
         "sort": 3,
-        "cooldown": 45,
         "abilityId": "Garrosh|Active",
         "abilityLinks": [
           "Garrosh|11"
@@ -324,9 +323,9 @@
         "name": "Seasoned Soldier",
         "description": "Gain 5% maximum Health, increase Groundbreaker's Slow duration by 1 second, and Bloodthirst gains an additional charge.",
         "icon": "storm_ui_icon_garrosh_bloodthirst.png",
-        "type": "Active",
+        "type": "Passive",
         "sort": 3,
-        "abilityId": "Garrosh|Active",
+        "abilityId": "Garrosh|Passive",
         "abilityLinks": [
           "Garrosh|D1"
         ]

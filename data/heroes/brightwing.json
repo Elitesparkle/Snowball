@@ -175,7 +175,10 @@
         "icon": "storm_ui_icon_talent_autoattack_cooldown.png",
         "type": "Passive",
         "sort": 3,
-        "abilityId": "Brightwing|Passive"
+        "abilityId": "Brightwing|Passive",
+        "abilityLinks": [
+          "Brightwing|D1"
+        ]
       }
     ],
     "7": [

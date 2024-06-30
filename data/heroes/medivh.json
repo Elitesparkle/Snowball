@@ -145,7 +145,7 @@
         "tooltipId": "MedivhPortalMageArmor",
         "talentTreeId": "MedivhPortalMageArmor",
         "name": "Mage Armor",
-        "description": "The first time an ally uses a Portal, they gain 30 Armor for 4 seconds, reducing their damage taken by 30%.",
+        "description": "The first time an ally uses a Portal, they gain 40 Armor for 5 seconds, reducing their damage taken by 40%.",
         "icon": "storm_ui_icon_medivh_portal.png",
         "type": "E",
         "sort": 1,

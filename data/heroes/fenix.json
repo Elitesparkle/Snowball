@@ -338,7 +338,11 @@
         "icon": "storm_ui_icon_talent_autoattack_cooldown.png",
         "type": "Passive",
         "sort": 3,
-        "abilityId": "Fenix|Passive"
+        "abilityId": "Fenix|Passive",
+        "abilityLinks": [
+          "Fenix|W1",
+          "Fenix|W2"
+        ]
       }
     ],
     "20": [

@@ -175,7 +175,10 @@
         "icon": "storm_ui_icon_talent_autoattack_building.png",
         "type": "Passive",
         "sort": 3,
-        "abilityId": "Blaze|Passive"
+        "abilityId": "Blaze|Passive",
+        "abilityLinks": [
+          "Blaze|D1"
+        ]
       }
     ],
     "7": [
@@ -365,7 +368,10 @@
         "icon": "storm_ui_icon_talent_autoattack_slow.png",
         "type": "Passive",
         "sort": 3,
-        "abilityId": "Blaze|Passive"
+        "abilityId": "Blaze|Passive",
+        "abilityLinks": [
+          "Blaze|D1"
+        ]
       }
     ]
   }

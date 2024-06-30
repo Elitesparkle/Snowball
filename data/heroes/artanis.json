@@ -99,8 +99,9 @@
         "icon": "storm_ui_icon_artanis_doubleslash_on.png",
         "type": "W",
         "sort": 1,
-        "abilityId": "Artanis|W1",
+        "abilityId": "Artanis|Q1",
         "abilityLinks": [
+          "Artanis|Q1",
           "Artanis|W1"
         ]
       },

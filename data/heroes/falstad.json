@@ -176,7 +176,10 @@
         "icon": "storm_ui_icon_talent_autoattack_heal.png",
         "type": "Passive",
         "sort": 3,
-        "abilityId": "Falstad|Passive"
+        "abilityId": "Falstad|Passive",
+        "abilityLinks": [
+          "Falstad|D1"
+        ]
       }
     ],
     "7": [

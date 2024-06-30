@@ -248,7 +248,10 @@
         "icon": "storm_ui_icon_talent_autoattack_aoe.png",
         "type": "Passive",
         "sort": 1,
-        "abilityId": "TheButcher|Passive"
+        "abilityId": "TheButcher|Passive",
+        "abilityLinks": [
+          "TheButcher|D1"
+        ]
       },
       {
         "tooltipId": "ButcherRuthlessOnslaughtSavageChargeTalent",
@@ -309,7 +312,10 @@
         "icon": "storm_ui_icon_talent_autoattack_speed.png",
         "type": "Passive",
         "sort": 3,
-        "abilityId": "TheButcher|Passive"
+        "abilityId": "TheButcher|Passive",
+        "abilityLinks": [
+          "TheButcher|D1"
+        ]
       }
     ],
     "20": [

@@ -37,7 +37,7 @@
       {
         "uid": "da6cb3",
         "name": "Blood Rage",
-        "description": "Passive: Basic Attack and Ability damage cause enemies to bleed for 44 (+4% per level) damage over 4 seconds. Stacks 5 times.  Active: Qhira deals 32 (+4% per level) damage and heals for 85 (+4% per level) Health per enemy Hero affected. Damage and healing is increased by 50% per each additional stack on that Hero.",
+        "description": "Passive: Basic Attack and Ability damage cause enemies to bleed for 44 (+4% per level) damage over 4 seconds. Stacks 5 times.  Qhira deals 32 (+4% per level) damage and heals for 85 (+4% per level) Health per enemy Hero affected. Damage and healing is increased by 50% per each additional stack on that Hero.",
         "hotkey": "W",
         "abilityId": "Qhira|W1",
         "cooldown": 8,

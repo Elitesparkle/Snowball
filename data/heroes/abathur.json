@@ -75,7 +75,7 @@
       {
         "uid": "8562c7",
         "name": "Deep Tunnel",
-        "description": "Quickly tunnel to a visible location",
+        "description": "Quickly tunnel to a visible location.",
         "hotkey": "Z",
         "abilityId": "Abathur|Z1",
         "cooldown": 30,
@@ -163,9 +163,10 @@
         "icon": "storm_ui_icon_abathur_carapace.png",
         "type": "E",
         "sort": 3,
-        "abilityId": "Abathur|E1",
+        "abilityId": "Abathur|Q1",
         "abilityLinks": [
-          "Abathur|E1"
+          "Abathur|E1",
+          "Abathur|Q1"
         ]
       },
       {
@@ -288,6 +289,7 @@
         "type": "Heroic",
         "sort": 2,
         "cooldown": 90,
+        "isQuest": true,
         "abilityId": "Abathur|R1",
         "abilityLinks": [
           "Abathur|R1"

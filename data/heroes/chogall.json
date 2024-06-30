@@ -349,7 +349,9 @@
         "type": "Passive",
         "sort": 3,
         "abilityId": "Chogall|Passive",
-        "abilityLinks": []
+        "abilityLinks": [
+          "Chogall|D1"
+        ]
       },
       {
         "tooltipId": "ChoHourofTwilight",

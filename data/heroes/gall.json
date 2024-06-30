@@ -279,7 +279,9 @@
         "type": "Passive",
         "sort": 2,
         "abilityId": "Gall|Passive",
-        "abilityLinks": []
+        "abilityLinks": [
+          "Gall|D1"
+        ]
       },
       {
         "tooltipId": "GallTwilightNovaTalent",
@@ -330,7 +332,10 @@
         "icon": "storm_ui_icon_gall_twoheaded.png",
         "type": "Passive",
         "sort": 3,
-        "abilityId": "Gall|Passive"
+        "abilityId": "Gall|Passive",
+        "abilityLinks": [
+          "Gall|D1"
+        ]
       }
     ],
     "20": [
