@@ -982,7 +982,18 @@ class Draft(commands.Cog):
             return
 
         file = Hero.get_code(hero, "Blizzard")
-        portrait = Image.open(f"./images/heroes/{file}.png")
+
+        try:
+            portrait = Image.open(f"./images/heroes/{file}.png")
+        except FileNotFoundError:
+            event = f"Portrait for {hero} not found."
+
+            await context.respond(content=event, ephemeral=True)
+            Misc.send_log(context, event)
+
+            Draft.ready_up(context.channel_id)
+            return
+
         portrait = portrait.resize(self.portrait_size)
         if slot < 4 or slot == 9 or slot == 10:
             enhancer = ImageEnhance.Brightness(portrait)
