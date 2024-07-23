@@ -154,30 +154,28 @@ class Hero:
     ) -> str | None:
         hero_code = unidecode(hero_name)
 
-        if company is not None:
-            if company == "Blizzard":
-                hero_code = "".join(
-                    filter(
-                        str.isalpha,
-                        hero_code.replace("Cho", "Cho'Gall").replace(
-                            "The Lost Vikings", "Lost Vikings"
-                        ),
-                    )
+        if company == "Blizzard":
+            hero_code = "".join(
+                filter(
+                    str.isalpha,
+                    hero_code.replace("Cho", "Cho'Gall").replace(
+                        "The Lost Vikings", "Lost Vikings"
+                    ),
                 )
-            elif company == "Icy Veins":
-                hero_code = (
-                    hero_code.replace("Kel'Thuzad", "Kel Thuzad")
-                    .replace(". ", "-")
-                    .replace(".", "-", 2)
-                    .replace(".", "")
-                    .replace("'", "")
-                    .replace(" ", "-")
-                )
-            elif company == "Psionic Storm":
-                hero_code = (
-                    hero_code.replace("'", "").replace(".", "").replace(" ", "-")
-                )
-            hero_code = hero_code.lower()
+            ).lower()
+        elif company == "Icy Veins":
+            hero_code = (
+                hero_code.replace("Kel'Thuzad", "Kel Thuzad")
+                .replace(". ", "-")
+                .replace(".", "-", 2)
+                .replace(".", "")
+                .replace("'", "")
+                .replace(" ", "-")
+            ).lower()
+        elif company == "Psionic Storm":
+            hero_code = (
+                hero_code.replace("'", "").replace(".", "").replace(" ", "-").lower()
+            )
         else:
             hero_code = None
             print("Company not valid.")
