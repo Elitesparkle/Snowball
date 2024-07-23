@@ -16,6 +16,7 @@ class Database:
                 Name TEXT,
                 Role TEXT,
                 Acronym TEXT,
+                EmoteID INTEGER,
                 PRIMARY KEY (HeroID)
             )
         """
@@ -228,21 +229,25 @@ class Database:
                         data = json.load(file)
                     acronym = data.get(name)
 
+                    with open(
+                        "./data/misc/emotes.json",
+                        "r",
+                        encoding="utf-8",
+                    ) as file:
+                        data = json.load(file)
+                    emote_id = data.get(name)
+
                     query = """
                         INSERT INTO Heroes (
                             HeroID,
                             Name,
                             Role,
-                            Acronym
+                            Acronym,
+                            EmoteID
                         )
-                        VALUES (?, ?, ?, ?)
+                        VALUES (?, ?, ?, ?, ?)
                     """
-                    values = (
-                        id,
-                        name,
-                        role,
-                        acronym,
-                    )
+                    values = (id, name, role, acronym, emote_id)
                     async with database_connection.cursor() as cursor:
                         await cursor.execute(query, values)
 

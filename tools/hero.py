@@ -108,6 +108,22 @@ class Hero:
         return acronym
 
     @staticmethod
+    async def get_emote_id(hero_name: str) -> int:
+        query = """
+            SELECT EmoteID
+            FROM Heroes
+            WHERE Name = ?
+        """
+        values = (hero_name,)
+        async with database_connection.cursor() as cursor:
+            await cursor.execute(query, values)
+            results = await cursor.fetchone()
+
+        assert results is not None
+        emote_id = results[0]
+        return emote_id
+
+    @staticmethod
     async def fix_name(hero_name: str) -> str:
         try:
             fix_name = Misc.alpha_unidecode_lower(hero_name)
