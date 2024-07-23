@@ -154,6 +154,7 @@ class Hero:
     ) -> str | None:
         hero_code = unidecode(hero_name)
 
+        # Used for portrait images of Heroes
         if company == "Blizzard":
             hero_code = "".join(
                 filter(
@@ -163,6 +164,8 @@ class Hero:
                     ),
                 )
             ).lower()
+
+        # Used for links to Hero Guides on Icy Veins
         elif company == "Icy Veins":
             hero_code = (
                 hero_code.replace("Kel'Thuzad", "Kel Thuzad")
@@ -172,10 +175,17 @@ class Hero:
                 .replace("'", "")
                 .replace(" ", "-")
             ).lower()
+
+        # Used for links to Talent Builds on Psionic Storm
         elif company == "Psionic Storm":
             hero_code = (
                 hero_code.replace("'", "").replace(".", "").replace(" ", "-").lower()
             )
+
+        # Used for Discord emotes of Heroes
+        elif company == "Snowball":
+            hero_code = "".join(filter(str.isalpha, hero_code)).lower()
+
         else:
             hero_code = None
             print("Company not valid.")
