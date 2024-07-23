@@ -174,10 +174,15 @@ class Matchup(commands.Cog):
             value = "-"
         else:
             matchups.sort()
-            matchups = [
-                f":{Hero.get_code(hero, 'Snowball')}: {hero}" for hero in matchups
-            ]
-            value = "• " + "\n• ".join(matchups)
+
+            for matchup in matchups:
+                hero = matchup
+                emote_name = Hero.get_code(hero, "Snowball")
+                emote_id = Hero.get_emote_id(hero)
+                emote = f"<:{emote_name}:{emote_id}:>"
+                matchup = f"• {emote} {hero}"
+
+            value = "\n".join(matchups)
 
         embed.add_field(
             name=name,
