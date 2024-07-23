@@ -390,17 +390,19 @@ class Tooltip(commands.Cog):
                 rows = []
                 total += 1
 
+                emote = Hero.get_code(hero, "Snowball")
+
                 # Abilities
                 if level is None:
                     form = await Hero.fix_name(unit)
                     subcategory = "Baseline" if form == hero else "Special"
-                    rows.append(f"{hero} ★ {subcategory}")
+                    rows.append(f":{emote}: {hero} ★ {subcategory}")
 
                 # Talents
                 else:
                     if hero == "Chromie" and level > 3:
                         level -= 2
-                    rows.append(f"{hero} ★ Level {level}")
+                    rows.append(f":{emote}: {hero} ★ Level {level}")
 
                 if hotkey is None:
                     rows.append(f"**__{name}__**")
