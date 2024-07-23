@@ -396,13 +396,13 @@ class Tooltip(commands.Cog):
                 if level is None:
                     form = await Hero.fix_name(unit)
                     subcategory = "Baseline" if form == hero else "Special"
-                    rows.append(f":{emote}: {hero} ★ {subcategory}")
+                    rows.append(f":{emote}: {hero} ‒ {subcategory}")
 
                 # Talents
                 else:
                     if hero == "Chromie" and level > 3:
                         level -= 2
-                    rows.append(f":{emote}: {hero} ★ Level {level}")
+                    rows.append(f":{emote}: {hero} ‒ Level {level}")
 
                 if hotkey is None:
                     rows.append(f"**__{name}__**")
