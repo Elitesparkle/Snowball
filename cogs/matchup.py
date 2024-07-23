@@ -179,7 +179,7 @@ class Matchup(commands.Cog):
                 hero = matchup
                 emote_name = Hero.get_code(hero, "Snowball")
                 emote_id = await Hero.get_emote_id(hero)
-                emote = f"<:{emote_name}:{emote_id}:>"
+                emote = f"<:{emote_name}:{emote_id}>"
                 matchup = f"• {emote} {hero}"
 
             value = "\n".join(matchups)
