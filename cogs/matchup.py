@@ -174,6 +174,9 @@ class Matchup(commands.Cog):
             value = "-"
         else:
             matchups.sort()
+            matchups = [
+                f":{Hero.get_code(hero, 'Snowball')}: {hero}" for hero in matchups
+            ]
             value = "• " + "\n• ".join(matchups)
 
         embed.add_field(
