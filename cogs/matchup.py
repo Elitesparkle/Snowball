@@ -243,12 +243,12 @@ class Matchup(commands.Cog):
             ]
 
             embed.title = str(embed.title) + " (2/2)"
-            embed = Matchup.list_matchups(embed, "Missing", missing_matchups)
+            embed = await Matchup.list_matchups(embed, "Missing", missing_matchups)
         else:
             embed.title = str(embed.title) + " (1/2)"
-            embed = Matchup.list_matchups(embed, "Favored", favored_matchups)
-            embed = Matchup.list_matchups(embed, "Even", even_matchups)
-            embed = Matchup.list_matchups(embed, "Unfavored", unfavored_matchups)
+            embed = await Matchup.list_matchups(embed, "Favored", favored_matchups)
+            embed = await Matchup.list_matchups(embed, "Even", even_matchups)
+            embed = await Matchup.list_matchups(embed, "Unfavored", unfavored_matchups)
 
         hero_code = Hero.get_code(your_hero, "Blizzard")
         filename = f"{hero_code}.png"
