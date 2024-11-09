@@ -151,7 +151,7 @@
         "tooltipId": "AnaOverdose",
         "talentTreeId": "AnaOverdose",
         "name": "Overdose",
-        "description": "Sleep Dart applies 4 Doses.  While Aim Down Sights is active, Sleep Dart pierces all enemy Heroes.",
+        "description": "Sleep Dart applies 4 Doses. While Aim Down Sights is active, Sleep Dart pierces all enemy Heroes.",
         "icon": "storm_ui_icon_ana_sleep_dart.png",
         "type": "E",
         "sort": 2,

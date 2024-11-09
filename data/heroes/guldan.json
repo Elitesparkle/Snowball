@@ -351,7 +351,7 @@
         "tooltipId": "GuldanRainOfDestructionDeepImpact",
         "talentTreeId": "GuldanRainOfDestructionDeepImpact",
         "name": "Deep Impact",
-        "description": "Rain of Destruction slows enemies Movement Speed by 90% for 0.5 seconds.",
+        "description": "Rain of Destruction Slows enemies Movement Speed by 90% for 0.5 seconds.",
         "icon": "storm_ui_icon_guldan_rainoffire.png",
         "type": "Heroic",
         "sort": 2,

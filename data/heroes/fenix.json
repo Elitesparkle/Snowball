@@ -167,7 +167,7 @@
         "tooltipId": "FenixEmergencyProtocol",
         "talentTreeId": "FenixEmergencyProtocol",
         "name": "Emergency Protocol",
-        "description": "While Fenix has shields from Shield Capacitor, he gains 10% Movement Speed.  This bonus is increased to 15% when Fenix loses shields from Shield Capacitor.",
+        "description": "While Fenix has shields from Shield Capacitor, he gains 10% Movement Speed. This bonus is increased to 15% when Fenix loses shields from Shield Capacitor.",
         "icon": "storm_ui_icon_fenix_shield_1.png",
         "type": "Trait",
         "sort": 3,

@@ -58,7 +58,7 @@
       {
         "uid": "2f62cd",
         "name": "Army of the Dead",
-        "description": "Summons Ghouls that last 15 seconds and atttack for 20 (+4% per level) damage. Sacrifice Ghouls to heal for 267 (+4% per level) Health.",
+        "description": "Summons Ghouls that last 15 seconds and attack for 20 (+4% per level) damage. Sacrifice Ghouls to heal for 267 (+4% per level) Health.",
         "hotkey": "R",
         "abilityId": "Arthas|R1",
         "cooldown": 80,
@@ -214,7 +214,7 @@
         "tooltipId": "ArthasArmyOfTheDead",
         "talentTreeId": "ArthasHeroicAbilityArmyoftheDead",
         "name": "Army of the Dead",
-        "description": "Summons Ghouls that last 15 seconds and atttack for 20 (+4% per level) damage. Sacrifice Ghouls to heal for 267 (+4% per level) Health.",
+        "description": "Summons Ghouls that last 15 seconds and attack for 20 (+4% per level) damage. Sacrifice Ghouls to heal for 267 (+4% per level) Health.",
         "icon": "storm_ui_icon_arthas_armyofthedead.png",
         "type": "Heroic",
         "sort": 1,

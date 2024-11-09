@@ -50,7 +50,7 @@
       {
         "uid": "3569aa",
         "name": "Twisting Nether",
-        "description": "After 1 second, nearby enemies are slowed by 50% while Gall channels, up to 5 seconds. Activate to deal 353 (+5% per level) damage.",
+        "description": "After 1 second, nearby enemies are Slowed by 50% while Gall channels, up to 5 seconds. Activate to deal 353 (+5% per level) damage.",
         "hotkey": "R",
         "abilityId": "Gall|R1",
         "cooldown": 80,
@@ -245,7 +245,7 @@
         "tooltipId": "GallTwistingNether",
         "talentTreeId": "GallHeroicAbilityTwistingNether",
         "name": "Twisting Nether",
-        "description": "After 1 second, nearby enemies are slowed by 50% while Gall channels, up to 5 seconds. Activate to deal 353 (+5% per level) damage.",
+        "description": "After 1 second, nearby enemies are Slowed by 50% while Gall channels, up to 5 seconds. Activate to deal 353 (+5% per level) damage.",
         "icon": "storm_ui_icon_gall_twistingnether_a.png",
         "type": "Heroic",
         "sort": 2,

@@ -290,7 +290,7 @@
         "tooltipId": "ZagaraHunterKillerMutaliskTalent",
         "talentTreeId": "ZagaraMasteryMutalisk",
         "name": "Mutalisk",
-        "description": "Reduce the cooldown of Hunter Killer by 4 seconds.  Hunter Killer now spawns a Mutalisk. Mutalisks have a bounce attack and last for 30 seconds.",
+        "description": "Reduce the cooldown of Hunter Killer by 4 seconds. Hunter Killer now spawns a Mutalisk. Mutalisks have a bounce attack and last for 30 seconds.",
         "icon": "storm_ui_icon_zagara_hunterkillermuta.png",
         "type": "W",
         "sort": 2,

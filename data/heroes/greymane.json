@@ -341,7 +341,7 @@
         "tooltipId": "GenericExecutionerTalent",
         "talentTreeId": "HeroGenericExecutionerPassive",
         "name": "Executioner",
-        "description": "Attacking a Hero that is slowed, rooted, or stunned increases your Basic Attack damage by 30% for 3 seconds.",
+        "description": "Attacking a Hero that is Slowed, Rooted, or Stunned increases your Basic Attack damage by 30% for 3 seconds.",
         "icon": "storm_ui_icon_talent_autoattack_damage.png",
         "type": "Passive",
         "sort": 2,

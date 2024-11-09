@@ -146,7 +146,7 @@
         "tooltipId": "MeiOWColdFront",
         "talentTreeId": "MeiOWColdFront",
         "name": "Cold Front",
-        "description": "Reduce the cooldown of Icing by 3 seconds.  If Mei enters her own Blizzard while Icing is active, the cooldown of Icing is reduced by 5 seconds and she gains 80 Mana.",
+        "description": "Reduce the cooldown of Icing by 3 seconds. If Mei enters her own Blizzard while Icing is active, the cooldown of Icing is reduced by 5 seconds and she gains 80 Mana.",
         "icon": "storm_ui_icon_mei_e1_slide.png",
         "type": "E",
         "sort": 2,

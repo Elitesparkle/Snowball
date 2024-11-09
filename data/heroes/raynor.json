@@ -383,7 +383,7 @@
         "tooltipId": "RaynorHyperionExecuteOrders",
         "talentTreeId": "RaynorHyperionExecuteOrders",
         "name": "Execute Orders",
-        "description": "Reduce Raynor's death timer by 35 seconds. Upon death, the Hyperion is cast towards the closest enemy Hero.",
+        "description": "When Raynor is killed, the Hyperion is cast towards the closest enemy Hero. It lasts 12 seconds, hitting up to 4 enemy Heroes of the lowest Health in the area for 66 (+4% per level) damage every second. Every 4 seconds, it will also fire its Yamato Cannon at the lowest Health enemy Hero, dealing 395 (+4% per level) damage.  Passive: Reduce Raynor's death timer by 35 seconds.",
         "icon": "storm_ui_icon_raynor_advancedoptics.png",
         "type": "Passive",
         "sort": 5,

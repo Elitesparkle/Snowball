@@ -189,7 +189,7 @@
         "tooltipId": "ChromieDragonsBreathMobiusLoop",
         "talentTreeId": "ChromieDragonsBreathMobiusLoop",
         "name": "Mobius Loop",
-        "description": "Dragon's Breath deals 30% bonus damage to enemies hit by its center.  Enemy Heroes hit by its center are Slowed by 60% for 0.75 seconds.",
+        "description": "Dragon's Breath deals 30% bonus damage to enemies hit by its center. Enemy Heroes hit by its center are Slowed by 60% for 0.75 seconds.",
         "icon": "storm_ui_icon_chromie_sandstrike.png",
         "type": "W",
         "sort": 2,

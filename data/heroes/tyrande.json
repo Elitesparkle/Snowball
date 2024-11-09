@@ -205,7 +205,7 @@
         "tooltipId": "TyrandeHuntersMarkHuntressFuryTalent",
         "talentTreeId": "TyrandeHuntressFury",
         "name": "Huntress' Fury",
-        "description": "Increase the cast range and duration of Hunter's Mark by 25%. Tyrande's Basic Attacks against targets with Hunter's Mark bounce  to nearby enemy Heroes.",
+        "description": "Increase the cast range and duration of Hunter's Mark by 25%. Tyrande's Basic Attacks against targets with Hunter's Mark bounce to nearby enemy Heroes.",
         "icon": "storm_ui_icon_tyrande_huntersmark.png",
         "type": "Trait",
         "sort": 3,

@@ -259,7 +259,7 @@
         "tooltipId": "DiabloHellfire",
         "talentTreeId": "DiabloHellfire",
         "name": "Hellfire",
-        "description": "Each enemy Hero hit by Fire Stomp grants 3% Spell Power for 10 seconds, up to 30%.  While at maximum stacks, Diablo deals 33 (+4% per level) damage per second to nearby enemies.",
+        "description": "Each enemy Hero hit by Fire Stomp grants 3% Spell Power for 10 seconds, up to 30%. While at maximum stacks, Diablo deals 33 (+4% per level) damage per second to nearby enemies.",
         "icon": "storm_ui_icon_diablo_firestomp.png",
         "type": "W",
         "sort": 2,

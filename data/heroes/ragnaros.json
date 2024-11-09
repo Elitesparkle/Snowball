@@ -122,7 +122,7 @@
       {
         "uid": "145ab3",
         "name": "Meteor Shower",
-        "description": "Vector Targeting Summon 3 meteors at the target point that fall in the target direction. Each meteor deals 151 (+4% per level) damage and slows enemies by 25% for 2 seconds.  Damage increased by 25% versus Minions, Mercenaries, and Monsters.",
+        "description": "Vector Targeting Summon 3 meteors at the target point that fall in the target direction. Each meteor deals 151 (+4% per level) damage and Slows enemies by 25% for 2 seconds.  Damage increased by 25% versus Minions, Mercenaries, and Monsters.",
         "hotkey": "W",
         "abilityId": "Ragnaros|W3",
         "cooldown": 2.5,
@@ -193,7 +193,7 @@
         "tooltipId": "RagnarosBlastWaveSlowBurn",
         "talentTreeId": "RagnarosBlastWaveSlowBurn",
         "name": "Slow Burn",
-        "description": "Blast Wave slows enemies hit by 40% for 2 seconds.",
+        "description": "Blast Wave Slows enemies hit by 40% for 2 seconds.",
         "icon": "storm_ui_icon_ragnaros_blastwave.png",
         "type": "E",
         "sort": 2,

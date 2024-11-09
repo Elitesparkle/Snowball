@@ -166,7 +166,7 @@
         "tooltipId": "AzmodanGlobOfAnnihilationBattlebornTalent",
         "talentTreeId": "AzmodanBattleborn",
         "name": "Battleborn",
-        "description": "Reduce the Mana cost of Summon Demon Warrior from 25 to 20.  Azmodan's Basic Attacks reduce the cooldown of Summon Demon Warrior by 0.75 seconds and Demon Lieutenant by 1.5 seconds.",
+        "description": "Reduce the Mana cost of Summon Demon Warrior from 25 to 20. Azmodan's Basic Attacks reduce the cooldown of Summon Demon Warrior by 0.75 seconds and Demon Lieutenant by 1.5 seconds.",
         "icon": "storm_ui_icon_talent_autoattack_cooldown.png",
         "type": "Passive",
         "sort": 3,

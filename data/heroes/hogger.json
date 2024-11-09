@@ -177,7 +177,7 @@
         "tooltipId": "HoggerGarbageFire",
         "talentTreeId": "HoggerGarbageFire",
         "name": "Garbage Fire",
-        "description": "Reduce the cooldown of Loot Hoard by 2 seconds.  Every 0.5 seconds, enemies in a large area around Loot Hoard take 23 (+4% per level) damage and are Slowed by 20%.",
+        "description": "Reduce the cooldown of Loot Hoard by 2 seconds. Every 0.5 seconds, enemies in a large area around Loot Hoard take 23 (+4% per level) damage and are Slowed by 20%.",
         "icon": "storm_ui_icon_hogger_trait.png",
         "type": "Trait",
         "sort": 2,

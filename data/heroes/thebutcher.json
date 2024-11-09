@@ -25,7 +25,7 @@
       {
         "uid": "eff167",
         "name": "Hamstring",
-        "description": "Deal 110 (+4% per level) damage and slow enemies by 50% fading over 2 seconds.  The Butcher's next Basic Attack will strike immediately.",
+        "description": "Deal 110 (+4% per level) damage and slow enemies by 50% fading over 2 seconds. The Butcher's next Basic Attack will strike immediately.",
         "hotkey": "Q",
         "abilityId": "TheButcher|Q1",
         "cooldown": 4,

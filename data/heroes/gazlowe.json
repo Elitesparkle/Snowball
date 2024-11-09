@@ -45,7 +45,7 @@
       {
         "uid": "8f8fb4",
         "name": "Xplodium Charge",
-        "description": "Place a bomb that deals 142 (+4% per level) damage to enemies within the target area after 1.25 seconds.  Enemies hit are also Stunned for 1 second.",
+        "description": "Place a bomb that deals 142 (+4% per level) damage to enemies within the target area after 1.25 seconds. Enemies hit are also Stunned for 1 second.",
         "hotkey": "E",
         "abilityId": "Gazlowe|E1",
         "cooldown": 12,
@@ -125,7 +125,7 @@
         "tooltipId": "GazloweOneManWreckingCrew",
         "talentTreeId": "GazloweOneManWreckingCrew",
         "name": "One Man Wrecking Crew",
-        "description": "Casting Basic Abilities cause Gazlowe's next Basic Attack within 6 seconds to deal 60% more damage.  Stores up to 2 charges.",
+        "description": "Casting Basic Abilities cause Gazlowe's next Basic Attack within 6 seconds to deal 60% more damage. Stores up to 2 charges.",
         "icon": "storm_ui_icon_talent_autoattack_damage.png",
         "type": "Passive",
         "sort": 3,

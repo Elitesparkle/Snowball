@@ -300,7 +300,7 @@
         "tooltipId": "RehgarLightningShieldRisingStorm",
         "talentTreeId": "RehgarLightningShieldRisingStorm",
         "name": "Rising Storm",
-        "description": "Every time a Lighting Shield damages an enemy Hero, increase its damage by 10%. Stacks up to 15 times.  Passive: Increase the duration of Lightning Shield by 3 seconds.",
+        "description": "Every time a Lightning Shield damages an enemy Hero, increase its damage by 10%. Stacks up to 15 times.  Passive: Increase the duration of Lightning Shield by 3 seconds.",
         "icon": "storm_ui_icon_rehgar_lightningshield.png",
         "type": "W",
         "sort": 1,

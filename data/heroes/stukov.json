@@ -332,7 +332,7 @@
         "tooltipId": "StukovControlledChaosTalent",
         "talentTreeId": "StukovControlledChaos",
         "name": "Controlled Chaos",
-        "description": "Flailing Swipe gains 2 additional charges, but each use only swings 1 time, at maximum range.  Additionally, its cooldown is decreased to 25 seconds, and its Mana cost is reduced from 60 to 25.",
+        "description": "Flailing Swipe gains 2 additional charges, but each use only swings 1 time, at maximum range. Additionally, its cooldown is decreased to 25 seconds, and its Mana cost is reduced from 60 to 25.",
         "icon": "storm_ui_icon_stukov_flailingswipe.png",
         "type": "Heroic",
         "sort": 1,

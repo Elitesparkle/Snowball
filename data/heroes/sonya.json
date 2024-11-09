@@ -318,7 +318,7 @@
         "tooltipId": "BarbarianLeapArreatCraterTalent",
         "talentTreeId": "BarbarianArreatCrater",
         "name": "Arreat Crater",
-        "description": "Leap leaves behind an impassable crater for 5 seconds.  Reduces Leap's cooldown by 20 seconds.",
+        "description": "Leap leaves behind an impassable crater for 5 seconds. Reduces Leap's cooldown by 20 seconds.",
         "icon": "storm_ui_icon_sonya_leap.png",
         "type": "Heroic",
         "sort": 1,

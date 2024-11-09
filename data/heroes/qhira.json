@@ -37,10 +37,10 @@
       {
         "uid": "da6cb3",
         "name": "Blood Rage",
-        "description": "Passive: Basic Attack and Ability damage cause enemies to bleed for 44 (+4% per level) damage over 4 seconds. Stacks 5 times.  Qhira deals 32 (+4% per level) damage and heals for 85 (+4% per level) Health per enemy Hero affected. Damage and healing is increased by 50% per each additional stack on that Hero.",
+        "description": "Passive: Basic Attack and Ability damage cause enemies to bleed for 44 (+4% per level) damage over 4 seconds. Stacks 5 times.  Qhira deals 32 (+4% per level) damage and heals for 90 (+4% per level) Health per enemy Hero affected. Damage and healing is increased by 50% per each additional stack on that Hero.",
         "hotkey": "W",
         "abilityId": "Qhira|W1",
-        "cooldown": 8,
+        "cooldown": 7,
         "manaCost": 35,
         "icon": "storm_ui_icon_nexushunter_w.png",
         "type": "basic"
@@ -70,7 +70,7 @@
       {
         "uid": "9b6fac",
         "name": "Final Strike",
-        "description": "After 1 second, deal 395 (+4% per level) damage to enemies in a line. This damage is increased by 25% against enemy Heroes who are below 50% Health.",
+        "description": "After 1 second, deal 410 (+4% per level) damage to enemies in a line. This damage is increased by 25% against enemy Heroes who are below 50% Health.",
         "hotkey": "R",
         "abilityId": "Qhira|R2",
         "cooldown": 40,
@@ -85,7 +85,7 @@
         "hotkey": "D",
         "trait": true,
         "abilityId": "Qhira|D1",
-        "cooldown": 25,
+        "cooldown": 20,
         "icon": "storm_ui_icon_nexushunter_d.png",
         "type": "trait"
       }
@@ -193,7 +193,7 @@
         "tooltipId": "NexusHunterBloodRageHealmonger",
         "talentTreeId": "NexusHunterBloodRageHealmonger",
         "name": "Healmonger",
-        "description": "If Blood Rage damages an enemy Hero below 50% Health, it heals for an additional 190 (+4% per level) Health.",
+        "description": "If Blood Rage damages an enemy Hero below 50% Health, it heals for an additional 210 (+4% per level) Health.",
         "icon": "storm_ui_icon_nexushunter_w.png",
         "type": "W",
         "sort": 2,
@@ -235,7 +235,7 @@
         "tooltipId": "NexusHunterFinalStrike",
         "talentTreeId": "NexusHunterFinalStrike",
         "name": "Final Strike",
-        "description": "After 1 second, deal 395 (+4% per level) damage to enemies in a line. This damage is increased by 25% against enemy Heroes who are below 50% Health.",
+        "description": "After 1 second, deal 410 (+4% per level) damage to enemies in a line. This damage is increased by 25% against enemy Heroes who are below 50% Health.",
         "icon": "storm_ui_icon_nexushunter_r2.png",
         "type": "Heroic",
         "sort": 2,
@@ -305,7 +305,7 @@
         "tooltipId": "NexusHunterRevolvingSweepLingeringAilment",
         "talentTreeId": "NexusHunterRevolvingSweepLingeringAilment",
         "name": "Lingering Ailment",
-        "description": "Enemy Heroes hit by Revolving Sweep or by Grappling Hook have their Armor reduced by 25 for 3 seconds.",
+        "description": "Enemy Heroes hit by Revolving Sweep or by Grappling Hook have their Armor reduced by 35 for 4 seconds.",
         "icon": "storm_ui_icon_nexushunter_e_alt_1.png",
         "type": "E",
         "sort": 2,

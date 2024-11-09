@@ -178,7 +178,7 @@
         "tooltipId": "DeckardCubeMastery",
         "talentTreeId": "DeckardCubeMastery",
         "name": "Cube Mastery",
-        "description": "Reduce the Mana cost of Scroll of Sealing from 40 to 25.  Each enemy Hero hit by Horadric Cube reduces the cooldown of Scroll of Sealing by 4 seconds.",
+        "description": "Reduce the Mana cost of Scroll of Sealing from 40 to 25. Each enemy Hero hit by Horadric Cube reduces the cooldown of Scroll of Sealing by 4 seconds.",
         "icon": "storm_ui_icon_deckard_horadric_cube.png",
         "type": "W",
         "sort": 1,

@@ -349,7 +349,7 @@
         "tooltipId": "KelThuzadMightOfTheScourge",
         "talentTreeId": "KelThuzadMightOfTheScourge",
         "name": "Might of the Scourge",
-        "description": "If a Hero is hit with Shadow Fissure, a second one is cast below them 1 second later.  This second cast will not duplicate itself.",
+        "description": "If a Hero is hit with Shadow Fissure, a second one is cast below them 1 second later. This second cast will not duplicate itself.",
         "icon": "storm_ui_icon_kelthuzad_shadowfissure.png",
         "type": "Heroic",
         "sort": 2,

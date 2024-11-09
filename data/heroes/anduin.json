@@ -242,7 +242,7 @@
         "tooltipId": "AnduinDivineStarSpeedOfThePious",
         "talentTreeId": "AnduinDivineStarSpeedOfThePious",
         "name": "Speed of the Pious",
-        "description": "While Divine Star is traveling, gain 30% Movement Speed.  Each allied Hero healed by Divine Star on its return to Anduin reduces its cooldown by 1 second.",
+        "description": "While Divine Star is traveling, gain 30% Movement Speed. Each allied Hero healed by Divine Star on its return to Anduin reduces its cooldown by 1 second.",
         "icon": "storm_ui_icon_anduin_divine_star.png",
         "type": "W",
         "sort": 1,

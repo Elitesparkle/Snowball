@@ -334,7 +334,7 @@
         "tooltipId": "KerriganSummonUltraliskTorrasqueTalent",
         "talentTreeId": "KerriganTorrasqueSummonUltralisk",
         "name": "Torrasque",
-        "description": "Increase the Health and Basic Attack damage of the Ultralisk by 20%.  The Ultralisk morphs into an egg when it dies. If the egg isn't killed within 4 seconds, a new Ultralisk is born.",
+        "description": "Increase the Health and Basic Attack damage of the Ultralisk by 20%. The Ultralisk morphs into an egg when it dies. If the egg isn't killed within 4 seconds, a new Ultralisk is born.",
         "icon": "storm_ui_icon_kerrigan_ultralisk.png",
         "type": "Heroic",
         "sort": 2,

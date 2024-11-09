@@ -24,7 +24,7 @@
       {
         "uid": "3a5ec4",
         "name": "Chain Lightning",
-        "description": "Shock an enemy with lightning, dealing 162 (+4% per level) damage. The lightning then bounces 3 times to nearby enemies, dealing 81 (+4% per level) damage to each enemy hit.",
+        "description": "Shock an enemy with lightning, dealing 170 (+4% per level) damage. The lightning then bounces 3 times to nearby enemies, dealing 85 (+4% per level) damage to each enemy hit.",
         "hotkey": "Q",
         "abilityId": "Thrall|Q1",
         "cooldown": 7,
@@ -38,7 +38,7 @@
         "description": "Unleash a Feral Spirit that deals 153 (+4% per level) damage to enemies in its path and Roots Heroes hit for 1 second. Each Hero hit increases the distance traveled by 25%.",
         "hotkey": "W",
         "abilityId": "Thrall|W1",
-        "cooldown": 12,
+        "cooldown": 10,
         "manaCost": 40,
         "icon": "storm_ui_icon_thrall_feralspirit.png",
         "type": "basic"
@@ -79,7 +79,7 @@
       {
         "uid": "44240f",
         "name": "Frostwolf Resilience",
-        "description": "Dealing damage with Abilities grants 1 stack of Frostwolf Resilience. At 5 stacks, Thrall is instantly healed for 223 (+4% per level) Health.",
+        "description": "Dealing damage with Abilities grants 1 stack of Frostwolf Resilience. At 5 stacks, Thrall is instantly healed for 240 (+4% per level) Health.",
         "trait": true,
         "abilityId": "Thrall|D1",
         "icon": "storm_ui_icon_thrall_frostwolfresilience.png",
@@ -271,7 +271,7 @@
         "tooltipId": "ThrallSpiritShield",
         "talentTreeId": "ThrallSpiritShield",
         "name": "Spirit Shield",
-        "description": "Every 45 seconds, gain 50 Spell Armor against the next enemy Ability and subsequent Abilities for 4 seconds. Frostwolf Resilience reduces this cooldown by 10 seconds.  Can be toggled to allow or prevent this talent from triggering automatically.",
+        "description": "Every 45 seconds, gain 70 Spell Armor against the next enemy Ability and subsequent Abilities for 4 seconds. Frostwolf Resilience reduces this cooldown by 10 seconds.  Can be toggled to allow or prevent this talent from triggering automatically.",
         "icon": "storm_ui_icon_talent_spellshield.png",
         "type": "Active",
         "sort": 3,

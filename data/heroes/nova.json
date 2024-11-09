@@ -170,7 +170,7 @@
         "tooltipId": "NovaCovertMissionTalent",
         "talentTreeId": "NovaCovertMission",
         "name": "Covert Mission",
-        "description": "Enemy Minions killed near Nova grant a stack of Bribe. Hero Takedowns grant 10 stacks of Bribe. Use 25 stacks to bribe a Mercenary, instantly defeating them.  Does not work on Elite Mercenaries.  Maximum of 100 stacks. If a camp is defeated entirely with Bribe, the camp respawns 50% faster.",
+        "description": "Enemy Minions killed near Nova grant a stack of Bribe. Hero Takedowns grant 10 stacks of Bribe. Use 25 stacks to bribe a Mercenary, instantly defeating them. Does not work on Elite Mercenaries. Maximum of 100 stacks. If a camp is defeated entirely with Bribe, the camp respawns 50% faster.",
         "icon": "storm_ui_icon_talent_bribe.png",
         "type": "Active",
         "sort": 3,

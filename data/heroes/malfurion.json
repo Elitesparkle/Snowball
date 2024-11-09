@@ -349,7 +349,7 @@
         "tooltipId": "MalfurionTwilightDreamAstralCommunionTalent",
         "talentTreeId": "MalfurionMasteryAstralCommunion",
         "name": "Astral Communion",
-        "description": "Activate to Channel for 1 second, and then instantly teleport and cast Twilight Dream at the targeted location.  Cooldown is shared with Twilight Dream.  Passive: Increase Twilight Dream's Silence duration to 5 seconds.",
+        "description": "Activate to Channel for 1 second, and then instantly teleport and cast Twilight Dream at the targeted location. Cooldown is shared with Twilight Dream.  Passive: Increase Twilight Dream's Silence duration to 5 seconds.",
         "icon": "storm_ui_icon_malfurion_twilightdream.png",
         "type": "Heroic",
         "sort": 2,

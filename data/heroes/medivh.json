@@ -35,7 +35,7 @@
       {
         "uid": "20c9af",
         "name": "Force of Will",
-        "description": "Protect an allied Hero from all damage for 1.5 seconds.  Upon expiration, Force of Will heals the target for 20% of the damage it absorbed.",
+        "description": "Protect an allied Hero from all damage for 1.5 seconds. Upon expiration, Force of Will heals the target for 20% of the damage it absorbed.",
         "hotkey": "W",
         "abilityId": "Medivh|W1",
         "cooldown": 9,
