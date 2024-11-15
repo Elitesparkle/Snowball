@@ -29,27 +29,11 @@
             ]
         ]
     },
-    "Anub'arak": {
-        "Nerubian Armor": [
-            [
-                "Hardened Carapace",
-                "Harden Carapace"
-            ]
-        ]
-    },
     "Arthas": {
         "Army of the Dead": [
             [
                 "Summons Ghouls",
                 "Summons 6 Ghouls with 1060 Health (+4% per level)"
-            ]
-        ]
-    },
-    "Dehaka": {
-        "Drag": [
-            [
-                "Stunned or Silenced",
-                "Stunned, Silenced, or knocked back"
             ]
         ]
     },
@@ -114,8 +98,8 @@
     "E.T.C.": {
         "Prog Rock": [
             [
-                "0  ",
-                "0.  "
+                "100  ",
+                "100.  "
             ]
         ]
     },
@@ -131,7 +115,7 @@
         "Go for the Throat": [
             [
                 null,
-                "  Greymane is Unstoppable during Go For The Throat, unless the travel distance is short."
+                "  Greymane is Unstoppable during Go For The Throat."
             ]
         ]
     },
@@ -175,7 +159,7 @@
         "Total Mayhem": [
             [
                 "Detonate an active Concussion Mine.",
-                "Detonate the planted Concussion Mine, dealing 180 (+4% per level) damage to nearby enemies and knocking them back. Junkrat can also be affected by Concussion Mine, but takes no damage."
+                "Detonate an active Concussion Mine, dealing 180 (+4% per level) damage to nearby enemies and knocking them back. Junkrat can also be affected by Concussion Mine, but takes no damage."
             ]
         ]
     },
@@ -235,7 +219,7 @@
         "Leap": [
             [
                 null,
-                "  Sonya is Unstoppable during Leap, unless the travel distance is short."
+                "  Sonya is Unstoppable during Leap."
             ]
         ]
     },
@@ -247,24 +231,10 @@
             ]
         ]
     },
-    "Sylvanas": {
-        "Black Arrows": [
-            [
-                "withBanshee's Curse",
-                "with Banshee's Curse"
-            ]
-        ]
-    },
     "The Lost Vikings": {
         "Viking Hoard": [
             [
                 "Current Bonus: 0 Regen per second",
-                ""
-            ]
-        ],
-        "Viking Bribery": [
-            [
-                "Current number of Bribe stacks: 0",
                 ""
             ]
         ]
