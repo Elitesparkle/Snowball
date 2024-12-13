@@ -68,7 +68,7 @@
       {
         "uid": "1014e2",
         "name": "Wrath of the Angiris",
-        "description": "After 0.75 seconds, charge in the target direction, lifting the first enemy Hero hit into the Heavens. While in the air, Imperius can steer the landing location by moving.  After 2 seconds, slam the target into the ground, dealing 375 (+4% per level) damage and Stunning them for 1 second.",
+        "description": "After 0.75 seconds, charge in the target direction, lifting the first enemy Hero hit into the Heavens. While in the air, Imperius can steer the landing location by moving.  After 2 seconds, slam the target into the ground, dealing 250 (+4% per level) damage to them, increased by 20% for each Valorous Brand on the target when landing, and Stunning them for 1 second.",
         "hotkey": "R",
         "abilityId": "Imperius|R2",
         "cooldown": 80,
@@ -228,7 +228,7 @@
         "tooltipId": "ImperiusWrathOfTheAngiris",
         "talentTreeId": "ImperiusWrathOfTheAngiris",
         "name": "Wrath of the Angiris",
-        "description": "After 0.75 seconds, charge in the target direction, lifting the first enemy Hero hit into the Heavens. While in the air, Imperius can steer the landing location by moving.  After 2 seconds, slam the target into the ground, dealing 375 (+4% per level) damage and Stunning them for 1 second.",
+        "description": "After 0.75 seconds, charge in the target direction, lifting the first enemy Hero hit into the Heavens. While in the air, Imperius can steer the landing location by moving.  After 2 seconds, slam the target into the ground, dealing 250 (+4% per level) damage to them, increased by 20% for each Valorous Brand on the target when landing, and Stunning them for 1 second.",
         "icon": "storm_ui_icon_imperius_r2.png",
         "type": "Heroic",
         "sort": 2,

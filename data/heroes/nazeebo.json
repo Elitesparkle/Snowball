@@ -57,7 +57,7 @@
       {
         "uid": "e78c10",
         "name": "Gargantuan",
-        "description": "Summon a Gargantuan to guard an area for 20 seconds. Deals 100 (+4% per level) damage when summoned, attacks for 140 (+4% per level) damage, and can be ordered to stomp nearby enemies. The Gargantuan's Stomp deals 140 (+4% per level) damage and Slows by 30% for 2 seconds.",
+        "description": "Summon a Gargantuan to guard an area for 20 seconds. Deals 100 (+4% per level) damage when summoned, attacks for 140 (+4% per level) damage, and can be ordered to stomp nearby enemies. The Gargantuan's Stomp deals 240 (+4% per level) damage and Slows by 30% for 2 seconds.",
         "hotkey": "R",
         "abilityId": "Nazeebo|R1",
         "cooldown": 70,
@@ -231,7 +231,7 @@
         "tooltipId": "WitchDoctorGargantuan",
         "talentTreeId": "WitchDoctorHeroicAbilityGargantuan",
         "name": "Gargantuan",
-        "description": "Summon a Gargantuan to guard an area for 20 seconds. Deals 100 (+4% per level) damage when summoned, attacks for 140 (+4% per level) damage, and can be ordered to stomp nearby enemies. The Gargantuan's Stomp deals 140 (+4% per level) damage and Slows by 30% for 2 seconds.",
+        "description": "Summon a Gargantuan to guard an area for 20 seconds. Deals 100 (+4% per level) damage when summoned, attacks for 140 (+4% per level) damage, and can be ordered to stomp nearby enemies. The Gargantuan's Stomp deals 240 (+4% per level) damage and Slows by 30% for 2 seconds.",
         "icon": "storm_ui_icon_nazeebo_gargantuan.png",
         "type": "Heroic",
         "sort": 1,

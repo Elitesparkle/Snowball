@@ -337,7 +337,7 @@
         "tooltipId": "MedivhPolyBombGlyphOfPolyBomb",
         "talentTreeId": "MedivhPolyBombGlyphOfPolyBomb",
         "name": "Glyph Of Poly Bomb",
-        "description": "Poly Bomb explodes 1 second sooner and the spread radius is increased by 25%.",
+        "description": "Poly Bomb now hits an area, instantly Polymorphing enemy Heroes, hitting the same area again 1 second later.  Poly Bomb's duration is reduced to 1 second, and the spread radius is increased by 25%.",
         "icon": "storm_ui_icon_medivh_polybomb.png",
         "type": "Heroic",
         "sort": 1,

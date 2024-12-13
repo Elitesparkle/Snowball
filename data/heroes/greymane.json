@@ -338,10 +338,10 @@
         ]
       },
       {
-        "tooltipId": "GenericExecutionerTalent",
-        "talentTreeId": "HeroGenericExecutionerPassive",
-        "name": "Executioner",
-        "description": "Attacking a Hero that is Slowed, Rooted, or Stunned increases your Basic Attack damage by 30% for 3 seconds.",
+        "tooltipId": "GreymaneLordofHisPackTalent",
+        "talentTreeId": "GreymaneLordofHisPack",
+        "name": "Lord of His Pack",
+        "description": "Attacking a Hero that is Slowed, Rooted, or Stunned increases Greymane's Basic Attack damage by 25% for 3 seconds, increased to 50% while in Worgen Form.",
         "icon": "storm_ui_icon_talent_autoattack_damage.png",
         "type": "Passive",
         "sort": 2,

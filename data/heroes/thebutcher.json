@@ -104,27 +104,27 @@
         ]
       },
       {
-        "tooltipId": "GenericBlockTalent",
-        "talentTreeId": "GenericTalentBlock",
-        "name": "Block",
-        "description": "Every 5 seconds, gain 75 Physical Armor against the next enemy Hero Basic Attack, reducing the damage taken by 75%.  Stores up to 2 charges.",
-        "icon": "storm_ui_icon_talent_block.png",
-        "type": "Passive",
-        "sort": 2,
-        "abilityId": "TheButcher|Passive"
-      },
-      {
         "tooltipId": "ButcherHamstringChopMeatTalent",
         "talentTreeId": "ButcherMasteryHamstringChopMeat",
         "name": "Chop Meat",
         "description": "Increases Hamstring damage by 100% to Minions, Mercenaries, and Monsters.",
         "icon": "storm_ui_icon_butcher_hamstring_var1.png",
         "type": "Q",
-        "sort": 3,
+        "sort": 2,
         "abilityId": "TheButcher|Q1",
         "abilityLinks": [
           "TheButcher|Q1"
         ]
+      },
+      {
+        "tooltipId": "GenericBlockTalent",
+        "talentTreeId": "GenericTalentBlock",
+        "name": "Block",
+        "description": "Every 5 seconds, gain 75 Physical Armor against the next enemy Hero Basic Attack, reducing the damage taken by 75%.  Stores up to 2 charges.",
+        "icon": "storm_ui_icon_talent_block.png",
+        "type": "Passive",
+        "sort": 3,
+        "abilityId": "TheButcher|Passive"
       }
     ],
     "4": [
@@ -142,29 +142,29 @@
         ]
       },
       {
-        "tooltipId": "ButcherRuthlessOnslaughtUnrelentingPursuitTalent",
-        "talentTreeId": "ButcherMasteryRuthlessOnslaughtUnrelentingPursuit",
-        "name": "Unrelenting Pursuit",
-        "description": "Reduces the cooldown of Ruthless Onslaught by 33% upon impact.",
-        "icon": "storm_ui_icon_butcher_fullboar.png",
-        "type": "E",
-        "sort": 2,
-        "abilityId": "TheButcher|E1",
-        "abilityLinks": [
-          "TheButcher|E1"
-        ]
-      },
-      {
         "tooltipId": "ButcherHamstringCheapShotTalent",
         "talentTreeId": "ButcherMasteryHamstringCheapShot",
         "name": "Cheap Shot",
         "description": "Hamstring does 100% more damage to targets affected by a Slow, Root, or Stun.",
         "icon": "storm_ui_icon_butcher_hamstring_var1.png",
         "type": "Q",
-        "sort": 3,
+        "sort": 2,
         "abilityId": "TheButcher|Q1",
         "abilityLinks": [
           "TheButcher|Q1"
+        ]
+      },
+      {
+        "tooltipId": "ButcherRuthlessOnslaughtUnrelentingPursuitTalent",
+        "talentTreeId": "ButcherMasteryRuthlessOnslaughtUnrelentingPursuit",
+        "name": "Unrelenting Pursuit",
+        "description": "Reduces the cooldown of Ruthless Onslaught by 33% upon impact.",
+        "icon": "storm_ui_icon_butcher_fullboar.png",
+        "type": "E",
+        "sort": 3,
+        "abilityId": "TheButcher|E1",
+        "abilityLinks": [
+          "TheButcher|E1"
         ]
       }
     ],
@@ -183,29 +183,29 @@
         ]
       },
       {
-        "tooltipId": "ButcherFreshMeatVictualsTalent",
-        "talentTreeId": "ButcherMasteryFreshMeatVictuals",
-        "name": "Victuals",
-        "description": "Every time a nearby enemy minion dies, The Butcher heals 5% of his maximum health.",
-        "icon": "storm_ui_icon_butcher_freshmeat.png",
-        "type": "Trait",
-        "sort": 2,
-        "abilityId": "TheButcher|D1",
-        "abilityLinks": [
-          "TheButcher|D1"
-        ]
-      },
-      {
         "tooltipId": "ButcherMeatShield",
         "talentTreeId": "ButcherMeatShield",
         "name": "Meat Shield",
         "description": "When Ruthless Onslaught impacts an enemy Hero, The Butcher gains 50 Spell Armor for 2.5 seconds, reducing Ability Damage taken by 50%.",
         "icon": "storm_ui_icon_butcher_fullboar.png",
         "type": "E",
-        "sort": 3,
+        "sort": 2,
         "abilityId": "TheButcher|E1",
         "abilityLinks": [
           "TheButcher|E1"
+        ]
+      },
+      {
+        "tooltipId": "ButcherFreshMeatVictualsTalent",
+        "talentTreeId": "ButcherMasteryFreshMeatVictuals",
+        "name": "Victuals",
+        "description": "Every time a nearby enemy minion dies, The Butcher heals 5% of his maximum health.",
+        "icon": "storm_ui_icon_butcher_freshmeat.png",
+        "type": "Trait",
+        "sort": 3,
+        "abilityId": "TheButcher|D1",
+        "abilityLinks": [
+          "TheButcher|D1"
         ]
       }
     ],
@@ -241,16 +241,16 @@
     ],
     "13": [
       {
-        "tooltipId": "ButcherCleaver",
-        "talentTreeId": "ButcherCleaver",
-        "name": "Cleaver",
-        "description": "Basic Attacks deal 35% of The Butcher's Basic Attack Damage in an area around the target.",
-        "icon": "storm_ui_icon_talent_autoattack_aoe.png",
-        "type": "Passive",
+        "tooltipId": "ButcherHamstringBrutalStrikeTalent",
+        "talentTreeId": "ButcherMasteryHamstringBrutalStrike",
+        "name": "Brutal Strike",
+        "description": "After using Hamstring, The Butcher's next 3 Basic Attacks within 5 seconds deal an additional 15% damage.",
+        "icon": "storm_ui_icon_butcher_hamstring.png",
+        "type": "Q",
         "sort": 1,
-        "abilityId": "TheButcher|Passive",
+        "abilityId": "TheButcher|Q1",
         "abilityLinks": [
-          "TheButcher|D1"
+          "TheButcher|Q1"
         ]
       },
       {
@@ -267,16 +267,16 @@
         ]
       },
       {
-        "tooltipId": "ButcherHamstringBrutalStrikeTalent",
-        "talentTreeId": "ButcherMasteryHamstringBrutalStrike",
-        "name": "Brutal Strike",
-        "description": "After using Hamstring, The Butcher's next 3 Basic Attacks within 5 seconds deal an additional 15% damage.",
-        "icon": "storm_ui_icon_butcher_hamstring.png",
-        "type": "Q",
+        "tooltipId": "ButcherCleaver",
+        "talentTreeId": "ButcherCleaver",
+        "name": "Cleaver",
+        "description": "Basic Attacks deal 35% of The Butcher's Basic Attack Damage in an area around the target.",
+        "icon": "storm_ui_icon_talent_autoattack_aoe.png",
+        "type": "Passive",
         "sort": 3,
-        "abilityId": "TheButcher|Q1",
+        "abilityId": "TheButcher|Passive",
         "abilityLinks": [
-          "TheButcher|Q1"
+          "TheButcher|D1"
         ]
       }
     ],

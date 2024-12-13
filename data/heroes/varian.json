@@ -380,7 +380,7 @@
         "tooltipId": "VarianDemoralizingShout",
         "talentTreeId": "VarianDemoralizingShout",
         "name": "Demoralizing Shout",
-        "description": "Activate to demoralize nearby enemy Heroes, reducing damage they deal by 40% for 5 seconds.",
+        "description": "Activate to demoralize nearby enemy Heroes, reducing damage they deal by 40% for 5 seconds.  Each time an enemy Hero affected by Demoralizing Shout deals damage to a Hero, reduce its cooldown and Parry's cooldown by 2.5%.",
         "icon": "storm_ui_icon_varian_demoralizingshout.png",
         "type": "Active",
         "sort": 5,

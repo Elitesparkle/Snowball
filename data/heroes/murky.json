@@ -254,7 +254,7 @@
         "tooltipId": "MurkyEggShell",
         "talentTreeId": "MurkyEggShell",
         "name": "Egg Shell",
-        "description": "Spawning from his Egg grants Murky a Shield equal to 100% of his maximum Health. The shield lasts indefinitely.",
+        "description": "Spawning from his Egg grants Murky a Shield equal to 100% of his maximum Health. Casting Spawn Egg refreshes this Shield for an amount equal to 35% of Murky's current Health.",
         "icon": "storm_ui_icon_murky_trait_spawnegg.png",
         "type": "Trait",
         "sort": 2,
