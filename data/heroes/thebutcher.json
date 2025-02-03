@@ -25,7 +25,7 @@
       {
         "uid": "eff167",
         "name": "Hamstring",
-        "description": "Deal 110 (+4% per level) damage and slow enemies by 50% fading over 2 seconds. The Butcher's next Basic Attack will strike immediately.",
+        "description": "Deal 110 (+4% per level) damage and Slow enemies by 50%, decaying over 2 seconds. The Butcher's next Basic Attack will strike immediately.",
         "hotkey": "Q",
         "abilityId": "TheButcher|Q1",
         "cooldown": 4,
@@ -285,7 +285,7 @@
         "tooltipId": "ButcherHamstringCripplingSlamTalent",
         "talentTreeId": "ButcherMasteryHamstringCripplingSlam",
         "name": "Crippling Slam",
-        "description": "Hamstring's slow no longer fades out, and the duration is increased by 30%.",
+        "description": "Hamstring's Slow no longer decays, and its duration is increased by 30%.",
         "icon": "storm_ui_icon_butcher_hamstring.png",
         "type": "Q",
         "sort": 1,

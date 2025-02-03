@@ -59,8 +59,8 @@
         "description": "For the next 4 seconds, Zul'jin is Unkillable, and cannot be reduced to less than 1 Health. Taz'dingo!",
         "hotkey": "R",
         "abilityId": "Zuljin|R1",
-        "cooldown": 90,
-        "manaCost": 75,
+        "cooldown": 100,
+        "manaCost": 80,
         "icon": "storm_ui_icon_zuljin_tazdingo.png",
         "type": "heroic"
       },
@@ -70,15 +70,15 @@
         "description": "Zul'jin launches a massive axe into the air that drops on the targeted area, dealing 330 (+4% per level) damage plus bonus damage the lower his Health is.",
         "hotkey": "R",
         "abilityId": "Zuljin|R2",
-        "cooldown": 40,
-        "manaCost": 70,
+        "cooldown": 30,
+        "manaCost": 60,
         "icon": "storm_ui_icon_zuljin_guillotine.png",
         "type": "heroic"
       },
       {
         "uid": "6241a7",
         "name": "Berserker",
-        "description": "Activate to increase Basic Attack damage by 25% but consume 2% maximum Health per attack.  Passive: Zul'jin attacks 1% faster for every 1% of maximum Health missing.  You Want Axe?  Quest: Every 5 Basic Attacks against Heroes permanently increases Basic Attack damage by 1.  Reward: After attacking Heroes 75 times, Basic Attack range is increased by 1.1.  Reward: After attacking Heroes 150 times, Twin Cleave now revolves twice.",
+        "description": "Activate to increase Basic Attack damage by 25% but consume 2% maximum Health per attack.  Passive: Zul'jin attacks 1% faster for every 1% of maximum Health missing.  You Want Axe?  Quest: Every 5 Basic Attacks against Heroes permanently increases Basic Attack damage by 1, up to 50.  Reward: After attacking Heroes 75 times, Basic Attack range is increased by 1.1.  Reward: After attacking Heroes 150 times, Twin Cleave now revolves twice.",
         "trait": true,
         "abilityId": "Zuljin|D1",
         "icon": "storm_ui_icon_zuljin_berzerker.png",
@@ -115,7 +115,7 @@
         "tooltipId": "ZuljinRecklessness",
         "talentTreeId": "ZuljinRecklessness",
         "name": "Recklessness",
-        "description": "While Zul'jin is below 75% Health, he gains 10% Spell Power. While he is below 50% Health, his Basic Attack damage is increased by 15% and Basic Attacks against Heroes grant an additional stack of You Want Axe?.",
+        "description": "While Zul'jin is below 75% Health, he gains 10% Spell Power. While he is below 50% Health, his Basic Attack damage is increased by 10% and Basic Attacks against Heroes grant an additional stack of You Want Axe?.",
         "icon": "storm_ui_icon_zuljin_berzerker.png",
         "type": "Trait",
         "sort": 2,
@@ -229,7 +229,7 @@
         "icon": "storm_ui_icon_zuljin_tazdingo.png",
         "type": "Heroic",
         "sort": 1,
-        "cooldown": 90,
+        "cooldown": 100,
         "abilityId": "Zuljin|R1",
         "abilityLinks": [
           "Zuljin|R1"
@@ -243,7 +243,7 @@
         "icon": "storm_ui_icon_zuljin_guillotine.png",
         "type": "Heroic",
         "sort": 2,
-        "cooldown": 40,
+        "cooldown": 30,
         "abilityId": "Zuljin|R2",
         "abilityLinks": [
           "Zuljin|R2"

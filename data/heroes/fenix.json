@@ -154,7 +154,7 @@
         "tooltipId": "FenixInhibitingEnergy",
         "talentTreeId": "FenixInhibitingEnergy",
         "name": "Inhibiting Energy",
-        "description": "Every 10 seconds, Fenix's next Basic Attack with Phase Bomb active Slows all enemies hit by 60%, decaying in strength over 1.5 seconds.",
+        "description": "Every 10 seconds, Fenix's next Basic Attack with Phase Bomb active Slows all enemies hit by 60%, decaying over 1.5 seconds.",
         "icon": "storm_ui_icon_fenix_w_1.png",
         "type": "W",
         "sort": 2,

@@ -57,7 +57,7 @@
       {
         "uid": "8ca841",
         "name": "Mighty Gust",
-        "description": "Push enemies away, and slow their Movement Speed by 40% decaying over 4 seconds.",
+        "description": "Push enemies away, and Slow them by 40%, decaying over 4 seconds.",
         "hotkey": "R",
         "abilityId": "Falstad|R1",
         "cooldown": 60,
@@ -242,7 +242,7 @@
         "tooltipId": "FalstadMightyGust",
         "talentTreeId": "FalstadHeroicAbilityMightyGust",
         "name": "Mighty Gust",
-        "description": "Push enemies away, and slow their Movement Speed by 40% decaying over 4 seconds.",
+        "description": "Push enemies away, and Slow them by 40%, decaying over 4 seconds.",
         "icon": "storm_ui_icon_falstad_mightygust.png",
         "type": "Heroic",
         "sort": 2,
