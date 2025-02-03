@@ -1,0 +1,6 @@
+[submodule "heroes-data"]
+	path = heroes-data
+	url = https://github.com/HeroesToolChest/heroes-data
+[submodule "heroes-convert"]
+	path = heroes-convert
+	url = https://github.com/heroesshare/heroes-convert
