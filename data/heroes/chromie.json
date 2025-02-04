@@ -323,7 +323,7 @@
         "tooltipId": "ChromieSlowingSandsUnravelling",
         "talentTreeId": "ChromieSlowingSandsUnravelling",
         "name": "Unravelling",
-        "description": "Every 0.25 seconds, enemy Heroes Slowed by Slowing Sands have their Spell Armor reduced by 10 up to 50. Slowing Sands persists for 5 seconds after it is cancelled.",
+        "description": "Every 0.25 seconds, enemy Heroes Slowed by Slowing Sands have their Spell Armor reduced by 10 up to 50.  Passive: Increase Slowing Sands cast range by 50%, and Slowing Sands persists for 5 seconds after it is cancelled.",
         "icon": "storm_ui_icon_chromie_timewarp.png",
         "type": "Heroic",
         "sort": 1,
