@@ -240,81 +240,98 @@ class Draft(commands.Cog):
 
             assert interaction.user is not None
             is_owner = await self.bot.my_is_owner(interaction.user.id)
-            if your_turn or is_owner:
-                ready = Draft.is_ready(channel_id)
-                if not ready:
-                    return
+            if not (your_turn or is_owner):
+                if interaction.user in players:
+                    event = "Not your turn."
+                    content = f"No, it's {players[1].mention}'s turn!"
+                else:
+                    event = "Not your draft."
+                    content = "No, it's not your draft!"
 
-                if "Ask" in button_id:
-                    event = "Ask opponent."
+                await interaction.respond(
+                    content,
+                    ephemeral=True,
+                    allowed_mentions=discord.AllowedMentions.none(),
+                )
+                Misc.send_log(interaction.context, event)
+
+                Draft.ready_up(interaction.channel_id)
+                return
+
+            ready = Draft.is_ready(channel_id)
+            if not ready:
+                return
+
+            if "Ask" in button_id:
+                event = "Ask opponent."
+
+                players.reverse()
+                if interaction.message is not None:
+                    await interaction.message.delete()
+
+                player = players[0].mention
+                content = f"{player}, your opponent passed. What do you prefer?"
+                interaction = await response.send_message(content, view=self)
+            else:
+                if "Pick" in button_id:
+                    event = "First pick."
+
+                    if interaction.message is not None:
+                        await interaction.message.delete()
+
+                elif "Map" in button_id:
+                    event = "Map choice."
 
                     players.reverse()
                     if interaction.message is not None:
                         await interaction.message.delete()
 
-                    player = players[0].mention
-                    content = f"{player}, your opponent passed. What do you prefer?"
-                    interaction = await response.send_message(content, view=self)
-                else:
-                    if "Pick" in button_id:
-                        event = "First pick."
+                player = players[1].mention
+                content = f"{player}, choose a Map or select multiple Maps to get a random one."
+                view = Draft.MapView(self.bot)
 
-                        if interaction.message is not None:
-                            await interaction.message.delete()
+                interaction = await response.send_message(content, view=view)
 
-                    elif "Map" in button_id:
-                        event = "Map choice."
+            message = await interaction.original_response()
+            Misc.send_log(interaction, event)
 
-                        players.reverse()
-                        if interaction.message is not None:
-                            await interaction.message.delete()
+            query = """
+                UPDATE Drafts
+                SET MessageID = ?
+                WHERE ChannelID = ?
+            """
+            values = (
+                message.id,
+                channel_id,
+            )
+            async with database_connection.cursor() as cursor:
+                await cursor.execute(query, values)
 
-                    player = players[1].mention
-                    content = f"{player}, choose a Map or select multiple Maps to get a random one."
-                    view = Draft.MapView(self.bot)
+            query = """
+                DELETE FROM Teams
+                WHERE ChannelID = ?
+            """
+            values = (channel_id,)
+            async with database_connection.cursor() as cursor:
+                await cursor.execute(query, values)
 
-                    interaction = await response.send_message(content, view=view)
-
-                message = await interaction.original_response()
-                Misc.send_log(interaction, event)
-
+            for player in players:
                 query = """
-                    UPDATE Drafts
-                    SET MessageID = ?
-                    WHERE ChannelID = ?
+                    INSERT INTO Teams (
+                        UserID,
+                        ChannelID
+                    )
+                    VALUES (?, ?)
                 """
                 values = (
-                    message.id,
+                    player.id,
                     channel_id,
                 )
                 async with database_connection.cursor() as cursor:
                     await cursor.execute(query, values)
 
-                query = """
-                    DELETE FROM Teams
-                    WHERE ChannelID = ?
-                """
-                values = (channel_id,)
-                async with database_connection.cursor() as cursor:
-                    await cursor.execute(query, values)
-
-                for player in players:
-                    query = """
-                        INSERT INTO Teams (
-                            UserID,
-                            ChannelID
-                        )
-                        VALUES (?, ?)
-                    """
-                    values = (
-                        player.id,
-                        channel_id,
-                    )
-                    async with database_connection.cursor() as cursor:
-                        await cursor.execute(query, values)
-
-                await database_connection.commit()
-                Draft.ready_up(channel_id)
+            await database_connection.commit()
+            Draft.ready_up(channel_id)
 
     class MapView(discord.ui.View):
         def __init__(
@@ -745,6 +762,30 @@ class Draft(commands.Cog):
             Draft.ready_up(interaction.channel_id)
             return
 
+        players = await Draft.get_drafting_players(self.bot, interaction.channel_id)
+
+        # Check whose turn is.
+        has_first_pick = interaction.user == players[0]
+        is_owner = await self.bot.my_is_owner(interaction.user.id)
+        is_allowed = interaction.user.id in draft_settings.self_drafters
+        if not is_owner and not is_allowed:
+            if has_first_pick:
+                event = "Not your turn."
+                content = f"No, it's {players[1].mention}'s turn!"
+            else:
+                event = "Not your draft."
+                content = "No, it's not your draft!"
+
+            await interaction.respond(
+                content,
+                ephemeral=True,
+                allowed_mentions=discord.AllowedMentions.none(),
+            )
+            Misc.send_log(interaction.context, event)
+
+            Draft.ready_up(interaction.channel_id)
+            return
+
         message_id, image, layout = results
 
         if image is not None:
@@ -773,26 +814,6 @@ class Draft(commands.Cog):
             image.paste(portrait, Draft.layouts[layout][slot])
             path = f"./draft/{interaction.channel_id}.png"
             image.save(path)
-
-        players = await Draft.get_drafting_players(self.bot, interaction.channel_id)
-
-        # Check whose turn is.
-        map_chooser = interaction.user == players[0]
-        is_owner = await self.bot.my_is_owner(interaction.user.id)
-        is_allowed = interaction.user.id in draft_settings.self_drafters
-        if map_chooser and not is_owner and not is_allowed:
-            event = "Not your turn."
-            content = f"No, it's {players[1].mention}'s turn!"
-
-            await interaction.respond(
-                content,
-                ephemeral=True,
-                allowed_mentions=discord.AllowedMentions.none(),
-            )
-            Misc.send_log(interaction.context, event)
-
-            Draft.ready_up(interaction.channel_id)
-            return
 
         filename = f"{interaction.channel_id}.png"
         file = discord.File(path, filename)
@@ -930,6 +951,31 @@ class Draft(commands.Cog):
         # Extract all Heroes that have been already used.
         heroes = [hero for result in results for hero in result]
         slot = len(heroes)
+        
+        players = await Draft.get_drafting_players(self.bot, context.channel_id)
+
+        # Check whose turn is.
+        next = self.turns[slot]
+        self_target = context.author != players[next]
+        is_owner = await self.bot.my_is_owner(context.author.id)
+        is_allowed = context.author.id in draft_settings.self_drafters
+        if self_target and not is_owner and not is_allowed:
+            if context.author not in players:
+                event = "Not your draft."
+                content = "No, it's not your draft!"
+            else:
+                event = "Not your turn."
+                content = f"No, it's {players[next].mention}'s turn!"
+
+            await context.respond(
+                content,
+                ephemeral=True,
+                allowed_mentions=discord.AllowedMentions.none(),
+            )
+            Misc.send_log(context, event)
+
+            Draft.ready_up(context.channel_id)
+            return
 
         # Check if there are picks remaining.
         if slot == 16:
@@ -940,27 +986,6 @@ class Draft(commands.Cog):
             content = f"{event} Use {command.mention} to begin a new draft."
 
             await context.respond(content, ephemeral=True)
-            Misc.send_log(context, event)
-
-            Draft.ready_up(context.channel_id)
-            return
-
-        players = await Draft.get_drafting_players(self.bot, context.channel_id)
-
-        # Check whose turn is.
-        next = self.turns[slot]
-        self_target = context.author != players[next]
-        is_owner = await self.bot.my_is_owner(context.author.id)
-        is_allowed = context.author.id in draft_settings.self_drafters
-        if self_target and not is_owner and not is_allowed:
-            event = "Not your turn."
-            content = f"No, it's {players[next].mention}'s turn!"
-
-            await context.respond(
-                content,
-                ephemeral=True,
-                allowed_mentions=discord.AllowedMentions.none(),
-            )
             Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
@@ -1213,8 +1238,12 @@ class Draft(commands.Cog):
         is_owner = await self.bot.my_is_owner(context.author.id)
         is_allowed = context.author.id in draft_settings.self_drafters
         if self_target and not is_owner and not is_allowed:
-            event = "Not your turn."
-            content = "You can only undo your own moves."
+            if context.author not in players:
+                event = "Not your draft."
+                content = "No, it's not your draft!"
+            else:
+                event = "Not your turn."
+                content = f"No, it's {players[next].mention}'s turn!"
 
             await context.respond(content, ephemeral=True)
             Misc.send_log(context, event)
