@@ -1,7 +1,7 @@
 aiosqlite
 bs4
 pillow
-py-cord
+py-cord==2.6.1
 python-dotenv
 requests
 unidecode
