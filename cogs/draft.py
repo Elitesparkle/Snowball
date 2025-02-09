@@ -500,7 +500,7 @@ class Draft(commands.Cog):
                     icon_url=icon_url,
                 )
             else:
-                embed.set_footer(text=discord.Embed.Empty)
+                embed.set_footer(text=None)
 
             try:
                 await message.edit(embeds=[embed])
