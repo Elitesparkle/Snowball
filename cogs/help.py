@@ -114,7 +114,6 @@ class Help(commands.Cog):
             ],
             "Draft": [
                 "/draft start <opponent> [coin]",
-                "/draft map <map> [layout]",
                 "/draft hero <hero>",
                 "/draft undo",
                 "/draft quit",

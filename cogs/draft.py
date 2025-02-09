@@ -165,6 +165,7 @@ class Draft(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self) -> None:
         self.bot.add_view(self.CoinView(self.bot))
+        self.bot.add_view(self.MapView(self.bot))
         print("Draft extension loaded.")
 
     class CoinView(discord.ui.View):
@@ -268,14 +269,11 @@ class Draft(commands.Cog):
                         if interaction.message is not None:
                             await interaction.message.delete()
 
-                    command = self.bot.get_application_command("draft map")
-                    assert command is not None and isinstance(
-                        command, discord.SlashCommand
-                    )
-
                     player = players[1].mention
-                    content = f"{player}, use {command.mention} to select a Map."
-                    interaction = await response.send_message(content)
+                    content = f"{player}, choose a Map or select multiple Maps to get a random one."
+                    view = Draft.MapView(self.bot)
+
+                    interaction = await response.send_message(content, view=view)
 
                 message = await interaction.original_response()
                 Misc.send_log(interaction, event)
@@ -317,6 +315,45 @@ class Draft(commands.Cog):
 
                 await database_connection.commit()
                 Draft.ready_up(channel_id)
+
+    class MapView(discord.ui.View):
+        def __init__(
+            self,
+            bot: MyBot,
+        ) -> None:
+            self.bot: MyBot = bot
+            super().__init__(timeout=None)
+
+        map_choices: list[discord.SelectOption] = []
+        loop = asyncio.get_event_loop()
+        for map in loop.run_until_complete(Map.catalog()):
+            map_choices.append(discord.SelectOption(label=map, description=f"Choose to draft on {map}."))
+        del loop
+
+        random_choices: list[discord.SelectOption] = []
+        for game_mode in ["Quick Match", "Storm League", "Custom Game"]:
+            random_choices.append(discord.SelectOption(label=f"Random ({game_mode})", description=f"Choose to draft on a random Map in {game_mode}."))
+
+        @discord.ui.string_select(
+            placeholder="Select one or more Maps.",
+            custom_id="Map¦Select",
+            max_values=len(map_choices),
+            options = map_choices,
+        )
+        async def select_map_callback(self, select, interaction):
+            map = secrets.choice(select.values)
+            await Draft.draft_map(self, interaction, map)
+
+        @discord.ui.string_select(
+            placeholder="Select a pool of Maps.",
+            custom_id="Map¦Random",
+            options = random_choices,
+        )
+        async def random_map_callback(self, select, interaction):
+            game_mode = select.values[0][8:-1]
+            map_pool = await Map.catalog(game_mode)
+            map = secrets.choice(map_pool)
+            await Draft.draft_map(self, interaction, map)
 
     @staticmethod
     def craft_embed(
@@ -477,7 +514,7 @@ class Draft(commands.Cog):
 
     async def draft_countdown(
         self,
-        context: discord.ApplicationContext,
+        channel_id: int,
         message: discord.Message,
         seconds: int,
     ) -> None:
@@ -488,7 +525,7 @@ class Draft(commands.Cog):
         except AttributeError:
             return
 
-        embed.set_image(url=f"attachment://{context.channel_id}.png")
+        embed.set_image(url=f"attachment://{channel_id}.png")
 
         for amount in range(seconds, -1, -1):
             if amount == 10:
@@ -535,11 +572,18 @@ class Draft(commands.Cog):
             "Random",
         ],
     )
+    @option(
+        "layout",
+        description="Select a layout, else use the default layout for this server.",
+        default=None,
+        choices=layout_choices,
+    )
     async def draft_start(
         self,
         context: discord.ApplicationContext,
         opponent: discord.User,
         coin: str,
+        layout: str,
     ) -> None:
         ready = Draft.is_ready(context.channel_id)
         if not ready:
@@ -589,6 +633,14 @@ class Draft(commands.Cog):
             Draft.ready_up(context.channel_id)
             return
 
+        # Check if the server has a custom default layout.
+        if layout is None:
+            layout = (
+                "Horizontal"
+                if context.guild_id in draft_settings.alternative_layout_servers
+                else "Vertical"
+            )
+
         result = '"won"'
         if coin == "Opponent":
             random = 1
@@ -633,7 +685,7 @@ class Draft(commands.Cog):
             context.channel_id,
             message.id,
             None,
-            None,
+            layout,
             None,
             time.time(),
         )
@@ -658,47 +710,23 @@ class Draft(commands.Cog):
         await database_connection.commit()
         Draft.ready_up(context.channel_id)
 
-    map_choices = [
-        "Random (Quick Match)",
-        "Random (Storm League)",
-        "Random (Custom Game)",
-    ]
-    loop = asyncio.get_event_loop()
-    map_choices += loop.run_until_complete(Map.catalog())
-    del loop
-
-    @draft.command(
-        name="map",
-        description="Select a Map for the current draft simulation.",
-    )
-    @option(
-        "map",
-        description="Select a Map.",
-        choices=map_choices,
-    )
-    @option(
-        "layout",
-        description="Select a layout, else use the default layout for this server.",
-        default=None,
-        choices=layout_choices,
-    )
     async def draft_map(
         self,
-        context: discord.ApplicationContext,
+        interaction: discord.Interaction,
         map: str,
-        layout: str,
     ) -> None:
-        ready = Draft.is_ready(context.channel_id)
+        ready = Draft.is_ready(interaction.channel_id)
         if not ready:
             return
 
         query = """
             SELECT MessageID,
-                Image
+                Image,
+                Layout
             FROM Drafts
             WHERE ChannelID = ?
         """
-        values = (context.channel_id,)
+        values = (interaction.channel_id,)
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
             results = await cursor.fetchone()
@@ -711,13 +739,13 @@ class Draft(commands.Cog):
             event = "No draft going on."
             content = f"{event} Use {command.mention} to begin a new draft."
 
-            await context.respond(content=content, ephemeral=True)
-            Misc.send_log(context, event)
+            await interaction.respond(content=content, ephemeral=True)
+            Misc.send_log(interaction.context, event)
 
-            Draft.ready_up(context.channel_id)
+            Draft.ready_up(interaction.channel_id)
             return
 
-        message_id, image = results
+        message_id, image, layout = results
 
         if image is not None:
             command = self.bot.get_application_command("draft hero")
@@ -726,69 +754,55 @@ class Draft(commands.Cog):
             event = "Map already selected."
             content = content = f"{event} Use {command.mention} to continue the draft."
 
-            await context.respond(content, ephemeral=True)
-            Misc.send_log(context, event)
+            await interaction.respond(content, ephemeral=True)
+            Misc.send_log(interaction.context, event)
 
-            Draft.ready_up(context.channel_id)
+            Draft.ready_up(interaction.channel_id)
             return
-
-        # Choose a random Map, excluding banned ones.
-        if "Random" in map:
-            game_mode = map[8:-1]
-            map_pool = await Map.catalog(game_mode)
-            map = secrets.choice(map_pool)
-
-        # Check if the server has a custom default layout.
-        if layout is None:
-            layout = (
-                "Horizontal"
-                if context.guild_id in draft_settings.alternative_layout_servers
-                else "Vertical"
-            )
 
         slot = 0
         try:
             portrait = Image.open("./draft/slots/next.png")
         except OSError:
-            Draft.ready_up(context.channel_id)
+            Draft.ready_up(interaction.channel_id)
             raise
         else:
-            portrait = portrait.resize(self.portrait_size)
+            portrait = portrait.resize(Draft.portrait_size)
             map_code = map.lower().replace(" ", "-").replace("'", "")
             image = Image.open(f"./draft/layouts/{layout.lower()}/{map_code}.png")
-            image.paste(portrait, self.layouts[layout][slot])
-            path = f"./draft/{context.channel_id}.png"
+            image.paste(portrait, Draft.layouts[layout][slot])
+            path = f"./draft/{interaction.channel_id}.png"
             image.save(path)
 
-        players = await Draft.get_drafting_players(self.bot, context.channel_id)
+        players = await Draft.get_drafting_players(self.bot, interaction.channel_id)
 
         # Check whose turn is.
-        map_chooser = context.author == players[0]
-        is_owner = await self.bot.my_is_owner(context.author.id)
-        is_allowed = context.author.id in draft_settings.self_drafters
+        map_chooser = interaction.user == players[0]
+        is_owner = await self.bot.my_is_owner(interaction.user.id)
+        is_allowed = interaction.user.id in draft_settings.self_drafters
         if map_chooser and not is_owner and not is_allowed:
             event = "Not your turn."
             content = f"No, it's {players[1].mention}'s turn!"
 
-            await context.respond(
+            await interaction.respond(
                 content,
                 ephemeral=True,
                 allowed_mentions=discord.AllowedMentions.none(),
             )
-            Misc.send_log(context, event)
+            Misc.send_log(interaction.context, event)
 
-            Draft.ready_up(context.channel_id)
+            Draft.ready_up(interaction.channel_id)
             return
 
-        filename = f"{context.channel_id}.png"
+        filename = f"{interaction.channel_id}.png"
         file = discord.File(path, filename)
 
-        assert context.channel_id is not None
+        assert interaction.channel_id is not None
         embed = Draft.craft_embed(
             color_id=2,
             map=map,
             players=players,
-            channel_id=context.channel_id,
+            channel_id=interaction.channel_id,
         )
 
         command = self.bot.get_application_command("draft hero")
@@ -796,7 +810,7 @@ class Draft(commands.Cog):
 
         try:
             content = f"{players[0].mention}, use {command.mention} to ban a Hero."
-            interaction = await context.respond(
+            interaction = await interaction.respond(
                 content,
                 embed=embed,
                 file=file,
@@ -805,15 +819,15 @@ class Draft(commands.Cog):
             event = "Discord error."
             content = f"{event} Try again later."
 
-            await context.respond(content, ephemeral=True)
-            Misc.send_log(context, event)
+            await interaction.respond(content, ephemeral=True)
+            Misc.send_log(interaction.context, event)
 
-            Draft.ready_up(context.channel_id)
+            Draft.ready_up(interaction.channel_id)
             return
 
         assert isinstance(interaction, discord.Interaction)
         message = await interaction.original_response()
-        await self.delete_message(context.channel_id, message_id)
+        await Draft.delete_message(self, interaction.channel_id, message_id)
 
         # Encode the image, from PNG to BLOB.
         with open(path, "rb") as file:
@@ -821,29 +835,27 @@ class Draft(commands.Cog):
         image = base64.b64encode(data)
 
         # Delete image from disk.
-        self.delete_image(path)
+        Draft.delete_image(self, path)
 
         query = """
             UPDATE Drafts
             SET MessageID = ?,
                 Image = ?,
-                Layout = ?,
                 Map = ?
             WHERE ChannelID = ?
         """
         values = (
             message.id,
             image,
-            layout,
             map,
-            context.channel_id,
+            interaction.channel_id,
         )
         async with database_connection.cursor() as cursor:
             await cursor.execute(query, values)
 
         await database_connection.commit()
-        Draft.ready_up(context.channel_id)
-        await self.draft_countdown(context, message, self.countdowns[0])
+        Draft.ready_up(interaction.channel_id)
+        await Draft.draft_countdown(self, interaction.channel_id, message, Draft.countdowns[0])
 
     @draft.command(
         name="hero",
@@ -1120,7 +1132,7 @@ class Draft(commands.Cog):
         await database_connection.commit()
         Draft.ready_up(context.channel_id)
         if slot < 16:
-            await self.draft_countdown(context, message, self.countdowns[1])
+            await self.draft_countdown(context.channel_id, message, self.countdowns[1])
 
     @draft.command(
         name="undo",
