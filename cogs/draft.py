@@ -345,18 +345,32 @@ class Draft(commands.Cog):
         map_choices: list[discord.SelectOption] = []
         loop = asyncio.get_event_loop()
         for map in loop.run_until_complete(Map.catalog()):
-            map_choices.append(discord.SelectOption(label=map, description=f"Choose to draft on {map}."))
+            map_choices.append(
+                discord.SelectOption(
+                    label=map,
+                    description=f"Choose to draft on {map}.",
+                )
+            )
         del loop
 
         random_choices: list[discord.SelectOption] = []
-        for game_mode in ["Quick Match", "Storm League", "Custom Game"]:
-            random_choices.append(discord.SelectOption(label=f"Random ({game_mode})", description=f"Choose to draft on a random Map in {game_mode}."))
+        for game_mode in [
+            "Quick Match",
+            "Storm League",
+            "Custom Game",
+        ]:
+            random_choices.append(
+                discord.SelectOption(
+                    label=f"Random ({game_mode})",
+                    description=f"Choose to draft on a random Map in {game_mode}.",
+                ),
+            )
 
         @discord.ui.string_select(
             placeholder="Select one or more Maps.",
             custom_id="Map¦Select",
             max_values=len(map_choices),
-            options = map_choices,
+            options=map_choices,
         )
         async def select_map_callback(self, select, interaction):
             map = secrets.choice(select.values)
@@ -365,7 +379,7 @@ class Draft(commands.Cog):
         @discord.ui.string_select(
             placeholder="Select a pool of Maps.",
             custom_id="Map¦Random",
-            options = random_choices,
+            options=random_choices,
         )
         async def random_map_callback(self, select, interaction):
             game_mode = select.values[0][8:-1]
@@ -876,7 +890,9 @@ class Draft(commands.Cog):
 
         await database_connection.commit()
         Draft.ready_up(interaction.channel_id)
-        await Draft.draft_countdown(self, interaction.channel_id, message, Draft.countdowns[0])
+        await Draft.draft_countdown(
+            self, interaction.channel_id, message, Draft.countdowns[0]
+        )
 
     @draft.command(
         name="hero",
@@ -951,7 +967,7 @@ class Draft(commands.Cog):
         # Extract all Heroes that have been already used.
         heroes = [hero for result in results for hero in result]
         slot = len(heroes)
-        
+
         players = await Draft.get_drafting_players(self.bot, context.channel_id)
 
         # Check whose turn is.
