@@ -32,9 +32,12 @@ class Spray(commands.Cog):
     async def spray_use(
         self,
         context: discord.ApplicationContext,
-        hero: str,
+        hero: str = None,
     ) -> None:
-        hero = await Hero.fix_name(hero)
+        if hero is None:
+            hero = await Hero.random()
+        else:
+            hero = await Hero.fix_name(hero)
 
         if hero is None:
             event = "Hero not valid."

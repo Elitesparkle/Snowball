@@ -121,7 +121,7 @@ class Help(commands.Cog):
             "Creative": [
                 "/artwork",
                 "/joke",
-                "/spray <hero>",
+                "/spray [hero]",
                 "/quiz [category]",
             ],
             "Matchup": [
