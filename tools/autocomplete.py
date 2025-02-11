@@ -51,8 +51,19 @@ class Autocomplete:
         ]
 
         map_guides = [
-            "Hanamura Temple Map Guide",
+            "Alterac Pass Map Guide",
+            "Battlefield of Eternity Map Guide",
+            "Blackheart's Bay Map Guide",
+            "Braxis Holdout Map Guide",
+            "Cursed Hollow Map Guide",
+            "Dragon Shire Map Guide",
             "Garden of Terror Map Guide",
+            "Hanamura Temple Map Guide",
+            "Infernal Shrines Map Guide",
+            "Sky Temple Map Guide",
+            "Tomb of the Spider Queen Map Guide",
+            "Towers of Doom Map Guide",
+            "Volskaya Foundry Map Guide",
             "Warhead Junction Map Guide",
         ]
 
