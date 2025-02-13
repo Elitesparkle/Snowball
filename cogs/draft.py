@@ -238,6 +238,7 @@ class Draft(commands.Cog):
                 Draft.ready_up(interaction.channel_id)
                 return
 
+            # Check whose turn is.
             assert interaction.user is not None
             is_owner = await self.bot.my_is_owner(interaction.user.id)
             if not (your_turn or is_owner):
@@ -765,11 +766,10 @@ class Draft(commands.Cog):
         players = await Draft.get_drafting_players(self.bot, interaction.channel_id)
 
         # Check whose turn is.
-        has_first_pick = interaction.user == players[0]
+        your_turn = interaction.user == players[1]
         is_owner = await self.bot.my_is_owner(interaction.user.id)
-        is_allowed = interaction.user.id in draft_settings.self_drafters
-        if not is_owner and not is_allowed:
-            if has_first_pick:
+        if not (your_turn or is_owner):
+            if interaction.user in players:
                 event = "Not your turn."
                 content = f"No, it's {players[1].mention}'s turn!"
             else:
@@ -956,16 +956,15 @@ class Draft(commands.Cog):
 
         # Check whose turn is.
         next = self.turns[slot]
-        self_target = context.author != players[next]
+        your_turn = context.author == players[next]
         is_owner = await self.bot.my_is_owner(context.author.id)
-        is_allowed = context.author.id in draft_settings.self_drafters
-        if self_target and not is_owner and not is_allowed:
-            if context.author not in players:
-                event = "Not your draft."
-                content = "No, it's not your draft!"
-            else:
+        if not (your_turn or is_owner):
+            if context.author in players:
                 event = "Not your turn."
                 content = f"No, it's {players[next].mention}'s turn!"
+            else:
+                event = "Not your draft."
+                content = "No, it's not your draft!"
 
             await context.respond(
                 content,
@@ -1232,20 +1231,23 @@ class Draft(commands.Cog):
 
         players = await Draft.get_drafting_players(self.bot, context.channel_id)
 
-        # Check whose turn was.
+        # Check whose turn is.
         previous = self.turns[slot - 1]
-        self_target = context.author != players[previous]
+        your_turn = context.author == players[previous]
         is_owner = await self.bot.my_is_owner(context.author.id)
-        is_allowed = context.author.id in draft_settings.self_drafters
-        if self_target and not is_owner and not is_allowed:
-            if context.author not in players:
+        if not (your_turn or is_owner):
+            if context.author in players:
+                event = "Not your turn."
+                content = f"No, it's {players[previous].mention}'s turn!"
+            else:
                 event = "Not your draft."
                 content = "No, it's not your draft!"
-            else:
-                event = "Not your turn."
-                content = f"No, it's {players[next].mention}'s turn!"
 
-            await context.respond(content, ephemeral=True)
+            await context.respond(
+                content,
+                ephemeral=True,
+                allowed_mentions=discord.AllowedMentions.none(),
+            )
             Misc.send_log(context, event)
 
             Draft.ready_up(context.channel_id)
