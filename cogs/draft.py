@@ -1439,7 +1439,12 @@ class Draft(commands.Cog):
                 await self.delete_message(context.channel_id, message_id)
             event = "Draft aborted."
 
-        await context.respond(content=event)
+        command = self.bot.get_application_command("draft start")
+        assert command is not None and isinstance(command, discord.SlashCommand)
+
+        content = f"{event} Use {command.mention} to begin a new draft."
+
+        await context.respond(content)
         Misc.send_log(context, event)
 
         await database_connection.commit()
