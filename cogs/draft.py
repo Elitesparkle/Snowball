@@ -1006,7 +1006,7 @@ class Draft(commands.Cog):
             Draft.ready_up(context.channel_id)
             return
 
-        # Get the exact name of the selected Hero.
+        # Check if the selected Hero is valid.
         hero = await Hero.fix_name(hero)
         if hero is None:
             event = "Hero not valid."
@@ -1017,12 +1017,38 @@ class Draft(commands.Cog):
             Draft.ready_up(context.channel_id)
             return
 
-        # Check if the selected Hero has been already used.
-        if hero in heroes:
-            index = heroes.index(hero)
+        if (
+            hero in heroes
+            or (
+                hero == "Cho"
+                and "Gall" in heroes
+                and heroes.index("Gall") in self.previous_bans
+            )
+            or (
+                hero == "Gall"
+                and "Cho" in heroes
+                and heroes.index("Cho") in self.previous_bans
+            )
+        ):
+            if hero in ["Cho", "Gall"]:
+                if hero == "Cho":
+                    try:
+                        index = heroes.index("Gall")
+                    except ValueError:
+                        index = heroes.index("Cho")
+                else:
+                    try:
+                        index = heroes.index("Cho")
+                    except ValueError:
+                        index = heroes.index("Gall")
+            else:
+                index = heroes.index(hero)
 
             move = "banned" if index in self.previous_bans else "picked"
             verb = "have" if hero == "The Lost Vikings" else "has"
+
+            if move == "banned" and hero in ["Cho", "Gall"]:
+                hero = "Cho'Gall"
 
             event = "Hero not available."
             content = f"{hero} {verb} already been {move} before."
@@ -1032,6 +1058,30 @@ class Draft(commands.Cog):
 
             Draft.ready_up(context.channel_id)
             return
+
+        if slot > 0:
+            previous_hero = heroes[-1]
+        else:
+            previous_hero = None
+
+        CHO_GALL = ["Cho", "Gall"]
+        if slot not in self.previous_bans:
+            event, content = None, None
+            if slot in [6, 8, 12, 13]:
+                if hero not in CHO_GALL and previous_hero in CHO_GALL:
+                    event = "Cho'Gall not complete."
+                    content = "You have to finish picking Cho'Gall or undo it."
+            else:
+                if slot not in [5, 7, 11, 13] and hero in CHO_GALL:
+                    event = "Cho'Gall not valid."
+                    content = "Cho'Gall can only be picked during a turn with 2 picks."
+
+            if event and content:
+                await context.respond(content, ephemeral=True)
+                Misc.send_log(context, event)
+
+                Draft.ready_up(context.channel_id)
+                return
 
         file = Hero.get_code(hero, "Blizzard")
 
