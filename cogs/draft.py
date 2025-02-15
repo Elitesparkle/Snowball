@@ -1283,11 +1283,11 @@ class Draft(commands.Cog):
 
         # Check if there are moves to undo.
         if slot == 0:
-            command = self.bot.get_application_command("draft start")
+            command = self.bot.get_application_command("draft quit")
             assert command is not None and isinstance(command, discord.SlashCommand)
 
             event = "No moves to undo."
-            content = f"{event} Use {command.mention} to begin a new draft."
+            content = f"{event} Use {command.mention} to end the current draft."
 
             await context.respond(content, ephemeral=True)
             Misc.send_log(context, event)
