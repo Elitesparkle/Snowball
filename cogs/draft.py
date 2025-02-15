@@ -1266,7 +1266,7 @@ class Draft(commands.Cog):
         message_id, image, layout, map = results
 
         query = """
-            SELECT COUNT (Selections.SelectionID) as Slot,
+            SELECT MAX (Selections.SelectionID) as Slot,
                 Heroes.Name
             FROM Heroes
             INNER JOIN Selections
@@ -1278,7 +1278,6 @@ class Draft(commands.Cog):
             await cursor.execute(query, values)
             results = await cursor.fetchone()
 
-        assert results is not None
         slot, hero = results
 
         # Check if there are moves to undo.
@@ -1334,7 +1333,7 @@ class Draft(commands.Cog):
             image.paste(portrait, self.layouts[layout][slot])
 
         move = "banned" if slot in self.next_bans else "picked"
-        event = f"Turn {slot - 1}: {hero} un{move}."
+        event = f"Turn {slot}: {hero} un{move}."
         content = event
 
         if draft_settings.actions_history:
